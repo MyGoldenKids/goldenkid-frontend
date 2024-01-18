@@ -3,11 +3,11 @@
 <template>
     <div class="header">
         <div class="logo">
-            <a href="/"><img src="@/assets/img/logo.png" /></a>
+            <router-link to="/"><img src="@/assets/img/logo.png" /></router-link>
         </div>
         <div class="nav">
             <div class="menu-item"><a href="#">금쪽일기</a></div>
-            <div class="menu-item"><a href="#">꿀팁</a></div>
+            <div class="menu-item"><router-link to="/article/list">꿀팁</router-link></div>
             <div class="menu-item"><a href="#">진단</a></div>
             <div class="menu-item"><a href="#">주변병원</a></div>
         </div>
