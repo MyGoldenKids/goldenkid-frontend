@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import MainViewVue from "@/views/MainView.vue";
-import ArticleView from "@/views/ArticleView.vue";
+import ArticleListView from "@/views/ArticleListView.vue";
 import ArticleDetailView from "@/views/ArticleDetailView.vue";
 
 const router = createRouter({
@@ -15,7 +15,7 @@ const router = createRouter({
             children: [
                 {
                     path: "list",
-                    component: ArticleView,
+                    component: ArticleListView,
                 },
                 {
                     path: "detail",
