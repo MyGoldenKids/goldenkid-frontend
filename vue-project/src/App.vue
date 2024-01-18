@@ -1,5 +1,6 @@
 <script setup>
 import HeaderComponent from "./components/common/HeaderComponent.vue";
+import FooterComponent from "./components/common/FooterComponent.vue";
 import "./assets/css/common.css";
 </script>
 
@@ -8,6 +9,7 @@ import "./assets/css/common.css";
         <div class="wrap">
             <HeaderComponent></HeaderComponent>
             <RouterView></RouterView>
+            <FooterComponent></FooterComponent>
         </div>
     </div>
 </template>
