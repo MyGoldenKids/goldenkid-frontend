@@ -19,14 +19,28 @@ const status = reactive({ value: false }); // 결과창은 제출 버튼을 눌�
 // 설문지 화면 바뀌는 동작을 담당합니다.
 const switchTab = (value) => {
   if (value !== category.value) {
-    // value 값이 들어왔을 때 현재 category 값과 같지 않을 떄만 이벤트 발생
-    category.value = value;
-    status.value = false;
+    category.value = value; // value 값이 들어왔을 때 현재 category 값과 같지 않을 떄만 이벤트 발생
+
+    // 설문지를 이동해도 이전 설문지 결과는 다시 볼 수 있도록 설정
+    if (category.value === 0) {
+      if (childAnswer.value.length !== 20) {
+        status.value = false;
+      } else {
+        status.value = true;
+      }
+    } else {
+      console.log(parentAnswer.value.length);
+      if (parentAnswer.value.length !== 9) {
+        status.value = false;
+      } else {
+        status.value = true;
+      }
+    }
   }
 };
 
 // sumFunction 함수 선언 비동기로 호출되어 순차적인 합산이 가능하게 하였습니다.
-const sumFunction = async (a, b) => a + b; 
+const sumFunction = async (a, b) => a + b;
 
 // answer 배열 돌면서 sum 구하는 함수
 const calculate = async (value) => {
