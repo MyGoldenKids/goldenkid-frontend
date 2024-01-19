@@ -10,18 +10,18 @@ const cutOff = standard;
 const childAnswer = ref([]); // 아이 ADHD 검사 내용 저장
 const parentAnswer = ref([]); // 부모 depression 검사 내용 저장
 
-let category = ref(0); // 설문지 종류 추적
+let category = ref(0); // 자가진단지 종류 추적
 let result = ref(); // 설문 점수를 내려주기 위한 변수
 let resultComment = ref(); // DOM에 comment값을 내려주기 위한 변수
 
 const status = reactive({ value: false }); // 결과창은 제출 버튼을 눌렀을 경우에만 보여주기 위해서 상태관리를 해주기 위함
 
-// 설문지 화면 바뀌는 동작을 담당합니다.
+// 자가진단 화면 바뀌는 동작을 담당합니다.
 const switchTab = (value) => {
   if (value !== category.value) {
     category.value = value; // value 값이 들어왔을 때 현재 category 값과 같지 않을 떄만 이벤트 발생
 
-    // 설문지를 이동해도 이전 설문지 결과는 다시 볼 수 있도록 설정
+    // 자가진단 설문지를 이동해도 이전 설문지 결과는 다시 볼 수 있도록 설정
     if (category.value === 0) {
       if (childAnswer.value.length !== 20) {
         status.value = false;
@@ -42,7 +42,7 @@ const switchTab = (value) => {
 // sumFunction 함수 선언 비동기로 호출되어 순차적인 합산이 가능하게 하였습니다.
 const sumFunction = async (a, b) => a + b;
 
-// answer 배열 돌면서 sum 구하는 함수
+// 설문 결과 총점을 계산해주는 함수입니다. ADHD test는 총점 100점 기준으로 하였고, 우울증세 테스트는 총점 27점 기준입니다.
 const calculate = async (value) => {
   let sum = 0;
   // value값에 따라 설문지 합산 결과가 달라진다.
@@ -58,10 +58,10 @@ const calculate = async (value) => {
   }
   status.value = true;
   result.value = sum;
-  await resultView();
+  await resultView();  // 모든 연산이 끝나고 결과 화면을 띄워줘야하기 때문에 비동기 처리
 };
 
-// 검사결과 완료되지않았음을 체크하기 위한 함수
+// 검사 진행 완료되지 않았음을 체크하기 위한 함수
 const isComplete = async () => {
   let answer = [];
   let length = 0; // 문항 수 체크를 위한 변수
@@ -77,10 +77,11 @@ const isComplete = async () => {
     alert("선택하지 않은 문항이 있습니다.");
     return;
   } else {
-    await calculate(category.value);
+    await calculate(category.value);  // 체크를 모두 진행한 후 함수를 호출하기 위해 비동기 처리
   }
 };
 
+// 검사 결과를 기준에 따라 정해진 comment를 보여줄 수 있도록 처리한 함수
 const resultView = async () => {
   let comment = "";
   const results = cutOff[category.value][category.value];
