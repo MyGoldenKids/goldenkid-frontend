@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import MainViewVue from "@/views/MainView.vue";
+import ArticleListView from "@/views/ArticleListView.vue";
+import ArticleDetailView from "@/views/ArticleDetailView.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,6 +9,19 @@ const router = createRouter({
         {
             path: "/",
             component: MainViewVue,
+        },
+        {
+            path: "/article",
+            children: [
+                {
+                    path: "list",
+                    component: ArticleListView,
+                },
+                {
+                    path: "detail",
+                    component: ArticleDetailView,
+                },
+            ],
         },
     ],
 });
