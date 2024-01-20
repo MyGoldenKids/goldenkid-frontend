@@ -29,7 +29,6 @@ const switchTab = (value) => {
         status.value = true;
       }
     } else {
-      console.log(parentAnswer.value.length);
       if (parentAnswer.value.length !== 9) {
         status.value = false;
       } else {
