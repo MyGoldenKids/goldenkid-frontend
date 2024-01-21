@@ -1,6 +1,4 @@
-<script setup>
-
-</script>
+<script setup></script>
 
 <template>
     <div>
@@ -46,7 +44,7 @@
 /* 컨텐츠들 타이틀 */
 .item-title {
     width: 50%;
-    border-bottom: 3px solid #89B9AD;
+    border-bottom: 3px solid #89b9ad;
     padding-bottom: 0.313rem;
     margin: 0 auto 1.2rem auto;
 }
@@ -62,11 +60,15 @@
     border-radius: 20px;
     padding: 0.4rem;
     margin: 0.2rem auto;
-    border: 2px solid #89B9AD;
+    border: 2px solid #89b9ad;
 }
 .diary-list-sub span {
     font-size: 0.8rem;
     padding-left: 0.3rem;
-    color: #89B9AD;
+    color: #89b9ad;
+}
+
+a {
+    text-decoration-line: none;
 }
 </style>

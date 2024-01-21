@@ -9,7 +9,7 @@
         <div class="diary-ing-sub">
             <div class="ing-sub-left">
                 <div>
-                    <span># 183</span>
+                    <span>#183 </span>
                     <span>우리 금쪽이 최고잉</span>
                 </div>
                 <div class="ing-sub-date">2024.01.20</div>
@@ -55,6 +55,7 @@
     color: #ffffff;
     padding: 0.313rem 0.625rem;
     border-radius: 20px;
+    font-size: 0.8rem;
 }
 .diary-ing-sub-not {
     width: 80%;
