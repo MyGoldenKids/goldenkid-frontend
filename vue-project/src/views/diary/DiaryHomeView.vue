@@ -4,6 +4,8 @@ import DiaryNavComponent from "@/components/diary/DiaryNavComponent.vue";
 import DiaryProfileComponent from "@/components/diary/DiaryProfileComponent.vue";
 import DiaryCalendarComponent from "@/components/diary/DiaryCalendarComponent.vue";
 import DiaryPreviewComponent from "@/components/diary/DiaryPreviewComponent.vue";
+import DiaryListComponent from "@/components/diary/DiaryListComponent.vue";
+import DiaryIngComponent from "@/components/diary/DiaryIngComponent.vue";
 </script>
 
 <template>
@@ -21,7 +23,8 @@ import DiaryPreviewComponent from "@/components/diary/DiaryPreviewComponent.vue"
                     </div>
                     <!--다이어리 홈 위젯 하단 -->
                     <div class="content-bottom">
-
+                        <DiaryListComponent></DiaryListComponent>
+                        <DiaryIngComponent></DiaryIngComponent>
                     </div>
                 </div>
             </div>
