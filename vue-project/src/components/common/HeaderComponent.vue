@@ -19,7 +19,7 @@
         <div class="nav">
             <div class="menu-item"><a href="#">금쪽일기</a></div>
             <div class="menu-item"><router-link to="/article/list">꿀팁</router-link></div>
-            <div class="menu-item"><a href="#">진단</a></div>
+            <div class="menu-item"><router-link to="/survey">진단</router-link></div>
             <div class="menu-item"><a href="#">주변병원</a></div>
         </div>
     </div>
