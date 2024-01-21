@@ -1,4 +1,8 @@
-<script setup></script>
+<script setup>
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+</script>
 
 <template>
     <div class="header">
@@ -17,9 +21,9 @@
             <router-link to="/"><img src="@/assets/img/logo.png" /></router-link>
         </div>
         <div class="nav">
-            <div class="menu-item"><router-link to="/diary/home">금쪽일기</router-link></div>
-            <div class="menu-item"><router-link to="/article/list">꿀팁</router-link></div>
-            <div class="menu-item"><router-link to="/survey">진단</router-link></div>
+            <div class="menu-item" :class="{ 'active' : route.path.startsWith('/diary')}"><router-link to="/diary/home">금쪽일기</router-link></div>
+            <div class="menu-item" :class="{ 'active' : route.path.startsWith('/article')}"><router-link to="/article/list">꿀팁</router-link></div>
+            <div class="menu-item" :class="{ 'active' : route.path.startsWith('/survey')}"><router-link to="/survey">진단</router-link></div>
             <div class="menu-item"><a href="#">주변병원</a></div>
         </div>
     </div>
@@ -67,6 +71,10 @@ a:hover {
 }
 
 .menu-item:hover {
+    background-image: url(../../assets/img/sticker3.png);
+}
+
+.menu-item.active{
     background-image: url(../../assets/img/sticker3.png);
 }
 
