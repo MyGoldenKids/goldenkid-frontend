@@ -2,6 +2,7 @@
 import DiaryHeaderComponent from "@/components/diary/DiaryHeaderComponent.vue";
 import DiaryNavComponent from "@/components/diary/DiaryNavComponent.vue";
 import DiaryProfileComponent from "@/components/diary/DiaryProfileComponent.vue";
+import DiaryCalendarComponent from "@/components/diary/DiaryCalendarComponent.vue";
 </script>
 
 <template>
@@ -10,6 +11,9 @@ import DiaryProfileComponent from "@/components/diary/DiaryProfileComponent.vue"
         <DiaryNavComponent></DiaryNavComponent>
         <div class="diary-main">
             <DiaryProfileComponent></DiaryProfileComponent>
+            <div class="diary-content">
+                <DiaryCalendarComponent></DiaryCalendarComponent>
+            </div>
         </div>
     </div>
 </template>
@@ -31,4 +35,9 @@ import DiaryProfileComponent from "@/components/diary/DiaryProfileComponent.vue"
     grid-template-columns: 20% 80%;
     padding: 1.2rem;
 }
+.diary-content {
+    /* background-color: peru; */
+    padding: 0.313rem 1.2rem;
+}
+
 </style>
