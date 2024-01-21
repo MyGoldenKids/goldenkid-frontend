@@ -28,8 +28,9 @@
     position: relative;
 }
 .preview-temp-text {
-    width: 40%;
-    font-size: 0.8rem;
+    width: 70%;
+    font-size: 1.0rem;
+    line-height: 1.5;
 }
 .sticker1 {
     width: 7.5rem;
