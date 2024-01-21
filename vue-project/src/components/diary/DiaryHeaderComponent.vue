@@ -8,15 +8,16 @@
 </template>
 
 <style scoped>
+/* 다이어리 타이틀 영역 */
 .diary-header {
-    padding: 40px 0;
-}
-.diary-header h1 {
+    /* background-color: #DEB4A6; */
+    background-image: url(@/assets/img/sticker2.png);
+    background-size: cover;
+    width: 10rem;
+    height: auto;
+    padding: 0.625rem 2.5rem;
     color: #665031;
-    font-size: 30px;
-    font-weight: 700;
-    text-align: center;
-    padding-bottom: 35px;
-    border-bottom: 1px solid #ad9478;
+    /* margin: 0 auto; */
+    margin-left: 20px;
 }
 </style>
