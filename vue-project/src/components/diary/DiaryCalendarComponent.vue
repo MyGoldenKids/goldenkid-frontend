@@ -28,7 +28,7 @@ const attrs = ref([
 /* 캘린더 & 캘린더 미리보기 */
 .calendar {
     width: 70%;
-    height: 12.5rem;
+    height: 14rem;  
     margin: 0 auto;
 }
 </style>
