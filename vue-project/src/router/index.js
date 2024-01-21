@@ -3,6 +3,7 @@ import MainViewVue from "@/views/MainView.vue";
 import SurveyViewVue from "@/views/survey/SurveyView.vue";
 import ArticleListView from "@/views/ArticleListView.vue";
 import ArticleDetailView from "@/views/ArticleDetailView.vue";
+import DiaryHomeView from "@/views/diary/DiaryHomeView.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,6 +29,15 @@ const router = createRouter({
                 },
             ],
         },
+        {
+            path: "/diary",
+            children: [
+                {
+                    path: "home",
+                    component: DiaryHomeView,
+                }
+            ]
+        }
     ],
 });
 
