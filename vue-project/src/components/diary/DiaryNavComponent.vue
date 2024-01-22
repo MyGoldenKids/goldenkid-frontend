@@ -1,39 +1,70 @@
-<script setup></script>
+<script setup>
+import { useRouter } from "vue-router";
+const route = useRouter();
+
+console.log(route.currentRoute.value.path);
+</script>
 
 <template>
     <div class="diary-nav">
         <ul>
             <li>
-                <a href="#">
-                    <img src="@/assets/img/house.png" alt="홈" class="icon" />
+                <router-link to="/diary/home">
+                    <img
+                        src="@/assets/img/house.png"
+                        alt="홈"
+                        class="icon"
+                        :class="{
+                            active:
+                                route.currentRoute.value.path === '/diary/home',
+                        }"
+                    />
                     <span class="icon-text">홈</span>
-                </a>
+                </router-link>
             </li>
             <li>
-                <a href="#">
+                <router-link to="/diary/write">
                     <img
                         src="@/assets/img/marker.png"
                         alt="일기쓰기"
                         class="icon"
+                        :class="{
+                            active:
+                                route.currentRoute.value.path ===
+                                '/diary/write',
+                        }"
                     />
                     <span class="icon-text">일기쓰기</span>
-                </a>
+                </router-link>
             </li>
             <li>
-                <a href="#">
-                    <img src="@/assets/img/book.png" alt="일기모음" class="icon" />
+                <router-link to="/diary/list">
+                    <img
+                        src="@/assets/img/book.png"
+                        alt="일기모음"
+                        class="icon"
+                        :class="{
+                            active:
+                                route.currentRoute.value.path === '/diary/list',
+                        }"
+                    />
                     <span class="icon-text">일기모음</span>
-                </a>
+                </router-link>
             </li>
             <li>
-                <a href="#">
+                <router-link to="/diary/extract">
                     <img
                         src="@/assets/img/analyze.png"
                         alt="일기추출"
                         class="icon"
+                        :class="{
+                            active:
+                                route.currentRoute.value.path ===
+                                '/diary/extract',
+                        }"
                     />
                     <span class="icon-text">일기추출</span>
-                </a>
+                </router-link>
             </li>
         </ul>
     </div>
@@ -55,7 +86,8 @@
     display: block;
     margin: 0 auto;
 }
-.icon:hover {
+.icon:hover,
+.icon.active {
     background-color: #ad9478;
     transition-duration: 0.5s;
 }
