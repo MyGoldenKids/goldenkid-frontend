@@ -12,7 +12,7 @@ import DiaryIngComponent from "@/components/diary/DiaryIngComponent.vue";
     <div class="diary">
         <DiaryNavComponent></DiaryNavComponent>
         <div>
-            <DiaryHeaderComponent></DiaryHeaderComponent>
+            <!-- <DiaryHeaderComponent></DiaryHeaderComponent> -->
             <div class="diary-main">
                 <DiaryProfileComponent></DiaryProfileComponent>
                 <div class="diary-content">
@@ -59,7 +59,7 @@ import DiaryIngComponent from "@/components/diary/DiaryIngComponent.vue";
     /* background-color: aquamarine; */
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    margin-bottom: 1.2rem;
+    margin-bottom: 5.0rem;
 }
 
 /* 컨텐츠 하위 영역 */

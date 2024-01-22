@@ -21,6 +21,9 @@
 </template>
 
 <style scoped>
+.diary-profile {
+    padding-top: 1.0rem;
+}
 .image-temp p{
     font-size: 0.7rem;
     margin-top: 0.313rem;
@@ -49,12 +52,12 @@
 .profile-text {
     /* background-color: aquamarine; */
     padding: 0.625rem 0;
-    margin: 0.8rem auto;
+    margin: 0.9rem auto;
 }
 .profile-kid {
     border: 2px solid #AD9478;
     width: 9.375rem;
-    height: 10rem;
+    height: 12.5rem;
     border-radius: 1.25rem;
     margin: 0 auto;
     display: flex;
