@@ -2,7 +2,6 @@
 import { useRouter } from "vue-router";
 const route = useRouter();
 
-console.log(route.currentRoute.value.path);
 </script>
 
 <template>
