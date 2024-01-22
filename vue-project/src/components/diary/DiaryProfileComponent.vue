@@ -49,7 +49,7 @@
 .profile-text {
     /* background-color: aquamarine; */
     padding: 0.625rem 0;
-    margin: 0 auto;
+    margin: 0.8rem auto;
 }
 .profile-kid {
     border: 2px solid #AD9478;

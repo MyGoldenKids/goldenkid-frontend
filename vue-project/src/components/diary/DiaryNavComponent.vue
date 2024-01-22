@@ -62,4 +62,8 @@
 .icon-text {
     font-size: 0.813rem;
 }
+
+a {
+    text-decoration-line: none;
+}
 </style>
