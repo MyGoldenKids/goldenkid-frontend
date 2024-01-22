@@ -62,6 +62,9 @@ body{
 	background-color: #FFF8F2;
 }
 /* 캘린더 토요일, 일요일 색 */
-.vc-container .vc-weekday-1, .vc-container .vc-weekday-7 {
+.vc-container .vc-weekday-1 {
+	color: red;
+}
+.vc-container .vc-weekday-7 {
 	color: #6366f1;
-  }
+}

@@ -1,16 +1,28 @@
 <script setup>
+import { useCalendarStore } from "@/stores/calendar-store";
 
+const store = useCalendarStore();
+
+const formatDate = (date) => {
+    const options = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    };
+    return date.toLocaleDateString("ko-KR", options);
+};
 </script>
 
 <template>
     <!-- 미리보기 -->
     <div class="preview">
         <img src="../../assets/img/sticker5.png" class="sticker1" />
-        <img src="../../assets/img/sticker5.png" class="sticker2"/>
+        <img src="../../assets/img/sticker5.png" class="sticker2" />
         <p class="preview-temp-text">
-            캘린더 날짜를 누르면
-            해당 일자 게시글 미리보기를
-            여기서 볼 수 있어요 :D
+            {{ formatDate(store.date) }}<br /><br />
+            캘린더 날짜를 누르면 해당 일자 게시글 미리보기를 여기서 볼 수 있어요
+            :D
         </p>
     </div>
 </template>
@@ -23,13 +35,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #89B9AD;
+    background-color: #89b9ad;
     border-radius: 20px;
     position: relative;
 }
 .preview-temp-text {
     width: 70%;
-    font-size: 1.0rem;
+    font-size: 1rem;
     line-height: 1.5;
 }
 .sticker1 {
