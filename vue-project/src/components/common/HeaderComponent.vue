@@ -21,10 +21,10 @@ const route = useRoute();
             <router-link to="/"><img src="@/assets/img/logo.png" /></router-link>
         </div>
         <div class="nav">
-            <div class="menu-item" :class="{ 'active' : route.path.startsWith('/diary')}"><router-link to="/diary/home">금쪽일기</router-link></div>
-            <div class="menu-item" :class="{ 'active' : route.path.startsWith('/article')}"><router-link to="/article/list">꿀팁</router-link></div>
-            <div class="menu-item" :class="{ 'active' : route.path.startsWith('/survey')}"><router-link to="/survey">진단</router-link></div>
-            <div class="menu-item"><a href="#">주변병원</a></div>
+            <router-link class="menu-item" :class="{'active' : route.path.startsWith('/diary')}" to='/diary/home'>금쪽일기</router-link>
+            <router-link class="menu-item" :class="{'active' : route.path.startsWith('/article')}" to='/article/list'>꿀팁</router-link>
+            <router-link class="menu-item" :class="{'active' : route.path.startsWith('/survey')}" to='/survey'>진단</router-link>
+            <router-link class="menu-item" :class="{'active' : route.path.startsWith('/hospital')}" to='/hospital'>주변병원</router-link>
         </div>
     </div>
 </template>
@@ -32,7 +32,7 @@ const route = useRoute();
 <style scoped>
 a {
     text-decoration: none;
-    color: inherit;
+    /* color: inherit; */
 }
 
 a:hover {
