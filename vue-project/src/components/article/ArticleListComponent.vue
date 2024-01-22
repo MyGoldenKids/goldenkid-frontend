@@ -17,7 +17,7 @@
             </div>
             <div class="write">
                 <div class="write-box">
-                    <button>글쓰기</button>
+                    <router-link to="/article/write"><button>글쓰기</button></router-link>
                 </div>
             </div>
         </div>
@@ -87,6 +87,9 @@
 </template>
 
 <style scoped>
+a {
+    text-decoration-line: none;
+}
 .board-wrap {
     /* background-color: beige; */
     padding: 20px 0;
