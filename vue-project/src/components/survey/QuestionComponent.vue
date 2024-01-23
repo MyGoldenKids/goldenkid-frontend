@@ -21,7 +21,6 @@ const childAnswer = ref([]); // 아이 ADHD 검사 내용 저장
 const parentAnswer = ref([]); // 부모 depression 검사 내용 저장
 
 const category = ref(store.category); // 자가진단지 종류 추적
-let result = ref(); // 설문 점수를 내려주기 위한 변수
 
 // sumFunction 함수 선언 비동기로 호출되어 순차적인 합산이 가능하게 하였습니다.
 const sumFunction = async (a, b) => a + b;
@@ -41,8 +40,13 @@ const calculate = async (value) => {
         }
     }
     store.status = true;
-    result.value = sum;
-    await resultView(); // 모든 연산이 끝나고 결과 화면을 띄워줘야하기 때문에 비동기 처리
+    if (category.value === 0){
+        store.childScore = sum;
+    } else{
+        store.parentScore = sum;
+    }
+
+    await resultView();
 };
 
 // 검사 진행 완료되지 않았음을 체크하기 위한 함수
@@ -68,34 +72,33 @@ const isComplete = async () => {
 // 검사 결과를 기준에 따라 정해진 comment를 보여줄 수 있도록 처리한 함수
 const resultView = async () => {
     let comment = "";
-    const results = cutOff[category.value][category.value];
+    const results = cutOff[store.category][store.category];
 
-    if (category.value === 0) {
-        if (result.value < 40) {
+    if (store.category === 0) {
+        if (store.childScore < 40) {
             comment = results[0].result;
-        } else if (result.value < 60) {
+        } else if (store.childScore < 60) {
             comment = results[1].result;
-        } else if (result.value < 80) {
+        } else if (store.childScore < 80) {
             comment = results[2].result;
         } else {
             comment = results[3].result;
         }
 
-        store.childAnswer = comment;
+        store.childComment = comment;
     } else {
-        if (result.value < 5) {
+        if (store.parentScore < 5) {
             comment = results[0].result;
-        } else if (result.value < 10) {
+        } else if (store.parentScore < 10) {
             comment = results[1].result;
-        } else if (result.value < 15) {
+        } else if (store.parentScore < 15) {
             comment = results[2].result;
-        } else if (result.value < 20) {
+        } else if (store.parentScore < 20) {
             comment = results[3].result;
         } else {
             comment = results[4].result;
         }
-
-        store.parentAnswer = comment;
+        store.parentComment = comment;
     }
 };
 </script>

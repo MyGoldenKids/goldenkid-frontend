@@ -13,16 +13,17 @@ watch(() => store.category, (newValue) => {  // store.category 값이 업데이�
 const switchTab = (value) => {
     if (value !== store.category) {
         store.category = value; // value 값이 들어왔을 때 현재 category 값과 같지 않을 떄만 이벤트 발생
-        
+        store.$reset();
+
         // 자가진단 설문지를 이동해도 이전 설문지 결과는 다시 볼 수 있도록 설정
         if (store.category === 0) {
-            if (store.childComment === 0) {
+            if (store.childScore === -1) {
                 store.status = false;
             } else {
                 store.status = true;
             }
         } else {
-            if (store.parentComment === 0) {
+            if (store.parentScore === -1) {
                 store.status = false;
             } else {
                 store.status = true;
