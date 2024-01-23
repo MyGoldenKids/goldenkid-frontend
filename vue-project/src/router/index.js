@@ -5,17 +5,18 @@ import ArticleListView from "@/views/ArticleListView.vue";
 import ArticleDetailView from "@/views/ArticleDetailView.vue";
 import DiaryHomeView from "@/views/diary/DiaryHomeView.vue";
 import ArticleWriteView from "@/views/ArticleWriteView.vue";
+import SignupView from "@/views/member/MemberSignupView.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
             path: "/",
-            component: MainViewVue
+            component: MainViewVue,
         },
         {
             path: "/survey",
-            component: SurveyViewVue
+            component: SurveyViewVue,
         },
         {
             path: "/article",
@@ -40,9 +41,18 @@ const router = createRouter({
                 {
                     path: "home",
                     component: DiaryHomeView,
-                }
-            ]
-        }
+                },
+            ],
+        },
+        {
+            path: "/member",
+            children: [
+                {
+                    path: "signup",
+                    component: SignupView,
+                },
+            ],
+        },
     ],
 });
 
