@@ -40,9 +40,9 @@ const calculate = async (value) => {
         }
     }
     store.status = true;
-    if (category.value === 0){
+    if (category.value === 0) {
         store.childScore = sum;
-    } else{
+    } else {
         store.parentScore = sum;
     }
 
@@ -60,13 +60,14 @@ const isComplete = async () => {
         answer = parentAnswer.value;
         length = 9;
     }
-    if (answer.length !== length) {
-        // 설문 체크를 하지 않은 문항이 있다면 alert 창 띄우고 return
-        alert("선택하지 않은 문항이 있습니다.");
-        return;
-    } else {
-        await calculate(category.value); // 체크를 모두 진행한 후 함수를 호출하기 위해 비동기 처리
+
+    for (let idx = 0; idx < length; idx++) {
+        if (answer[idx] === undefined) {
+            alert("선택하지 않은 문항이 있습니다.");
+            return;
+        }
     }
+    await calculate(category.value); // 체크를 모두 진행한 후 함수를 호출하기 위해 비동기 처리
 };
 
 // 검사 결과를 기준에 따라 정해진 comment를 보여줄 수 있도록 처리한 함수
