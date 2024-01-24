@@ -6,10 +6,7 @@ import ArticleListComponent from "@/components/article/ArticleListComponent.vue"
 <template>
   <div class="article-wrap">
     <ArticleHeaderComponent></ArticleHeaderComponent>
-    <!-- 게시글 클릭 후 디테일 페이지 이동 -->
-    <router-link to="/article/detail">
-      <ArticleListComponent></ArticleListComponent>
-    </router-link>
+    <ArticleListComponent></ArticleListComponent>
   </div>
 </template>
 
