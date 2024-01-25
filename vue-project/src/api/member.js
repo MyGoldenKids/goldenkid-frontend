@@ -32,4 +32,9 @@ const signup = (data) => {
         });
 };
 
-export { hasInput, message, checkId, signup };
+// 로그인
+const login = (data, success, fail) => {
+    instance.post("member/login", data.value).then(success).catch(fail);
+};
+
+export { hasInput, message, checkId, signup, login };
