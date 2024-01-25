@@ -5,9 +5,8 @@ import { useRouter } from "vue-router";
 
 // 게시글 전체 리스트 조회
 const articles = ref(null);
-const articleList = async () => {
+const articleInfo = async () => {
   articles.value = await getArticleList();
-  // for문 돌려서 일일이 가공
   articles.value.forEach((article) => {
     article.formattedCreatedAt = formatCreatedAt(article.createdAt);
   });
@@ -29,7 +28,7 @@ const goDetail = (articleId) => {
   router.push(`/article/detail/${articleId}`);
 };
 
-onMounted(articleList);
+onMounted(articleInfo);
 </script>
 
 <template>
@@ -63,15 +62,18 @@ onMounted(articleList);
         </tr>
       </thead>
       <!-- 게시글 리스트 조회 시작 -->
-      <tbody
+      <tbody>
+        <tr
         v-for="article in articles"
         :key="article.id"
         @click="goDetail(article.id)"
-      >
-        <td>{{ article.articleId }}</td>
-        <td>{{ article.articleTitle }}</td>
-        <td>{{ article.memberId }}</td>
-        <td>{{ article.formattedCreatedAt }}</td>
+        class="cursor-pointer"
+        >
+          <td>{{ article.articleId }}</td>
+          <td>{{ article.articleTitle }}</td>
+          <td>{{ article.memberId }}</td>
+          <td>{{ article.formattedCreatedAt }}</td>
+        </tr>
       </tbody>
       <!-- 게시글 리스트 조회 끝 -->
     </table>
@@ -200,5 +202,9 @@ a {
 
 a:hover {
   font-weight: 700;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 </style>
