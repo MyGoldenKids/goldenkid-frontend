@@ -1,4 +1,32 @@
-<script setup></script>
+<script setup>
+import { ref, onMounted } from 'vue';
+import { getArticle } from '@/api/article'
+import { useRoute } from 'vue-router';
+
+const article = ref('')
+const route = useRoute()
+const articleId = route.params.id
+const formattedDate = ref('')
+const articleInfo = async () => {
+    const data = await getArticle(articleId)
+    article.value = data.data
+    formattedDate.value = formatCreatedAt(article.value.createdAt);
+}
+
+// 작성일 연-월-일 포매팅 할 함수
+const formatCreatedAt = (createdAt) => {
+  const date = new Date(createdAt);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+
+onMounted(
+    articleInfo,
+)
+</script>
 
 <template>
     <!-- ==============모든페이지 여기부터 바뀜===================== -->
@@ -6,7 +34,7 @@
     <div class="board-detail">
         <!-- 게시글 타이틀 -->
         <div class="board-title">
-            <h1>금쪽다이어리 작성하는 꿀팁 전수해드립니다.</h1>
+            <h1>{{ article.articleTitle }}</h1>
             <div class="title-sub">
                 <div class="title-sub-left">
                     <div class="left-item1">
@@ -14,11 +42,13 @@
                             src="@/assets/img/basic_profile.png"
                             alt="프로필기본이미지"
                         />
-                        <span>영소정</span>
+                        <!-- 추후 Id가 아닌 닉네임으로 바꿔야할 부분 -->
+                        <span>{{ article.memberId }}</span>
+                        <!-- ------------------------------------- -->
                     </div>
-                    <div class="left-item2">2024.01.16</div>
-                    <div class="left-item2">조회수 : 116</div>
-                    <div class="left-item2">추천수 : 29</div>
+                    <div class="left-item2">{{ formattedDate }}</div>
+                    <div class="left-item2">조회수 : {{ article.hit }}</div>
+                    <div class="left-item2">추천수 : {{ article.recommendCount }}</div>
                 </div>
                 <div class="title-sub-right">
                     <div class="right-item">
@@ -30,18 +60,7 @@
 
         <!-- 게시글 내용 -->
         <div class="board-content">
-            <p>
-                한 가족이 함께 공원에 나가서 피크닉을 즐기고 있었습니다.
-                아이들은 잔디밭에서 놀이를 하고, 부모님은 고기를 구워 맛있는
-                점심을 준비했습니다. 햇빛은 따뜻하게 미소 짓고 있었고, 새들의
-                노래가 시원한 바람과 어우러져 피크닉의 날은 완벽한
-                휴식이었습니다. 한적한 산골 마을에 사는 사람들은 서로 친밀하게
-                지내며 평화로운 삶을 즐기고 있습니다. 이 마을은 자연의
-                아름다움과 조용한 분위기로 둘러싸여 있어 일상의 스트레스로부터
-                벗어나기에 안성맞춤입니다. 아침에는 새소리가 귀를 감동시키고,
-                저녁에는 별들이 하늘에 빛나며 마을 사람들은 마음껏 대화하며
-                평화롭게 지낼 수 있습니다.
-            </p>
+            <p>{{ article.articleContent }}</p>
         </div>
 
         <!-- 게시글 댓글 -->
@@ -148,6 +167,7 @@
     align-items: center;
 }
 .left-item2 {
+    /* width: 10rem; */
     font-size:0.8rem;
     text-align: center;
     border-right: 2px solid #AD9478;
