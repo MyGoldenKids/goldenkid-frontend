@@ -6,11 +6,14 @@ import ArticleDetailView from "@/views/ArticleDetailView.vue";
 import DiaryHomeView from "@/views/diary/DiaryHomeView.vue";
 import ArticleWriteView from "@/views/ArticleWriteView.vue";
 import SignupView from "@/views/member/MemberSignupView.vue";
+import LoginView from "@/views/member/MemberLoginView.vue";
+import MyPageView from "@/views/member/MemberMyPageView.vue"
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
+            name: "Main",
             path: "/",
             component: MainViewVue,
         },
@@ -51,6 +54,14 @@ const router = createRouter({
                     path: "signup",
                     component: SignupView,
                 },
+                {
+                    path: "login",
+                    component: LoginView,
+                },
+                {
+                    path: "mypage",
+                    component: MyPageView
+                }
             ],
         },
     ],
