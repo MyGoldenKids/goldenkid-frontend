@@ -12,4 +12,16 @@ const getDiaryList = async (memberId) => {
         });
 };
 
-export { getDiaryList };
+// 일기 상세 조회
+const getDiaryDetail = async (diaryId) => {
+    await instance
+        .get("diary/detail/" + diaryId)
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+};
+
+export { getDiaryList, getDiaryDetail };
