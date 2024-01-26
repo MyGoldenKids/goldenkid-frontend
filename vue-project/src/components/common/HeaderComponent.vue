@@ -16,12 +16,6 @@ const logout = () => {
 <template>
     <div class="header">
         <div class="member">
-            <!-- <div v-for="menu in menuList" :key="menu.name">
-                <div v-if="menu.show">
-                    {{ menu.name }}
-                </div>
-            </div> -->
-            <!-- 로그인 했을 때 -->
             <div v-if="store.isLoggedIn" class="member-sub">
                 <div>
                     <a href="#">MY PAGE</a>
