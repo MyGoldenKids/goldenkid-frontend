@@ -21,10 +21,10 @@ function submitForm() {
             (response) => {
                 store.isLoggedIn = true; // 로그인 여부 store에 저장
                 store.memberInfo = response.data.data; // 로그인한 사용자 정보 store에 저장
-                sessionStorage.setItem("memberNo", response.data.data.memberNo);
+                sessionStorage.setItem("memberId", response.data.data.memberId);
                 sessionStorage.setItem("nickname", response.data.data.nickname);
                 sessionStorage.setItem("isLoggedIn", true);
-                router.push("/"); // 로그인 성공 시 메인 페이지로 이동
+                router.push("/");
             },
             () => {
                 alert("ID 또는 비밀번호가 일치하지 않습니다.");

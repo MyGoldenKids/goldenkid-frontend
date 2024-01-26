@@ -3,19 +3,24 @@ import { useRoute } from "vue-router";
 import { useMemberStore } from "@/stores/member-store";
 import router from "@/router";
 const route = useRoute();
-
 const store = useMemberStore();
 
 const logout = () => {
-    store.isLoggedIn = false;
-    sessionStorage.clear(); // session 저장소 clear
-    router.push("/");
+    store.isLoggedIn = false; // 로그인 여부 false로 갱신
+    store.memberInfo = ''; // 로그인한 사용자 정보 초기화
+    sessionStorage.clear(); // 세션 
+    router.push("/"); // 로그아웃 후 메인 페이지로 이동
 };
 </script>
 
 <template>
     <div class="header">
         <div class="member">
+            <!-- <div v-for="menu in menuList" :key="menu.name">
+                <div v-if="menu.show">
+                    {{ menu.name }}
+                </div>
+            </div> -->
             <!-- 로그인 했을 때 -->
             <div v-if="store.isLoggedIn" class="member-sub">
                 <div>
