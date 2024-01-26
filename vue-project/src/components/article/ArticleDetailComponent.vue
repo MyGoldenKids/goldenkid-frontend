@@ -167,7 +167,6 @@ onMounted(
     align-items: center;
 }
 .left-item2 {
-    /* width: 10rem; */
     font-size:0.8rem;
     text-align: center;
     border-right: 2px solid #AD9478;
