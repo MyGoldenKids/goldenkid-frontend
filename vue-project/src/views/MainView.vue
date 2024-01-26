@@ -94,7 +94,7 @@ button:focus, button:hover {
 .banner-main-text > div {
     color: #FFF8F2;
     display: inline-block;
-    border-bottom: 5px solid #665031;
+    border-bottom: 0.313rem solid #665031;
     padding-bottom: 0.625rem;
 }
 
