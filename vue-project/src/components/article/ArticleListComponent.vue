@@ -4,13 +4,12 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 // 게시글 전체 리스트 조회
-const articles = ref(null);
+const articleList = ref('');
 const articleInfo = async () => {
-  articles.value = await getArticleList();
-  articles.value.forEach((article) => {
+  articleList.value = await getArticleList();
+  articleList.value.forEach((article) => {
     article.formattedCreatedAt = formatCreatedAt(article.createdAt);
   });
-  console.log(articles.value);
 };
 
 // 작성일 연-월-일 포매팅 할 함수
@@ -64,9 +63,9 @@ onMounted(articleInfo);
       <!-- 게시글 리스트 조회 시작 -->
       <tbody>
         <tr
-        v-for="article in articles"
+        v-for="article in articleList"
         :key="article.id"
-        @click="goDetail(article.id)"
+        @click="goDetail(article.articleId)"
         class="cursor-pointer"
         >
           <td>{{ article.articleId }}</td>
