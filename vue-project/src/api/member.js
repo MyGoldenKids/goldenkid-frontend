@@ -45,4 +45,26 @@ const getMemberDetail = (member_no, success, fail) => {
         .catch(fail);
 };
 
-export { hasInput, message, checkId, signup, login, getMemberDetail };
+// 회원정보 수정
+const modifyMemberDetail = (member, success, fail) => {
+    instance.put("member/modify", member).then(success).catch(fail);
+};
+
+// 회원 탈퇴
+const deleteMember = (member_no, success, fail) => {
+    instance
+        .put("member/signout/" + member_no)
+        .then(success)
+        .catch(fail);
+};
+
+export {
+    hasInput,
+    message,
+    checkId,
+    signup,
+    login,
+    getMemberDetail,
+    modifyMemberDetail,
+    deleteMember,
+};
