@@ -7,6 +7,7 @@ import DiaryHomeView from "@/views/diary/DiaryHomeView.vue";
 import ArticleWriteView from "@/views/ArticleWriteView.vue";
 import SignupView from "@/views/member/MemberSignupView.vue";
 import LoginView from "@/views/member/MemberLoginView.vue";
+import MyPageView from "@/views/member/MemberMyPageView.vue"
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -57,6 +58,10 @@ const router = createRouter({
                     path: "login",
                     component: LoginView,
                 },
+                {
+                    path: "mypage",
+                    component: MyPageView
+                }
             ],
         },
     ],

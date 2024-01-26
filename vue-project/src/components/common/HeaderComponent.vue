@@ -1,4 +1,4 @@
-<script setup>
+r<script setup>
 import { useRoute } from "vue-router";
 import { useMemberStore } from "@/stores/member-store";
 import router from "@/router";
@@ -18,7 +18,7 @@ const logout = () => {
         <div class="member">
             <div v-if="store.isLoggedIn" class="member-sub">
                 <div>
-                    <a href="#">MY PAGE</a>
+                    <router-link to="/member/mypage">MY PAGE</router-link>
                 </div>
                 <div>
                     <a href="#" @click="logout">LOGOUT</a>

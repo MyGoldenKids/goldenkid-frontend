@@ -37,4 +37,12 @@ const login = (data, success, fail) => {
     instance.post("member/login", data.value).then(success).catch(fail);
 };
 
-export { hasInput, message, checkId, signup, login };
+// 회원정보 조회
+const getMemberDetail = (member_no, success, fail) => {
+    instance
+        .get("member/detail/" + member_no)
+        .then(success)
+        .catch(fail);
+};
+
+export { hasInput, message, checkId, signup, login, getMemberDetail };
