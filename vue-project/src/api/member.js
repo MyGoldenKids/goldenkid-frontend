@@ -9,7 +9,7 @@ const checkId = (member_id) => {
     instance
         .post("member/idcheck/" + member_id)
         .then((response) => {
-            if (response.data.data === 1) {
+            if (response.data.data === 0) {
                 message.value = "중복된 아이디가 존재합니다!";
             } else {
                 message.value = "사용가능한 아이디입니다.";
