@@ -1,19 +1,105 @@
+<script setup>
+// ArticleWriteComponent.vue
+import { instance } from "@/api/axios";
+import { fileInstance } from "@/api/fileaxios";
+import { ref, onMounted } from "vue";
+import { onBeforeRouteLeave, useRouter } from "vue-router";
+
+// 게시글 작성
+// Request Body
+const memberId = ref("");
+const fileListId = ref("");
+const articleTitle = ref("");
+const articleContent = ref("");
+
+// 게시판 작성 POST 요청
+const createArticle = async () => {
+  try {
+    console.log("post 요청 시작");
+    const response = await instance.post("article/write", {
+      memberId: 29,
+      fileListId: 1,
+      articleTitle: articleTitle.value,
+      articleContent: articleContent.value,
+    });
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// 파일 관련
+const fileList = ref([]);
+
+// 첨부한 파일의 이름으로 넣어주는 코드
+const handleFileChange = (event) => {
+  // console.log(event.target.files)에 객체로 들어감
+  fileList.value = Array.from(event.target.files);
+  console.log(fileList.value);
+};
+
+const createFileList = async () => {
+  try {
+    const formData = new FormData();
+
+    // 파일 배열을 FormData에 추가
+    for (const file of fileList.value) {
+      formData.append("files", file);
+    }
+    console.log("파일 리스트 줍시다");
+    const response = await fileInstance.post("file/upload/1", {
+      files: fileList.value,
+    });
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// 뒤로가기 이벤트 발생 시 alert 기능
+let isCanceling = false;
+
+onBeforeRouteLeave((to, from) => {
+  if (isCanceling === false) {
+    const answer = window.confirm("작성 중이던 게시글은 저장되지 않습니다.");
+    if (answer === false) {
+      return false;
+    }
+  }
+});
+
+// 취소버튼
+const router = useRouter();
+const goArticleList = () => {
+  const answer = window.confirm(
+    "글 작성을 취소하시겠습니까?\n작성중이던 게시글은 저장되지 않습니다."
+  );
+  if (answer) {
+    isCanceling = true;
+    return router.push("article/list");
+  }
+};
+</script>
+
 <template>
   <div>
-    <form action="submit" name="article" class="article">
+    <form @submit.prevent="createArticle" class="article">
       <!-- 게시글 제목 작성 -->
       <div class="article-title">
-        <input type="text" placeholder="이 곳에 제목을 입력해주세요." />
+        <input
+          type="text"
+          placeholder="이 곳에 제목을 입력해주세요."
+          v-model.trim="articleTitle"
+        />
       </div>
 
       <!-- 게시글 내용 작성 -->
       <textarea
-        style="resize: none"
-        name="content"
-        id="content"
         cols="30"
         rows="15"
         placeholder="이 곳에 내용을 입력해주세요."
+        v-model.trim="articleContent"
       ></textarea>
 
       <!-- 첨부파일 -->
@@ -25,21 +111,35 @@
         </div>
 
         <!-- 첨부파일 박스 -->
-        <div class="upload-box">
+        <form
+          class="upload-box"
+          @submit.prevent="upLoadFile"
+          enctype="multipart/form-data"
+        >
           <label for="file">
             <img src="../../assets/img/AddNew.png" alt="add-img-err" />
-            <span class="attach-content">파일찾기</span>
+            <span class="attach-content">파일첨부</span>
           </label>
           <!-- 파일첨부 버튼 -->
-          <input type="file" id="file" />
+          <input
+            type="file"
+            id="file"
+            name="files"
+            @change="handleFileChange"
+            multiple
+          />
+        </form>
+        <div v-for="(file, index) in fileList" :key="index" class="fileList">
+          {{ file.name }}
         </div>
+        <button @click="createFileList">파일첨부실험버튼</button>
       </div>
 
       <!-- 취소&등록 bar -->
       <div class="write-control-bar">
         <!-- 게시글 등록 버튼 -->
         <div class="write-control-btn">
-          <button type="submit">취소</button>
+          <button type="submit" @click="goArticleList">취소</button>
           <button type="submit">등록</button>
         </div>
       </div>
@@ -47,10 +147,7 @@
   </div>
 </template>
 
-<script setup></script>
-
 <style scoped>
-
 input {
   color: #665031;
   font-family: "BMDOHYEON";
@@ -167,6 +264,10 @@ textarea {
 
 .attach-content {
   color: #ad9478;
+}
+
+.fileList {
+  padding-left: 2.5rem;
 }
 
 /* 취소&등록 bar */
