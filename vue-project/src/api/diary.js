@@ -24,4 +24,16 @@ const getDiaryDetail = async (diaryId) => {
         });
 };
 
-export { getDiaryList, getDiaryDetail };
+// 일기 생성
+const createDiary = async (data) => {
+    await instance
+        .post("diary/create", data.value)
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+};
+
+export { getDiaryList, getDiaryDetail, createDiary };
