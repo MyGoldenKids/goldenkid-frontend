@@ -36,4 +36,16 @@ const createDiary = async (data) => {
         });
 };
 
-export { getDiaryList, getDiaryDetail, createDiary };
+// 일기 삭제
+const deleteDiary = async(diaryId) => {
+    await instance
+    .delete("diary/delete/" + diaryId)
+    .then((response) => {
+        console.log(response.data);
+    })
+    .catch((error) => {
+        console.log(error);
+    })
+}
+
+export { getDiaryList, getDiaryDetail, createDiary, deleteDiary };
