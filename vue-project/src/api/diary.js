@@ -36,16 +36,28 @@ const createDiary = async (data) => {
         });
 };
 
-// 일기 삭제
-const deleteDiary = async(diaryId) => {
+// 일기 제출
+const submitDiary = async (data) => {
     await instance
-    .delete("diary/delete/" + diaryId)
-    .then((response) => {
-        console.log(response.data);
-    })
-    .catch((error) => {
-        console.log(error);
-    })
-}
+        .put("diary/submit", data.value)
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+};
 
-export { getDiaryList, getDiaryDetail, createDiary, deleteDiary };
+// 일기 삭제
+const deleteDiary = async (diaryId) => {
+    await instance
+        .delete("diary/delete/" + diaryId)
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+};
+
+export { getDiaryList, getDiaryDetail, createDiary, submitDiary, deleteDiary };
