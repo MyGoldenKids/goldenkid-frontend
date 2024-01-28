@@ -60,4 +60,23 @@ const deleteDiary = async (diaryId) => {
         });
 };
 
-export { getDiaryList, getDiaryDetail, createDiary, submitDiary, deleteDiary };
+// 일기 수정 및 임시 저장
+const updateDiary = async (diaryId, data) => {
+    await instance
+        .put("diary/update/" + diaryId, data.value)
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+};
+
+export {
+    getDiaryList,
+    getDiaryDetail,
+    createDiary,
+    submitDiary,
+    deleteDiary,
+    updateDiary,
+};
