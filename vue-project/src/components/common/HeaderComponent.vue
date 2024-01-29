@@ -1,30 +1,77 @@
+r
 <script setup>
-import { useRoute } from 'vue-router';
-
+import { useRoute } from "vue-router";
+import { useMemberStore } from "@/stores/member-store";
+import router from "@/router";
 const route = useRoute();
+const store = useMemberStore();
+
+const logout = () => {
+    store.isLoggedIn = false; // 로그인 여부 false로 갱신
+    store.memberInfo = ""; // 로그인한 사용자 정보 초기화
+    sessionStorage.clear(); // 세션
+    router.push("/"); // 로그아웃 후 메인 페이지로 이동
+};
 </script>
 
 <template>
     <div class="header">
         <div class="member">
-                <!-- 로그인 했을 때 -->
-                <div class="member-sub">
-                    <div>
-                        <a href="#">MY PAGE</a> 
-                    </div>
-                    <div>
-                        <a href="#">LOGOUT</a>
-                    </div>
+            <div v-if="store.isLoggedIn" class="member-sub">
+                <div>
+                    <router-link to="/member/mypage">MY PAGE</router-link>
+                </div>
+                <div>
+                    <a href="#" @click="logout">LOGOUT</a>
                 </div>
             </div>
+            <div v-else class="member-sub">
+                <div>
+                    <router-link
+                        :class="{ active: route.path.startsWith('/member') }"
+                        to="/member/login"
+                        >LOGIN</router-link
+                    >
+                </div>
+                <div>
+                    <router-link
+                        :class="{ active: route.path.startsWith('/member') }"
+                        to="/member/signup"
+                        >SIGNUP</router-link
+                    >
+                </div>
+            </div>
+        </div>
         <div class="logo">
-            <router-link to="/"><img src="@/assets/img/logo.png" /></router-link>
+            <router-link to="/"
+                ><img src="@/assets/img/logo.png"
+            /></router-link>
         </div>
         <div class="nav">
-            <router-link class="menu-item" :class="{'active' : route.path.startsWith('/diary')}" to='/diary/home'>금쪽일기</router-link>
-            <router-link class="menu-item" :class="{'active' : route.path.startsWith('/article')}" to='/article/list'>꿀팁</router-link>
-            <router-link class="menu-item" :class="{'active' : route.path.startsWith('/survey')}" to='/survey'>진단</router-link>
-            <router-link class="menu-item" :class="{'active' : route.path.startsWith('/hospital')}" to='/hospital'>주변병원</router-link>
+            <router-link
+                class="menu-item"
+                :class="{ active: route.path.startsWith('/jira') }"
+                to="/hospital"
+                >JIRA</router-link
+            >
+            <router-link
+                class="menu-item"
+                :class="{ active: route.path.startsWith('/diary') }"
+                to="/diary/home"
+                >금쪽일기</router-link
+            >
+            <router-link
+                class="menu-item"
+                :class="{ active: route.path.startsWith('/survey') }"
+                to="/survey"
+                >진단</router-link
+            >
+            <router-link
+                class="menu-item"
+                :class="{ active: route.path.startsWith('/article') }"
+                to="/article/list"
+                >꿀팁</router-link
+            >
         </div>
     </div>
 </template>
@@ -74,7 +121,7 @@ a:hover {
     background-image: url(../../assets/img/sticker3.png);
 }
 
-.menu-item.active{
+.menu-item.active {
     background-image: url(../../assets/img/sticker3.png);
 }
 
@@ -87,16 +134,15 @@ a:hover {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.313rem;
 }
-.member-sub div a{
+.member-sub div a {
     padding: 0.4rem 0.625rem;
-    border: 4px dotted #AD9478;
+    border: 4px dotted #ad9478;
     text-align: center;
     border-radius: 10px;
 }
 .member-sub div a:hover {
-    background-color: #AD9478;
+    background-color: #ad9478;
     color: #fff;
     transition-duration: 0.5s;
 }
-
 </style>
