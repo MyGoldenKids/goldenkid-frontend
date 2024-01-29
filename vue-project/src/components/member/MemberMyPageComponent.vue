@@ -35,6 +35,9 @@ function submitForm() {
         memberDetail,
         () => {
             console.log("회원정보 수정 성공");
+            // 회원정보 수정 시 수정한 닉네임으로 업데이트
+            sessionStorage.setItem("nickname", memberDetail.value.nickname);
+            store.memberInfo.nickname = memberDetail.value.nickname;
         },
         () => {
             console.log("회원정보 수정 실패");
