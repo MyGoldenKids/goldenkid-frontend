@@ -10,6 +10,15 @@ import LoginView from "@/views/member/MemberLoginView.vue";
 import MyPageView from "@/views/member/MemberMyPageView.vue";
 import DiaryListView from "@/views/diary/DiaryListView.vue";
 
+const requireLogin = (to, from, next) => {
+    if (!sessionStorage.getItem("isLoggedIn")) { // 로그인하지 않은 경우...
+        alert("로그인 후 이용가능합니다.");
+        next("/member/login"); // 로그인 페이지로 이동
+    } else {
+        next();
+    }
+};
+
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -32,10 +41,12 @@ const router = createRouter({
                 {
                     path: "detail/:id",
                     component: ArticleDetailView,
+                    beforeEnter: requireLogin,
                 },
                 {
                     path: "write",
                     component: ArticleWriteView,
+                    beforeEnter: requireLogin,
                 },
             ],
         },
@@ -49,6 +60,7 @@ const router = createRouter({
                 {
                     path: "list",
                     component: DiaryListView,
+                    beforeEnter: requireLogin,
                 },
             ],
         },
@@ -69,6 +81,7 @@ const router = createRouter({
                     name: "mypage",
                     path: "mypage",
                     component: MyPageView,
+                    beforeEnter: requireLogin,
                 },
             ],
         },
