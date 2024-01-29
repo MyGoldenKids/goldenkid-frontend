@@ -47,7 +47,7 @@ const getMemberDetail = (member_no, success, fail) => {
 
 // 회원정보 수정
 const modifyMemberDetail = (member, success, fail) => {
-    instance.put("member/modify", member).then(success).catch(fail);
+    instance.put("member/modify", member.value).then(success).catch(fail);
 };
 
 // 회원 탈퇴
