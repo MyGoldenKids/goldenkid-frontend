@@ -1,5 +1,5 @@
 import { instance } from "@/api/axios";
-import { ref } from "vue";
+import { fileInstance } from "./fileaxios";
 
 // 전체 게시글 조회
 const getArticleList = async () => {
@@ -22,15 +22,22 @@ const getArticle = async (articleId) => {
 };
 
 // 게시글 삭제
-
 const deleteArticles = async (articleId) => {
   try {
-    // put으로 바꿔야함
     await instance.put(`article/delete/${articleId}`);
-    console.log('성공!')
   } catch (error) {
-    console.error("Post delete ERROR!", error);
+    console.error("POST DELETE ERROR!", error);
   }
 };
 
-export { getArticleList, getArticle, deleteArticles };
+// 파일 불러오기
+const getFileInfo = async (fileListId) => {
+    try {
+        const response = await fileInstance.get(`/file/detail/all/${fileListId}`);
+        return response.data
+    } catch (error) {
+        console.log('FILE LIST GET ERROR!', error)
+    }
+}
+
+export { getArticleList, getArticle, deleteArticles, getFileInfo };

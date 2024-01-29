@@ -3,13 +3,15 @@ import { instance } from "@/api/axios";
 import { fileInstance } from "@/api/fileaxios";
 import { ref } from "vue";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
+import { useMemberStore } from "@/stores/member-store";
 
 // 게시글 작성
-// const memberNo = sessionStorage.getItem("memberNo");
-// const fileListId = ref("");
+const store = useMemberStore();
+const memberNo = store.memberInfo.memberNo;
+const fileListId = ref("");
 const articleTitle = ref("");
 const articleContent = ref("");
-let isCanceling = false;
+let isCanceling = false; //onBeforeRouteLeave, 게시글 등록, 게시글 등록 취소 동시 사용시에 필요합니다.
 
 // 게시판 작성 POST 요청
 const createArticle = async () => {
@@ -19,11 +21,11 @@ const createArticle = async () => {
       return
     }
     if (fileList.value.length >= 1) {
-      console.log('파일리스트아이디', createFileList())
+      await createFileList()
     }
     await instance.post("article/write", {
-      memberId: 29,
-      fileListId: 1,
+      memberId: memberNo,
+      fileListId: fileListId.value,
       articleTitle: articleTitle.value,
       articleContent: articleContent.value,
     });
@@ -35,10 +37,8 @@ const createArticle = async () => {
   }
 };
 
-// 파일 관련
-const fileList = ref([]);
-
 // 첨부한 파일의 이름으로 넣어주는 코드
+const fileList = ref([]);
 const handleFileChange = (event) => {
   fileList.value = Array.from(event.target.files);
 };
@@ -52,7 +52,13 @@ const createFileList = async () => {
       formData.append("files", file);
     }
     isCanceling = true;
-    return response = await fileInstance.post(`file/upload/${memberId}`, formData);
+    const response = await fileInstance.post(`file/upload/${memberNo}`, formData);
+    // fileListId 추출
+    if (response.status === 200) {
+      fileListId.value = response.data.data;
+    } else {
+      console.log('파일 업로드 실패')
+    }
   } catch (error) {
     console.log(error);
   }
