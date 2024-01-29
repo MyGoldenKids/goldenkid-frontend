@@ -1,4 +1,5 @@
-r<script setup>
+r
+<script setup>
 import { useRoute } from "vue-router";
 import { useMemberStore } from "@/stores/member-store";
 import router from "@/router";
@@ -7,8 +8,8 @@ const store = useMemberStore();
 
 const logout = () => {
     store.isLoggedIn = false; // 로그인 여부 false로 갱신
-    store.memberInfo = ''; // 로그인한 사용자 정보 초기화
-    sessionStorage.clear(); // 세션 
+    store.memberInfo = ""; // 로그인한 사용자 정보 초기화
+    sessionStorage.clear(); // 세션
     router.push("/"); // 로그아웃 후 메인 페이지로 이동
 };
 </script>
@@ -49,15 +50,15 @@ const logout = () => {
         <div class="nav">
             <router-link
                 class="menu-item"
-                :class="{ active: route.path.startsWith('/diary') }"
-                to="/diary/home"
-                >금쪽일기</router-link
+                :class="{ active: route.path.startsWith('/jira') }"
+                to="/hospital"
+                >JIRA</router-link
             >
             <router-link
                 class="menu-item"
-                :class="{ active: route.path.startsWith('/article') }"
-                to="/article/list"
-                >꿀팁</router-link
+                :class="{ active: route.path.startsWith('/diary') }"
+                to="/diary/home"
+                >금쪽일기</router-link
             >
             <router-link
                 class="menu-item"
@@ -67,9 +68,9 @@ const logout = () => {
             >
             <router-link
                 class="menu-item"
-                :class="{ active: route.path.startsWith('/hospital') }"
-                to="/hospital"
-                >주변병원</router-link
+                :class="{ active: route.path.startsWith('/article') }"
+                to="/article/list"
+                >꿀팁</router-link
             >
         </div>
     </div>
