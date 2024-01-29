@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import MainViewVue from "@/views/MainView.vue";
 import SurveyViewVue from "@/views/survey/SurveyView.vue";
-import ArticleListView from "@/views/ArticleListView.vue";
-import ArticleDetailView from "@/views/ArticleDetailView.vue";
+import ArticleListView from "@/views/article/ArticleListView.vue";
+import ArticleDetailView from "@/views/article/ArticleDetailView.vue";
 import DiaryHomeView from "@/views/diary/DiaryHomeView.vue";
-import ArticleWriteView from "@/views/ArticleWriteView.vue";
+import ArticleWriteView from "@/views/article/ArticleWriteView.vue";
 import SignupView from "@/views/member/MemberSignupView.vue";
 import LoginView from "@/views/member/MemberLoginView.vue";
 import MyPageView from "@/views/member/MemberMyPageView.vue"
