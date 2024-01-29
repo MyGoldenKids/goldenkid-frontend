@@ -50,40 +50,29 @@ const route = useRouter();
                     <span class="icon-text">일기모음</span>
                 </router-link>
             </li>
-            <li>
-                <router-link to="/diary/extract">
-                    <img
-                        src="@/assets/img/analyze.png"
-                        alt="일기추출"
-                        class="icon"
-                        :class="{
-                            active:
-                                route.currentRoute.value.path ===
-                                '/diary/extract',
-                        }"
-                    />
-                    <span class="icon-text">일기추출</span>
-                </router-link>
-            </li>
         </ul>
     </div>
 </template>
 
-<style scoped>
+<style>
 .diary-nav {
     border-right: 3px dashed #ad9478;
-    padding: 2.5rem 1.25rem 0 0;
+    padding: 1.2rem 0.625rem 0 0;
     box-sizing: border-box;
 }
 .diary-nav ul li {
     padding: 0.625rem 0;
 }
 .icon {
-    border: 2px solid #ad9478;
+    border: 3px solid #ad9478;
     border-radius: 3.125rem;
     padding: 0.313rem;
     display: block;
     margin: 0 auto;
+}
+.diary-nav  ul  li  span {
+    display: inline-block;
+    margin-top: 0.5rem;
 }
 .icon:hover,
 .icon.active {
@@ -93,7 +82,6 @@ const route = useRouter();
 .icon-text {
     font-size: 0.813rem;
 }
-
 a {
     text-decoration-line: none;
 }
