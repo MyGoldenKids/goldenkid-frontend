@@ -61,7 +61,7 @@
 .title {
     padding-bottom: 0.313rem;
     padding-left: 0.313rem;
-    border-bottom: 5px solid #89B9AD;
+    border-bottom: 0.313rem solid #89B9AD;
     font-size: 3rem;
     font-weight: 600;
 }
@@ -100,15 +100,16 @@
 
 /* 다이어리 내용 */
 .diary-detail {
-    height: 500px;
+    height: 31.25rem;
     overflow-y: scroll;
-    margin-top: 30px;
+    margin-top: 1.875rem;
 }
 
 .diary-img {
     background-color: chocolate;
     margin: 0 1.2rem 1.2rem;
-    width: 500px;
+    /* 일기상세에서 보여줄 이미지 크기 정해야함 (임시) */
+    width: 500px; 
     height: 300px;
 }
 .diary-text {
@@ -121,8 +122,7 @@
 /* 다이어리 오른쪽 부분 */
 .content-right {
     text-align: left;
-    padding : 0.5rem;
-    padding : 1.2rem;
+    padding : 1.2rem 0 1.2rem 1.2rem;
     box-sizing: border-box;
 }
 
@@ -134,18 +134,22 @@
 }
 
 .list-title a{
-    border: 3px solid #89B9AD;
+    border: 0.2rem solid #89B9AD;
     background-color: initial;
     display: grid;
     border-radius: 1.2rem;
     grid-template-columns: auto auto 1fr;
     padding: 0.625rem 1rem;
     margin: 1rem 0;
+    align-items: center;
 }
-
+.list-title span {
+    padding-right: 0.625rem;
+}
 .list-title span:last-child {
     justify-self: end;
     font-size: 0.8rem;
+    padding-right: 0;
 }
 .list-title a:hover {
     background-color: #89B9AD;
