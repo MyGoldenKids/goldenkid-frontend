@@ -1,14 +1,12 @@
 <script setup>
-// ArticleWriteComponent.vue
 import { instance } from "@/api/axios";
 import { fileInstance } from "@/api/fileaxios";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
 
 // 게시글 작성
-// Request Body
-const memberId = ref("");
-const fileListId = ref("");
+// const memberNo = sessionStorage.getItem("memberNo");
+// const fileListId = ref("");
 const articleTitle = ref("");
 const articleContent = ref("");
 let isCanceling = false;
@@ -16,13 +14,22 @@ let isCanceling = false;
 // 게시판 작성 POST 요청
 const createArticle = async () => {
   try {
-    const response = await instance.post("article/write", {
+    if (articleTitle.value.length == 0 || articleContent.value.length == 0) {
+      window.alert('게시글의 제목/내용 이 없습니다.')
+      return
+    }
+    if (fileList.value.length >= 1) {
+      console.log('파일리스트아이디', createFileList())
+    }
+    await instance.post("article/write", {
       memberId: 29,
       fileListId: 1,
       articleTitle: articleTitle.value,
       articleContent: articleContent.value,
     });
-    return response;
+    // 첨부파일이 없을 경우 에러 뜨지 않게 하는 코드
+    isCanceling = true;
+    router.push('list');
   } catch (error) {
     console.log(error);
   }
@@ -44,11 +51,8 @@ const createFileList = async () => {
     for (const file of fileList.value) {
       formData.append("files", file);
     }
-    const response = await fileInstance.post("file/upload/29", formData);
     isCanceling = true;
-    if (response) {
-      return response, router.push('list');
-    }
+    return response = await fileInstance.post(`file/upload/${memberId}`, formData);
   } catch (error) {
     console.log(error);
   }
@@ -72,9 +76,10 @@ const goArticleList = () => {
   );
   if (answer) {
     isCanceling = true;
-    return router.push("article/list");
+    return router.push("/list");
   }
 };
+
 </script>
 
 <template>
@@ -134,7 +139,7 @@ const goArticleList = () => {
         <!-- 게시글 등록 버튼 -->
         <div class="write-control-btn">
           <button type="submit" @click="goArticleList">취소</button>
-          <button type="submit" @click="createFileList">등록</button>
+          <button type="submit">등록</button>
         </div>
       </div>
     </form>
@@ -187,6 +192,10 @@ textarea {
   color: #665031;
 }
 
+.article-title input:focus::placeholder {
+  color:transparent;
+}
+
 .article textarea {
   margin: 1rem 0;
   font-size: 1.813rem;
@@ -201,6 +210,10 @@ textarea {
 
 .article textarea::placeholder {
   color: #ad9478;
+}
+
+.article textarea:focus::placeholder {
+  color: transparent;
 }
 
 /* 첨부파일 커스텀 */
