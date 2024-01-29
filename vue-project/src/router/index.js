@@ -68,14 +68,17 @@ const router = createRouter({
             path: "/member",
             children: [
                 {
+                    name: "signup",
                     path: "signup",
                     component: SignupView,
                 },
                 {
+                    name: "login",
                     path: "login",
                     component: LoginView,
                 },
                 {
+                    name: "mypage",
                     path: "mypage",
                     component: MyPageView,
                     beforeEnter: requireLogin,
