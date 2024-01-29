@@ -7,7 +7,7 @@ import DiaryHomeView from "@/views/diary/DiaryHomeView.vue";
 import ArticleWriteView from "@/views/article/ArticleWriteView.vue";
 import SignupView from "@/views/member/MemberSignupView.vue";
 import LoginView from "@/views/member/MemberLoginView.vue";
-import MyPageView from "@/views/member/MemberMyPageView.vue"
+import MyPageView from "@/views/member/MemberMyPageView.vue";
 import DiaryListView from "@/views/diary/DiaryListView.vue";
 
 const router = createRouter({
@@ -56,17 +56,20 @@ const router = createRouter({
             path: "/member",
             children: [
                 {
+                    name: "signup",
                     path: "signup",
                     component: SignupView,
                 },
                 {
+                    name: "login",
                     path: "login",
                     component: LoginView,
                 },
                 {
+                    name: "mypage",
                     path: "mypage",
-                    component: MyPageView
-                }
+                    component: MyPageView,
+                },
             ],
         },
     ],
