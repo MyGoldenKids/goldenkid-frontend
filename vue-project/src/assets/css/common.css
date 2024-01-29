@@ -73,11 +73,15 @@ body{
 .vc-container .vc-weekday-7 {
 	color: #6366f1;
 }
+/* button 포커스, 마우스오버 */
+button:focus, button:hover{
+    cursor: pointer;
+}
 
 /* 스크롤 디자인 */
 /* 스크롤바 전체의 너비 설정 */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 0.625rem;
 }
 /* 스크롤바 트랙 (바탕) 부분 스타일링 */
 ::-webkit-scrollbar-track {

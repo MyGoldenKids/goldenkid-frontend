@@ -54,10 +54,6 @@ const fetchData = async () => {
 </template>
 
 <style scoped>
-button:focus, button:hover {
-    cursor: pointer;
-}
-
 /* ----------배너----------- */
 .banner-wrap {
     display: grid;
