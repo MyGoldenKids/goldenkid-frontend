@@ -9,6 +9,7 @@ import SignupView from "@/views/member/MemberSignupView.vue";
 import LoginView from "@/views/member/MemberLoginView.vue";
 import MyPageView from "@/views/member/MemberMyPageView.vue";
 import DiaryListView from "@/views/diary/DiaryListView.vue";
+import ErrorView from "@/views/error/ErrorView.vue";
 
 const requireLogin = (to, from, next) => {
     if (!sessionStorage.getItem("isLoggedIn")) { // 로그인하지 않은 경우...
@@ -22,6 +23,15 @@ const requireLogin = (to, from, next) => {
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
+        {
+            name: "NotFound",
+            path: "/404",
+            component: ErrorView,
+        },
+        {
+            path: "/:pathMatch(.*)*",
+            redirect: "/404",
+        },
         {
             name: "Main",
             path: "/",

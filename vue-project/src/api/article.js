@@ -1,5 +1,6 @@
 import { instance } from "@/api/axios";
 import { fileInstance } from "./fileaxios";
+import router from "@/router";
 
 // 전체 게시글 조회
 const getArticleList = async () => {
@@ -17,6 +18,7 @@ const getArticle = async (articleId) => {
     const response = await instance.get(`article/detail/${articleId}`);
     return response.data;
   } catch (error) {
+    router.push("/404");
     console.log(error);
   }
 };
