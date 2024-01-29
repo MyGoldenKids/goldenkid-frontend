@@ -11,18 +11,17 @@ const memberId = ref("");
 const fileListId = ref("");
 const articleTitle = ref("");
 const articleContent = ref("");
+let isCanceling = false;
 
 // 게시판 작성 POST 요청
 const createArticle = async () => {
   try {
-    console.log("post 요청 시작");
     const response = await instance.post("article/write", {
       memberId: 29,
       fileListId: 1,
       articleTitle: articleTitle.value,
       articleContent: articleContent.value,
     });
-    console.log(response);
     return response;
   } catch (error) {
     console.log(error);
@@ -34,9 +33,7 @@ const fileList = ref([]);
 
 // 첨부한 파일의 이름으로 넣어주는 코드
 const handleFileChange = (event) => {
-  // console.log(event.target.files)에 객체로 들어감
   fileList.value = Array.from(event.target.files);
-  console.log(fileList.value);
 };
 
 const createFileList = async () => {
@@ -47,19 +44,17 @@ const createFileList = async () => {
     for (const file of fileList.value) {
       formData.append("files", file);
     }
-    console.log("파일 리스트 줍시다");
-    const response = await fileInstance.post("file/upload/1", {
-      files: fileList.value,
-    });
-    return response;
+    const response = await fileInstance.post("file/upload/29", formData);
+    isCanceling = true;
+    if (response) {
+      return response, router.push('list');
+    }
   } catch (error) {
     console.log(error);
   }
 };
 
 // 뒤로가기 이벤트 발생 시 alert 기능
-let isCanceling = false;
-
 onBeforeRouteLeave((to, from) => {
   if (isCanceling === false) {
     const answer = window.confirm("작성 중이던 게시글은 저장되지 않습니다.");
@@ -132,7 +127,6 @@ const goArticleList = () => {
         <div v-for="(file, index) in fileList" :key="index" class="fileList">
           {{ file.name }}
         </div>
-        <button @click="createFileList">파일첨부실험버튼</button>
       </div>
 
       <!-- 취소&등록 bar -->
@@ -140,7 +134,7 @@ const goArticleList = () => {
         <!-- 게시글 등록 버튼 -->
         <div class="write-control-btn">
           <button type="submit" @click="goArticleList">취소</button>
-          <button type="submit">등록</button>
+          <button type="submit" @click="createFileList">등록</button>
         </div>
       </div>
     </form>
