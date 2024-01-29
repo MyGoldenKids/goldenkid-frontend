@@ -28,4 +28,8 @@ import "./assets/css/common.css";
     font-family: "BMDOHYEON";
     src: url("assets/fonts/BMDOHYEON_ttf.ttf");
 }
+@font-face {
+    font-family: "NanumNeuRisNeuRisCe";
+    src: url("assets/fonts/NanumNeuRisNeuRisCe.ttf");
+}
 </style>
