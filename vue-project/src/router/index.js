@@ -9,6 +9,7 @@ import SignupView from "@/views/member/MemberSignupView.vue";
 import LoginView from "@/views/member/MemberLoginView.vue";
 import MyPageView from "@/views/member/MemberMyPageView.vue";
 import DiaryListView from "@/views/diary/DiaryListView.vue";
+import DiaryWriteView from "@/views/diary/DiaryWriteView.vue";
 import ErrorView from "@/views/error/ErrorView.vue";
 
 const requireLogin = (to, from, next) => {
@@ -71,6 +72,10 @@ const router = createRouter({
                     path: "list",
                     component: DiaryListView,
                     beforeEnter: requireLogin,
+                },
+                {
+                    path: "write",
+                    component: DiaryWriteView,
                 },
             ],
         },
