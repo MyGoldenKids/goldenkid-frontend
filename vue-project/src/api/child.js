@@ -12,4 +12,9 @@ const registerChild = async (data) => {
         });
 };
 
-export { registerChild };
+// 아이 상세 정보 조회
+const getChildInfo = async (childId, success, fail) => {
+    instance.get(`child/detail/${childId}`).then(success).catch(fail);
+};
+
+export { registerChild, getChildInfo };
