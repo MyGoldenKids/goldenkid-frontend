@@ -11,16 +11,17 @@ const route = useRoute();
 const isLoginPage = computed(() => route.name === "login");
 const isSignupPage = computed(() => route.name === "signup");
 const isMyPage = computed(() => route.name === "mypage");
+const isErrorPage = computed(() => route.name === "NotFound");
 </script>
 
 <template>
     <div class="app-container">
         <div class="wrap">
-            <div v-if="!isLoginPage && !isSignupPage && !isMyPage">
+            <div v-if="!isLoginPage && !isSignupPage && !isMyPage && !isErrorPage">
                 <HeaderComponent></HeaderComponent>
             </div>
             <RouterView></RouterView>
-            <div v-if="!isLoginPage && !isSignupPage && !isMyPage">
+            <div v-if="!isLoginPage && !isSignupPage && !isMyPage && !isErrorPage">
                 <FooterComponent></FooterComponent>
             </div>
         </div>

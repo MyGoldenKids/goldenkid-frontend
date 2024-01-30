@@ -25,12 +25,12 @@ const router = createRouter({
     routes: [
         {
             name: "NotFound",
-            path: "/404",
+            path: "/error",
             component: ErrorView,
         },
         {
             path: "/:pathMatch(.*)*",
-            redirect: "/404",
+            redirect: "/error",
         },
         {
             name: "Main",
