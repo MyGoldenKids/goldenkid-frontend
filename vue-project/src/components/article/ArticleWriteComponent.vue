@@ -1,19 +1,111 @@
+<script setup>
+import { instance } from "@/api/axios";
+import { fileInstance } from "@/api/fileaxios";
+import { ref } from "vue";
+import { onBeforeRouteLeave, useRouter } from "vue-router";
+import { useMemberStore } from "@/stores/member-store";
+
+// 게시글 작성
+const store = useMemberStore();
+const memberNo = store.memberInfo.memberNo;
+const fileListId = ref("");
+const articleTitle = ref("");
+const articleContent = ref("");
+let isCanceling = false; //onBeforeRouteLeave, 게시글 등록, 게시글 등록 취소 동시 사용시에 필요합니다.
+
+// 게시판 작성 POST 요청
+const createArticle = async () => {
+  try {
+    if (articleTitle.value.length == 0 || articleContent.value.length == 0) {
+      window.alert('게시글의 제목/내용 이 없습니다.')
+      return
+    }
+    if (fileList.value.length >= 1) {
+      await createFileList()
+    }
+    await instance.post("article/write", {
+      memberId: memberNo,
+      fileListId: fileListId.value,
+      articleTitle: articleTitle.value,
+      articleContent: articleContent.value,
+    });
+    // 첨부파일이 없을 경우 에러 뜨지 않게 하는 코드
+    isCanceling = true;
+    router.push('list');
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// 첨부한 파일의 이름으로 넣어주는 코드
+const fileList = ref([]);
+const handleFileChange = (event) => {
+  fileList.value = Array.from(event.target.files);
+};
+
+const createFileList = async () => {
+  try {
+    const formData = new FormData();
+
+    // 파일 배열을 FormData에 추가
+    for (const file of fileList.value) {
+      formData.append("files", file);
+    }
+    isCanceling = true;
+    const response = await fileInstance.post(`file/upload/${memberNo}`, formData);
+    // fileListId 추출
+    if (response.status === 200) {
+      fileListId.value = response.data.data;
+    } else {
+      console.log('파일 업로드 실패')
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// 뒤로가기 이벤트 발생 시 alert 기능
+onBeforeRouteLeave((to, from) => {
+  if (isCanceling === false) {
+    const answer = window.confirm("작성 중이던 게시글은 저장되지 않습니다.");
+    if (answer === false) {
+      return false;
+    }
+  }
+});
+
+// 취소버튼
+const router = useRouter();
+const goArticleList = () => {
+  const answer = window.confirm(
+    "글 작성을 취소하시겠습니까?\n작성중이던 게시글은 저장되지 않습니다."
+  );
+  if (answer) {
+    isCanceling = true;
+    return router.push("/list");
+  }
+};
+
+</script>
+
 <template>
   <div>
-    <form action="submit" name="article" class="article">
+    <form @submit.prevent="createArticle" class="article">
       <!-- 게시글 제목 작성 -->
       <div class="article-title">
-        <input type="text" placeholder="이 곳에 제목을 입력해주세요." />
+        <input
+          type="text"
+          placeholder="이 곳에 제목을 입력해주세요."
+          v-model.trim="articleTitle"
+        />
       </div>
 
       <!-- 게시글 내용 작성 -->
       <textarea
-        style="resize: none"
-        name="content"
-        id="content"
         cols="30"
         rows="15"
         placeholder="이 곳에 내용을 입력해주세요."
+        v-model.trim="articleContent"
       ></textarea>
 
       <!-- 첨부파일 -->
@@ -25,13 +117,26 @@
         </div>
 
         <!-- 첨부파일 박스 -->
-        <div class="upload-box">
+        <form
+          class="upload-box"
+          @submit.prevent="upLoadFile"
+          enctype="multipart/form-data"
+        >
           <label for="file">
             <img src="../../assets/img/AddNew.png" alt="add-img-err" />
-            <span class="attach-content">파일찾기</span>
+            <span class="attach-content">파일첨부</span>
           </label>
           <!-- 파일첨부 버튼 -->
-          <input type="file" id="file" />
+          <input
+            type="file"
+            id="file"
+            name="files"
+            @change="handleFileChange"
+            multiple
+          />
+        </form>
+        <div v-for="(file, index) in fileList" :key="index" class="fileList">
+          {{ file.name }}
         </div>
       </div>
 
@@ -39,7 +144,7 @@
       <div class="write-control-bar">
         <!-- 게시글 등록 버튼 -->
         <div class="write-control-btn">
-          <button type="submit">취소</button>
+          <button type="submit" @click="goArticleList">취소</button>
           <button type="submit">등록</button>
         </div>
       </div>
@@ -47,10 +152,7 @@
   </div>
 </template>
 
-<script setup></script>
-
 <style scoped>
-
 input {
   color: #665031;
   font-family: "BMDOHYEON";
@@ -96,6 +198,10 @@ textarea {
   color: #665031;
 }
 
+.article-title input:focus::placeholder {
+  color:transparent;
+}
+
 .article textarea {
   margin: 1rem 0;
   font-size: 1.813rem;
@@ -110,6 +216,10 @@ textarea {
 
 .article textarea::placeholder {
   color: #ad9478;
+}
+
+.article textarea:focus::placeholder {
+  color: transparent;
 }
 
 /* 첨부파일 커스텀 */
@@ -167,6 +277,10 @@ textarea {
 
 .attach-content {
   color: #ad9478;
+}
+
+.fileList {
+  padding-left: 2.5rem;
 }
 
 /* 취소&등록 bar */

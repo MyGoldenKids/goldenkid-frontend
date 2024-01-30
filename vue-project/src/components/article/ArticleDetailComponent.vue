@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { getArticle } from '@/api/article'
+import { getArticle, deleteArticles } from '@/api/article'
 import { useRoute } from 'vue-router';
+import router from '@/router';
 
 const article = ref('')
 const route = useRoute()
@@ -22,6 +23,13 @@ const formatCreatedAt = (createdAt) => {
   return `${year}-${month}-${day}`;
 };
 
+const deleteArticle = async (articleId) => {
+    const answer = window.confirm('게시글을 삭제 하시겠습니까?')
+    if (answer) {
+        await deleteArticles(articleId)
+        router.push('../list')
+    }
+}
 
 onMounted(
     articleInfo,
@@ -65,7 +73,13 @@ onMounted(
 
         <!-- 게시글 댓글 -->
         <div class="board-comment">
-            <div class="comment-count">댓글 <span>2</span></div>
+            <div class="comments-header">
+                <div class="comment-count">댓글 <span>2</span></div>
+                <div class="article-delete-put">
+                    <button>글수정</button>
+                    <button @click="deleteArticle(articleId)">글삭제</button>
+                </div>
+            </div>
 
             <!-- for문 돌릴듯1 -->
             <div class="board-comment-sub">
@@ -209,7 +223,6 @@ onMounted(
 .comment-count {
     padding: 1.25rem;
     font-size: 1.25rem;
-    border-bottom: 1px solid #AD9478;
 }
 .comment-count span {
     font-weight: 800;
@@ -279,5 +292,24 @@ onMounted(
     color: #fff;
     border: none;
     font-size: 1.1rem;
+}
+
+.article-delete-put button {
+    border: 0.125rem solid #665031;
+    border-radius: 1.25rem;
+    background-color: #FFF8F2;
+    padding: 0.625rem;
+    margin: 0.125rem;
+    max-width: 4.75rem;
+    max-height: 2.6rem;
+    cursor: pointer;
+}
+
+.comments-header {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #AD9478;
 }
 </style>

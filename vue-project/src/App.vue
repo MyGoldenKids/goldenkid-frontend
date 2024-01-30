@@ -2,14 +2,28 @@
 import HeaderComponent from "./components/common/HeaderComponent.vue";
 import FooterComponent from "./components/common/FooterComponent.vue";
 import "./assets/css/common.css";
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+
+// 현재 라우터 경로가 로그인, 회원가입 또는 마이페이지인지 확인하는 계산된 속성
+const isLoginPage = computed(() => route.name === "login");
+const isSignupPage = computed(() => route.name === "signup");
+const isMyPage = computed(() => route.name === "mypage");
+const isErrorPage = computed(() => route.name === "NotFound");
 </script>
 
 <template>
     <div class="app-container">
         <div class="wrap">
-            <HeaderComponent></HeaderComponent>
+            <div v-if="!isLoginPage && !isSignupPage && !isMyPage && !isErrorPage">
+                <HeaderComponent></HeaderComponent>
+            </div>
             <RouterView></RouterView>
-            <FooterComponent></FooterComponent>
+            <div v-if="!isLoginPage && !isSignupPage && !isMyPage && !isErrorPage">
+                <FooterComponent></FooterComponent>
+            </div>
         </div>
     </div>
 </template>

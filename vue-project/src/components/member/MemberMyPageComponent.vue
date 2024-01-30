@@ -20,7 +20,7 @@ onMounted(() => {
     getMemberDetail(
         memberNo,
         (response) => {
-            memberDetail.value.nickname = response.data.data.nickName;
+            memberDetail.value.nickname = response.data.data.nickname;
             memberDetail.value.phoneNumber = response.data.data.phoneNumber;
         },
         () => {
