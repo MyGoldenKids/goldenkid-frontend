@@ -52,7 +52,6 @@ const router = createRouter({
                 {
                     path: "detail/:id",
                     component: ArticleDetailView,
-                    beforeEnter: requireLogin,
                 },
                 {
                     path: "write",
