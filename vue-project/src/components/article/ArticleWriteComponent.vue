@@ -1,6 +1,6 @@
 <script setup>
 import { instance } from "@/api/axios";
-import { fileInstance } from "@/api/fileaxios";
+import { createFileList } from "@/api/file";
 import { ref } from "vue";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
 import { useMemberStore } from "@/stores/member-store";
@@ -12,16 +12,28 @@ const fileListId = ref("");
 const articleTitle = ref("");
 const articleContent = ref("");
 let isCanceling = false; //onBeforeRouteLeave, 게시글 등록, 게시글 등록 취소 동시 사용시에 필요합니다.
+const formData = new FormData();
+
+const createFiles = (memberNo, formData) => {
+  for (let file of fileList.value) {
+    formData.append("files", file);
+  }
+  isCanceling = true;
+  createFileList(memberNo, formData, (response) => {
+    if (response.status === 200) {
+      fileListId.value = response.data.data;
+    } else {
+      console.log("파일 업로드 실패");
+    }
+  });
+};
 
 // 게시판 작성 POST 요청
 const createArticle = async () => {
   try {
     if (articleTitle.value.length == 0 || articleContent.value.length == 0) {
-      window.alert('게시글의 제목/내용 이 없습니다.')
-      return
-    }
-    if (fileList.value.length >= 1) {
-      await createFileList()
+      window.alert("게시글의 제목/내용 이 없습니다.");
+      return;
     }
     await instance.post("article/write", {
       memberId: memberNo,
@@ -31,7 +43,7 @@ const createArticle = async () => {
     });
     // 첨부파일이 없을 경우 에러 뜨지 않게 하는 코드
     isCanceling = true;
-    router.push('list');
+    router.push("list");
   } catch (error) {
     console.log(error);
   }
@@ -41,27 +53,7 @@ const createArticle = async () => {
 const fileList = ref([]);
 const handleFileChange = (event) => {
   fileList.value = Array.from(event.target.files);
-};
-
-const createFileList = async () => {
-  try {
-    const formData = new FormData();
-
-    // 파일 배열을 FormData에 추가
-    for (const file of fileList.value) {
-      formData.append("files", file);
-    }
-    isCanceling = true;
-    const response = await fileInstance.post(`file/upload/${memberNo}`, formData);
-    // fileListId 추출
-    if (response.status === 200) {
-      fileListId.value = response.data.data;
-    } else {
-      console.log('파일 업로드 실패')
-    }
-  } catch (error) {
-    console.log(error);
-  }
+  createFiles(memberNo, formData);
 };
 
 // 뒤로가기 이벤트 발생 시 alert 기능
@@ -85,7 +77,6 @@ const goArticleList = () => {
     return router.push("/list");
   }
 };
-
 </script>
 
 <template>
@@ -191,7 +182,7 @@ textarea {
 }
 
 .article-title {
-  border-bottom: solid 1px #ad9478;
+  border-bottom: solid 0.063rem #ad9478;
 }
 
 .article-title::placeholder {
@@ -199,7 +190,7 @@ textarea {
 }
 
 .article-title input:focus::placeholder {
-  color:transparent;
+  color: transparent;
 }
 
 .article textarea {
@@ -232,8 +223,8 @@ textarea {
   display: grid;
   grid-template-columns: auto 1fr;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
+  gap: 0.625rem;
+  margin-bottom: 0.5rem;
 }
 
 .upload-header img {
