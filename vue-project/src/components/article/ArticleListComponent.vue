@@ -70,7 +70,7 @@ onMounted(articleInfo);
         >
           <td>{{ article.articleId }}</td>
           <td>{{ article.articleTitle }}</td>
-          <td>{{ article.memberId }}</td>
+          <td>{{ article.nickname }}</td>
           <td>{{ article.formattedCreatedAt }}</td>
         </tr>
       </tbody>

@@ -24,4 +24,59 @@ const getDiaryDetail = async (diaryId) => {
         });
 };
 
-export { getDiaryList, getDiaryDetail };
+// 일기 생성
+const createDiary = async (data) => {
+    await instance
+        .post("diary/create", data.value)
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+};
+
+// 일기 제출
+const submitDiary = async (data) => {
+    await instance
+        .put("diary/submit", data.value)
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+};
+
+// 일기 삭제
+const deleteDiary = async (diaryId) => {
+    await instance
+        .delete("diary/delete/" + diaryId)
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+};
+
+// 일기 수정 및 임시 저장
+const updateDiary = async (diaryId, data) => {
+    await instance
+        .put("diary/update/" + diaryId, data.value)
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+};
+
+export {
+    getDiaryList,
+    getDiaryDetail,
+    createDiary,
+    submitDiary,
+    deleteDiary,
+    updateDiary,
+};

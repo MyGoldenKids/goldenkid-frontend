@@ -82,10 +82,6 @@ a {
     /* color: inherit; */
 }
 
-a:hover {
-    font-weight: 700;
-}
-
 .header {
     /* background-color: pink; */
     padding: 50px 0 20px;

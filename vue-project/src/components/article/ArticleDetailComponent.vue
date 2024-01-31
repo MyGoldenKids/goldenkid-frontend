@@ -23,11 +23,11 @@ const articleInfo = async () => {
 
 // 작성일 연-월-일 포매팅 할 함수
 const formatCreatedAt = (createdAt) => {
-  const date = new Date(createdAt);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
+    const date = new Date(createdAt);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
 };
 
 const deleteArticle = async (articleId) => {
@@ -91,7 +91,6 @@ onMounted(() => {
         </div>
       </div>
     </div>
-
     <!-- 게시글 댓글 -->
     <div class="board-comment">
       <div class="comments-header">
@@ -244,13 +243,12 @@ onMounted(() => {
   font-size: 1.25rem;
 }
 .comment-count span {
-  font-weight: 800;
-  color: #89b9ad;
+    font-weight: 800;
+    color: #89b9ad;
 }
 
 /* 댓글 리스트 */
 .board-comment-sub {
-  /* background-color: pink; */
   display: grid;
   grid-template-columns: 80% 20%;
   align-items: center;
@@ -259,7 +257,6 @@ onMounted(() => {
 }
 
 .comment-writer {
-  /* background-color: pink; */
   font-weight: 300;
   padding: 1.25rem 0;
   font-size: 1.2rem;
@@ -272,7 +269,6 @@ onMounted(() => {
   padding-left: 2.3rem;
 }
 .comment-sub-right {
-  /* background-color: pink; */
   justify-self: end;
 }
 .comment-date {
@@ -281,8 +277,8 @@ onMounted(() => {
   font-size: 0.8rem;
 }
 .comment-btn button {
-  border: none;
-  background-color: #fff8f2;
+    border: none;
+    background-color: #fff8f2;
 }
 .commet-add {
   padding: 1.25rem;

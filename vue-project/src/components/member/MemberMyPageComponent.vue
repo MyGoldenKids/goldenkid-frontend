@@ -20,7 +20,7 @@ onMounted(() => {
     getMemberDetail(
         memberNo,
         (response) => {
-            memberDetail.value.nickname = response.data.data.nickName;
+            memberDetail.value.nickname = response.data.data.nickname;
             memberDetail.value.phoneNumber = response.data.data.phoneNumber;
         },
         () => {
@@ -34,10 +34,13 @@ function submitForm() {
     modifyMemberDetail(
         memberDetail,
         () => {
-            console.log("회원정보 수정 성공");
+            // 회원정보 수정 시 수정한 닉네임으로 업데이트
+            sessionStorage.setItem("nickname", memberDetail.value.nickname);
+            store.memberInfo.nickname = memberDetail.value.nickname;
+            alert("회원정보가 변경되었습니다.")
         },
         () => {
-            console.log("회원정보 수정 실패");
+            alert("비밀번호가 일치하지 않습니다.");
         }
     );
 }
