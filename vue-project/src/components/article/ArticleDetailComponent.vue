@@ -1,43 +1,43 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { getArticle, deleteArticles } from '@/api/article'
-import { useRoute } from 'vue-router';
-import router from '@/router';
+import { ref, onMounted } from "vue";
+import { getArticle, deleteArticles } from "@/api/article";
+import { useRoute } from "vue-router";
+import router from "@/router";
 
-const article = ref('')
-const route = useRoute()
-const articleId = route.params.id
-const formattedDate = ref('')
+import { useMemberStore } from "@/stores/member-store";
+const store = useMemberStore();
+
+const article = ref("");
+const route = useRoute();
+const articleId = route.params.id;
+const formattedDate = ref("");
 const articleInfo = async () => {
-    const data = await getArticle(articleId)
-    article.value = data.data
+    const data = await getArticle(articleId);
+    article.value = data.data;
     formattedDate.value = formatCreatedAt(article.value.createdAt);
-}
+};
 
 // 작성일 연-월-일 포매팅 할 함수
 const formatCreatedAt = (createdAt) => {
-  const date = new Date(createdAt);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
+    const date = new Date(createdAt);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
 };
 
 const deleteArticle = async (articleId) => {
-    const answer = window.confirm('게시글을 삭제 하시겠습니까?')
+    const answer = window.confirm("게시글을 삭제 하시겠습니까?");
     if (answer) {
-        await deleteArticles(articleId)
-        router.push('../list')
+        await deleteArticles(articleId);
+        router.push("../list");
     }
-}
+};
 
-onMounted(
-    articleInfo,
-)
+onMounted(articleInfo);
 </script>
 
 <template>
-    <!-- ==============모든페이지 여기부터 바뀜===================== -->
     <!-- 꿀팁 게시판 상세-->
     <div class="board-detail">
         <!-- 게시글 타이틀 -->
@@ -51,12 +51,14 @@ onMounted(
                             alt="프로필기본이미지"
                         />
                         <!-- 추후 Id가 아닌 닉네임으로 바꿔야할 부분 -->
-                        <span>{{ article.memberId }}</span>
+                        <span>{{ article.nickname }}</span>
                         <!-- ------------------------------------- -->
                     </div>
                     <div class="left-item2">{{ formattedDate }}</div>
                     <div class="left-item2">조회수 : {{ article.hit }}</div>
-                    <div class="left-item2">추천수 : {{ article.recommendCount }}</div>
+                    <div class="left-item2">
+                        추천수 : {{ article.recommendCount }}
+                    </div>
                 </div>
                 <div class="title-sub-right">
                     <div class="right-item">
@@ -76,8 +78,13 @@ onMounted(
             <div class="comments-header">
                 <div class="comment-count">댓글 <span>2</span></div>
                 <div class="article-delete-put">
-                    <button>글수정</button>
-                    <button @click="deleteArticle(articleId)">글삭제</button>
+                    <!-- 본인이 작성한 글만 수정 삭제 버튼 보이기 -->
+                    <div v-if="store.memberInfo.memberNo === article.memberId">
+                        <button>글수정</button>
+                        <button @click="deleteArticle(articleId)">
+                            글삭제
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -148,12 +155,12 @@ onMounted(
     max-width: 1000px;
     margin: 0 auto;
     padding: 1.25rem 0;
-    color:#665031;
+    color: #665031;
 }
 
 /* 게시글 타이틀 부분 */
 .board-title {
-    border-bottom: 1px solid #AD9478;
+    border-bottom: 1px solid #ad9478;
 }
 .board-title h1 {
     font-size: 1.625rem;
@@ -174,19 +181,19 @@ onMounted(
 }
 .left-item1 {
     font-weight: 400;
-    font-size:1.1rem;
+    font-size: 1.1rem;
     display: grid;
     grid-template-columns: 30% 60%;
     gap: 0.313rem;
     align-items: center;
 }
 .left-item2 {
-    font-size:0.8rem;
+    font-size: 0.8rem;
     text-align: center;
-    border-right: 2px solid #AD9478;
+    border-right: 2px solid #ad9478;
 }
 .left-item2:last-child {
-    border:none;
+    border: none;
 }
 .title-sub-right {
     display: grid;
@@ -200,11 +207,11 @@ onMounted(
     justify-self: end;
 }
 .like-btn {
-    width:100%;
+    width: 100%;
     padding: 0.625rem;
     border: 1px solid #665031;
-    background-color: #FFF8F2;
-    font-size : 0.7rem;
+    background-color: #fff8f2;
+    font-size: 0.7rem;
 }
 
 /* 게시글 내용 부분 */
@@ -226,7 +233,7 @@ onMounted(
 }
 .comment-count span {
     font-weight: 800;
-    color: #89B9AD;
+    color: #89b9ad;
 }
 
 /* 댓글 리스트 */
@@ -236,7 +243,7 @@ onMounted(
     grid-template-columns: 80% 20%;
     align-items: center;
     padding: 1.25rem;
-    border-bottom: 1px solid #AD9478;
+    border-bottom: 1px solid #ad9478;
 }
 
 .comment-writer {
@@ -263,7 +270,7 @@ onMounted(
 }
 .comment-btn button {
     border: none;
-    background-color: #FFF8F2;
+    background-color: #fff8f2;
 }
 .commet-add {
     padding: 1.25rem;
@@ -274,21 +281,21 @@ onMounted(
 .add-input {
     border-radius: 50px;
     height: 50px;
-    border: 2px solid #89B9AD;
+    border: 2px solid #89b9ad;
     padding-left: 20px;
-    background-color: #FFF8F2;
+    background-color: #fff8f2;
     box-sizing: border-box;
 }
-.add-input:focus{
-    border: 2px solid #89B9AD;
+.add-input:focus {
+    border: 2px solid #89b9ad;
     box-sizing: border-box;
     border-radius: 50px;
-    outline: 1px solid #89B9AD;
+    outline: 1px solid #89b9ad;
 }
 .add-btn {
     border-radius: 50px;
     height: 50px;
-    background-color: #89B9AD;
+    background-color: #89b9ad;
     color: #fff;
     border: none;
     font-size: 1.1rem;
@@ -297,7 +304,7 @@ onMounted(
 .article-delete-put button {
     border: 0.125rem solid #665031;
     border-radius: 1.25rem;
-    background-color: #FFF8F2;
+    background-color: #fff8f2;
     padding: 0.625rem;
     margin: 0.125rem;
     max-width: 4.75rem;
@@ -310,6 +317,6 @@ onMounted(
     grid-template-columns: auto auto;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #AD9478;
+    border-bottom: 1px solid #ad9478;
 }
 </style>
