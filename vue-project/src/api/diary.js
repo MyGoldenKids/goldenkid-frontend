@@ -9,15 +9,11 @@ const getDiaryList = async (memberId, success, fail) => {
 };
 
 // 일기 상세 조회
-const getDiaryDetail = async (diaryId) => {
+const getDiaryDetail = async (diaryId, success, fail) => {
     await instance
         .get("diary/detail/" + diaryId)
-        .then((response) => {
-            console.log(response.data);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+        .then(success)
+        .catch(fail);
 };
 
 // 일기 생성
