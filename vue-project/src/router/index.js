@@ -64,8 +64,10 @@ const router = createRouter({
             path: "/diary",
             children: [
                 {
+                    name: "diary-home",
                     path: "home",
                     component: DiaryHomeView,
+                    beforeEnter: requireLogin,
                 },
                 {
                     name: "diary-list",
@@ -74,8 +76,10 @@ const router = createRouter({
                     beforeEnter: requireLogin,
                 },
                 {
+                    name: "diary-write",
                     path: "write",
                     component: DiaryWriteView,
+                    beforeEnter: requireLogin,
                 },
             ],
         },
