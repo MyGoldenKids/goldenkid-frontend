@@ -57,17 +57,12 @@ function submitForm() {
                         />
                         <button type="submit">로그인</button>
                         <div class="check-box">
-                            <div class="check-box-left">
-                                <label for="remember-check">
-                                    <input
-                                        type="checkbox"
-                                        id="remember-check"
-                                    />아이디 저장
-                                </label>
-                            </div>
-                            <div class="check-box-right">
-                                <a href="#">ID찾기 | PW찾기</a>
-                            </div>
+                            <label for="remember-check">
+                                <input
+                                    type="checkbox"
+                                    id="remember-check"
+                                />아이디 저장
+                            </label>
                         </div>
                         <a href="#" class="a-btn">카카오톡 계정으로 시작하기</a>
                         <router-link to="/member/signup" class="a-btn"
@@ -146,18 +141,10 @@ label {
 /* 로그인 박스 checkbox */
 .check-box {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
     padding-bottom: 1.875rem;
     padding-top: 0.625rem;
+    align-items: center;
 }
-
-.check-box-right {
-    justify-self: end;
-}
-.check-box span {
-    text-align: right;
-}
-
 /* 로그인 a태그 버튼 */
 .a-btn {
     display: block;
