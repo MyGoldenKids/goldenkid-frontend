@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { checkId, message, signup } from "@/api/member";
+import router from "@/router";
 
 const member = ref({
     memberId: "",
@@ -14,7 +15,17 @@ const passwordValidate = ref(""); // 비밀번호 확인
 
 function submitForm() {
     if (checked.value && passwordValidate.value == member.value.password) {
-        signup(member);
+        signup(
+            member,
+            () => {
+                alert("회원가입이 완료되었습니다. 로그인해주세요.");
+                router.push({ name: "login" });
+            },
+            (error) => {
+                alert("회원가입에 실패하였습니다. 다시 시도해주세요.");
+                console.error(error);
+            }
+        );
     } else if (!checked.value) {
         // 체크박스 미체크
         alert("개인정보 이용에 동의해주세요!");
@@ -36,7 +47,9 @@ function submitForm() {
                 <form @submit.prevent="submitForm">
                     <div class="sign-grid">
                         <div class="sign-item message">
-                            <label for="memberId" class="label"><span>*</span> 아이디</label>
+                            <label for="memberId" class="label"
+                                ><span>*</span> 아이디</label
+                            >
                             <input
                                 type="email"
                                 v-model="member.memberId"
@@ -45,25 +58,49 @@ function submitForm() {
                             />
                             <span class="message-text">{{ message }}</span>
                         </div>
-                            <div class="sign-item">
-                            <label for="password" class="label"><span>*</span> 비밀번호</label>
-                            <input type="password" required v-model="member.password" placeholder="8자리 이상 특수문자 1자 이상 포함" />
+                        <div class="sign-item">
+                            <label for="password" class="label"
+                                ><span>*</span> 비밀번호</label
+                            >
+                            <input
+                                type="password"
+                                required
+                                v-model="member.password"
+                                placeholder="8자리 이상 특수문자 1자 이상 포함"
+                            />
                         </div>
-                            <div class="sign-item">
-                            <label for="passwordValidate" class="label"><span>*</span> 비밀번호 확인</label>
+                        <div class="sign-item">
+                            <label for="passwordValidate" class="label"
+                                ><span>*</span> 비밀번호 확인</label
+                            >
                             <input type="password" v-model="passwordValidate" />
                         </div>
-                            <div class="sign-item">
-                            <label for="nickname" class="label"><span>*</span> 닉네임</label>
-                            <input type="text" required v-model="member.nickname" />
+                        <div class="sign-item">
+                            <label for="nickname" class="label"
+                                ><span>*</span> 닉네임</label
+                            >
+                            <input
+                                type="text"
+                                required
+                                v-model="member.nickname"
+                            />
                         </div>
-                            <div class="sign-item">
-                            <label for="phoneNumber" class="label"><span>*</span> 연락처</label>
-                            <input type="tel" required v-model="member.phoneNumber" placeholder="010-xxxx-xxxx"/>
+                        <div class="sign-item">
+                            <label for="phoneNumber" class="label"
+                                ><span>*</span> 연락처</label
+                            >
+                            <input
+                                type="tel"
+                                required
+                                v-model="member.phoneNumber"
+                                placeholder="010-xxxx-xxxx"
+                            />
                         </div>
                         <div class="sign-item">
                             <input type="checkbox" v-model="checked" />
-                            <label for="checkbox">개인정보 이용 동의(필수)</label>
+                            <label for="checkbox"
+                                >개인정보 이용 동의(필수)</label
+                            >
                         </div>
                         <div class="sign-item">
                             <button type="submit">가입하기</button>
@@ -94,7 +131,7 @@ function submitForm() {
 .signup-form h1 {
     text-align: center;
     font-size: 1.5rem;
-    color: #89B9AD;
+    color: #89b9ad;
     margin-bottom: 50px;
 }
 .sign-grid {
@@ -103,7 +140,7 @@ function submitForm() {
     display: grid;
 }
 .sign-item {
-    width: 100%; 
+    width: 100%;
     margin: 0.313rem auto;
     box-sizing: border-box;
     position: relative;
@@ -114,20 +151,23 @@ function submitForm() {
     top: -8px;
     left: 0.8rem;
     padding: 0.625rem;
-    background: #FFF8F2;
+    background: #fff8f2;
     font-size: 0.8rem;
-    color: #89B9AD;
+    color: #89b9ad;
     font-weight: bold;
 }
 
-.sign-item label span{
-    color: #E1BAAD;
+.sign-item label span {
+    color: #e1baad;
     vertical-align: -1px;
 }
 
-.sign-item input[type=email], input[type=password], input[type=text], input[type=tel]{
+.sign-item input[type="email"],
+input[type="password"],
+input[type="text"],
+input[type="tel"] {
     width: 100%;
-    border: 1px solid #89B9AD !important;
+    border: 1px solid #89b9ad !important;
     font-size: 1rem;
     line-height: 1.45;
     letter-spacing: -0.04rem;
@@ -136,14 +176,12 @@ function submitForm() {
     margin-top: 12px;
     background-color: inherit;
     box-sizing: border-box;
-    color:inherit;
+    color: inherit;
 }
-.sign-item
-.sign-item input:focus {
+.sign-item .sign-item input:focus {
     background-color: inherit;
-    border: #89B9AD;
+    border: #89b9ad;
 }
-
 
 .sign-item input::placeholder {
     text-align: left;
@@ -157,7 +195,7 @@ function submitForm() {
     width: 80%;
     margin: 0 auto;
     box-sizing: border-box;
-    background-color :#89B9AD;
+    background-color: #89b9ad;
     color: #fff;
     border: none;
     font-size: 1rem;
@@ -168,7 +206,7 @@ function submitForm() {
     margin-top: 12px;
 }
 .sign-item button:hover {
-    background-color: #E1BAAD;
+    background-color: #e1baad;
     transition-duration: 0.8s;
     cursor: pointer;
 }
@@ -184,7 +222,6 @@ function submitForm() {
 }
 
 .custom-checkbox input[type="checkbox"] {
-  display: none;
+    display: none;
 }
-
 </style>
