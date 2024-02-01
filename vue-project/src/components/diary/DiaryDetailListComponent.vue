@@ -2,7 +2,9 @@
 import { ref, onMounted } from "vue";
 import { getDiaryList, getDiaryDetail } from "@/api/diary";
 import { useMemberStore } from "@/stores/member-store";
+import { useDiaryStore } from "@/stores/diary-store";
 const memberStore = useMemberStore();
+const diaryStore = useDiaryStore();
 const diaryList = ref([]);
 const diaryDetail = ref("");
 
@@ -12,8 +14,12 @@ onMounted(() => {
         (response) => {
             diaryList.value = response.data.data;
 
+            // 최근 다이어리 모음에서 선택한 값이 있는 경우
+            if (diaryStore.diaryId) {
+                fetchDiaryDetail(diaryStore.diaryId); // 다어이리 모음에서 선택한 다이어리 정보 가져오기
+            }
             // 가장 최근 다이어리 가져오기
-            if (!diaryDetail.value && diaryList.value.length > 0) {
+            else if (!diaryDetail.value && diaryList.value.length > 0) {
                 fetchDiaryDetail(diaryList.value[0].diaryId);
             }
         },
