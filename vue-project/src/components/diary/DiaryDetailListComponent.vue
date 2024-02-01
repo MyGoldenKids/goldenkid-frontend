@@ -17,6 +17,7 @@ onMounted(() => {
             // 최근 다이어리 모음에서 선택한 값이 있는 경우
             if (diaryStore.diaryId) {
                 fetchDiaryDetail(diaryStore.diaryId); // 다어이리 모음에서 선택한 다이어리 정보 가져오기
+                diaryStore.diaryId = ""; // 가져온 후에는 초기화
             }
             // 가장 최근 다이어리 가져오기
             else if (!diaryDetail.value && diaryList.value.length > 0) {
