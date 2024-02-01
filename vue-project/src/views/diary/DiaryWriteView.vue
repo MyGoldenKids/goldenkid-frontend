@@ -19,7 +19,7 @@ import DiaryWriteComponent from "@/components/diary/DiaryWriteComponent.vue";
     box-sizing: border-box;
     display: grid;
     grid-template-columns: 10% 90%;
-    background-image: url(/img/diary/diary.png);
+    background-image: url(@/assets/img/diary.png);
     background-size: cover;
 }
 </style>
