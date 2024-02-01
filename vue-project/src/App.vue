@@ -37,13 +37,14 @@ const isErrorPage = computed(() => route.name === "NotFound");
     max-width: 75rem;
     margin: 0 auto;
 }
-
-@font-face {
-    font-family: "BMDOHYEON";
-    src: url("assets/fonts/BMDOHYEON_ttf.ttf");
-}
 @font-face {
     font-family: "NanumNeuRisNeuRisCe";
     src: url("assets/fonts/NanumNeuRisNeuRisCe.ttf");
+}
+@font-face {
+    font-family: 'Jalnan';
+    src: url('assets/fonts/Jalnan2TTF.ttf');
+    font-weight:lighter;
+    font-style: normal;
 }
 </style>
