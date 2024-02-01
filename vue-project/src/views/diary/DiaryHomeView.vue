@@ -1,5 +1,4 @@
 <script setup>
-import DiaryHeaderComponent from "@/components/diary/DiaryHeaderComponent.vue";
 import DiaryNavComponent from "@/components/diary/DiaryNavComponent.vue";
 import DiaryProfileComponent from "@/components/diary/DiaryProfileComponent.vue";
 import DiaryCalendarComponent from "@/components/diary/DiaryCalendarComponent.vue";

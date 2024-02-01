@@ -1,4 +1,23 @@
-<script setup></script>
+<script setup>
+import { ref, onMounted } from "vue";
+import { getDiaryList } from "@/api/diary";
+import { useMemberStore } from "@/stores/member-store";
+const memberStore = useMemberStore();
+const diaryList = ref([]);
+
+onMounted(() => {
+    getDiaryList(
+        memberStore.memberInfo.memberNo,
+        (response) => {
+            diaryList.value = response.data.data;
+            console.log(diaryList.value);
+        },
+        () => {
+            console.log("다이어리 목록을 불러올 수 없습니다.");
+        }
+    );
+});
+</script>
 
 <template>
     <div>
@@ -6,32 +25,11 @@
             <div class="item-title">최근 나의 일기</div>
             <div class="diary-list-sub">
                 <ul>
-                    <li>
-                        <a href="#">
-                            <span>#183</span>
-                            <span>좋은 부모란 무엇인가 ?</span>
-                            <span>Jan 10</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span>#183</span>
-                            <span>좋은 부모란 무엇인가 ?</span>
-                            <span>Jan 10</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span>#183</span>
-                            <span>좋은 부모란 무엇인가 ?</span>
-                            <span>Jan 10</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span>#183</span>
-                            <span>좋은 부모란 무엇인가 ?</span>
-                            <span>Jan 10</span>
+                    <li v-for="(diary, index) in diaryList" :key="index">
+                        <a href="">
+                            <span>#{{ diary.diaryId }}</span>
+                            <span>{{ diary.diaryTitle }}</span>
+                            <span>{{ diary.createdAt }}</span>
                         </a>
                     </li>
                 </ul>
