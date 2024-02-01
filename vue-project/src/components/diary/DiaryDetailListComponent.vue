@@ -1,41 +1,112 @@
 <script setup>
+import { ref, onMounted } from "vue";
+import { getDiaryList, getDiaryDetail, deleteDiary } from "@/api/diary";
+import { useMemberStore } from "@/stores/member-store";
+import { useDiaryStore } from "@/stores/diary-store";
+const memberStore = useMemberStore();
+const diaryStore = useDiaryStore();
+const diaryList = ref([]);
+const diaryDetail = ref("");
 
+onMounted(() => {
+    getDiaryList(
+        memberStore.memberInfo.memberNo,
+        (response) => {
+            diaryList.value = response.data.data;
+
+            // 최근 다이어리 모음에서 선택한 값이 있는 경우
+            if (diaryStore.diaryId) {
+                fetchDiaryDetail(diaryStore.diaryId); // 다어이리 모음에서 선택한 다이어리 정보 가져오기
+                diaryStore.diaryId = ""; // 가져온 후에는 초기화
+            }
+            // 가장 최근 다이어리 가져오기
+            else if (!diaryDetail.value && diaryList.value.length > 0) {
+                fetchDiaryDetail(diaryList.value[0].diaryId);
+            }
+        },
+        () => {
+            console.log("다이어리 목록을 불러올 수 없습니다.");
+        }
+    );
+});
+
+const fetchDiaryDetail = (diaryId) => {
+    getDiaryDetail(diaryId, (response) => {
+        diaryDetail.value = {
+            ...response.data.data,
+            diaryId: diaryId,
+        };
+    });
+};
+
+const deleteDiaryDetail = (diaryId) => {
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+        deleteDiary(diaryId, () => {
+            // 삭제 후 목록 다시 가져오기
+            getDiaryList(memberStore.memberInfo.memberNo, (response) => {
+                diaryList.value = response.data.data;
+
+                // 가장 최근 다이어리 가져오기
+                if (diaryList.value.length > 0) {
+                    fetchDiaryDetail(diaryList.value[0].diaryId);
+                } else {
+                    // 목록이 비어있을 경우 초기화
+                    diaryDetail.value = "";
+                }
+            });
+        });
+    }
+};
 </script>
 
 <template>
     <div class="diary-content">
         <div class="content-left">
-            <div class="diary-content-box">
-                <div class="title">좋은 부모란 무엇일까?</div>
-                <div class="title-under">
-                    <div class="title-sub">
-                        <span># 183번째 일기</span>
-                        <span>2024년 1월 25일 목요일</span>
+            <div v-if="diaryDetail">
+                <div class="diary-content-box">
+                    <div class="title">{{ diaryDetail.diaryTitle }}</div>
+                    <div class="title-under">
+                        <div class="title-sub">
+                            <span>#{{ diaryDetail.diaryId }}번째 일기</span>
+                            <span>{{ diaryDetail.cratedAt }}</span>
+                        </div>
+                        <div class="title-btn">
+                            <button>수정</button>
+                            <button
+                                @click="deleteDiaryDetail(diaryDetail.diaryId)"
+                            >
+                                삭제
+                            </button>
+                        </div>
                     </div>
-                    <div class="title-btn">
-                        <button>수정</button>
-                        <button>삭제</button>
-                    </div>
-                </div>
-                <div class="diary-detail">
-                    <div class="diary-img">이미지 크기 얼마로 해야할지 고민중 500x300 px</div>
-                    <div class="diary-text">
-                        오늘은 금쪽이의 컨디션이 좋은 지 하루종일 빵긋빵긋 웃으며 재밌는 하루를 보냈다고 생각한다
-                        이런날이 하루씩 찾아올 때 마다 그간 속상했던 날들에 대한 보상을 받ㅇ는 것 같아 기분이 조흐다.
-                        한 아름다운 봄 날, 작은 마을은 화려한 꽃들로 물든 곳이었습니다. 그날은 사람들이 웃음소리를 지르며 마을 한가운데 모여 어린이들은 꽃다발을 만들어 친구들에게 선물하고, 어른들은 향기로운 꽃들을 가지고 집으로 돌아갔습니다. 햇빛은 고요하게 미소 짓고 있었고, 새들의 노래가 마을을 가득 채우고 있었습니다. 이 아름다운 순간들은 마을 사람들에게 늘 기억 속에 남을 것 같았습니다.
-                        한 아름다운 봄 날, 작은 마을은 화려한 꽃들로 물든 곳이었습니다. 그날은 사람들이 웃음소리를 지르며 마을 한가운데 모여 어린이들은 꽃다발을 만들어 친구들에게 선물하고, 어른들은 향기로운 꽃들을 가지고 집으로 돌아갔습니다. 햇빛은 고요하게 미소 짓고 있었고, 새들의 노래가 마을을 가득 채우고 있었습니다. 이 아름다운 순간들은 마을 사람들에게 늘 기억 속에 남을 것 같았습니다.
+                    <div class="diary-detail">
+                        <div class="diary-img">
+                            이미지 크기 얼마로 해야할지 고민중 500x300 px
+                        </div>
+                        <div class="diary-text">
+                            {{ diaryDetail.diaryContent }}
+                        </div>
                     </div>
                 </div>
             </div>
+            <div v-else>
+                <div class="empty-diary">
+                    <div class="sub-title">😂 작성한 일기가 없어요...</div>
+                </div>
+            </div>
         </div>
-        <div class="content-right"> 
+        <div class="content-right">
             <div class="diary-list">
                 <div class="list-title">
-                    <a href="#">
-                        <span># 186</span>
-                        <span>좋은 부모란 무엇일까 ?</span>
-                        <span>01월 29일 월요일</span>
-                    </a>
+                    <ul>
+                        <li v-for="(diary, index) in diaryList" :key="index">
+                            <a @click="fetchDiaryDetail(diary.diaryId)">
+                                <span>#{{ diary.diaryId }}</span>
+                                <span>{{ diary.diaryTitle }}</span>
+                                <span>{{ diary.createdAt }}</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -54,14 +125,14 @@
 .content-left {
     /* background-color: cadetblue; */
     text-align: left;
-    padding : 1.2rem;
+    padding: 1.2rem;
     box-sizing: border-box;
-    font-family: 'NanumNeuRisNeuRisCe';
+    font-family: "NanumNeuRisNeuRisCe";
 }
 .title {
     padding-bottom: 0.313rem;
     padding-left: 0.313rem;
-    border-bottom: 0.313rem solid #89B9AD;
+    border-bottom: 0.313rem solid #89b9ad;
     font-size: 3rem;
     font-weight: 600;
 }
@@ -76,7 +147,7 @@
     font-size: 1.5rem;
     font-weight: 500;
 }
-.title-sub span:last-child{
+.title-sub span:last-child {
     margin-left: 2rem;
 }
 .title-btn {
@@ -85,15 +156,15 @@
 }
 .title-btn button {
     display: inline-block;
-    border:none;
-    background-color: #89B9AD;
+    border: none;
+    background-color: #89b9ad;
     color: #fff;
     border-radius: 1.2rem;
     padding: 0.313rem 1.2rem;
     margin-left: 0.313rem;
 }
 .title-btn button:hover {
-    background-color: #E1BAAD;
+    background-color: #e1baad;
     transition-duration: 0.8s;
     cursor: pointer;
 }
@@ -109,12 +180,12 @@
     background-color: chocolate;
     margin: 0 1.2rem 1.2rem;
     /* 일기상세에서 보여줄 이미지 크기 정해야함 (임시) */
-    width: 500px; 
+    width: 500px;
     height: 300px;
 }
 .diary-text {
     line-height: 2.2rem;
-    padding : 0 1.2rem;
+    padding: 0 1.2rem;
     font-size: 1.8rem;
     font-weight: 600;
 }
@@ -122,7 +193,7 @@
 /* 다이어리 오른쪽 부분 */
 .content-right {
     text-align: left;
-    padding : 1.2rem 0 1.2rem 1.2rem;
+    padding: 1.2rem 0 1.2rem 1.2rem;
     box-sizing: border-box;
 }
 
@@ -130,11 +201,11 @@
 
 /* 다이어리 리스트 */
 .diary-list span {
-    color: #89B9AD;
+    color: #89b9ad;
 }
 
-.list-title a{
-    border: 0.2rem solid #89B9AD;
+.list-title a {
+    border: 0.2rem solid #89b9ad;
     background-color: initial;
     display: grid;
     border-radius: 1.2rem;
@@ -152,11 +223,15 @@
     padding-right: 0;
 }
 .list-title a:hover {
-    background-color: #89B9AD;
+    background-color: #89b9ad;
     transition-duration: 0.5s;
 }
 .list-title:hover span {
-    color:#fff !important;
+    color: #fff !important;
     transition-duration: 0.5s;
+}
+
+.empty-diary {
+    font-size: 3.5rem;
 }
 </style>

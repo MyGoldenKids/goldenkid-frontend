@@ -68,6 +68,7 @@ const router = createRouter({
                     component: DiaryHomeView,
                 },
                 {
+                    name: "diary-list",
                     path: "list",
                     component: DiaryListView,
                     beforeEnter: requireLogin,

@@ -1,27 +1,19 @@
 import { instance } from "./axios";
 
 // 일기 모음 조회
-const getDiaryList = async (memberId) => {
+const getDiaryList = async (memberId, success, fail) => {
     await instance
         .get("diary/list/" + memberId)
-        .then((response) => {
-            console.log(response.data);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+        .then(success)
+        .catch(fail);
 };
 
 // 일기 상세 조회
-const getDiaryDetail = async (diaryId) => {
+const getDiaryDetail = async (diaryId, success, fail) => {
     await instance
         .get("diary/detail/" + diaryId)
-        .then((response) => {
-            console.log(response.data);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+        .then(success)
+        .catch(fail);
 };
 
 // 일기 생성
@@ -49,15 +41,11 @@ const submitDiary = async (data) => {
 };
 
 // 일기 삭제
-const deleteDiary = async (diaryId) => {
+const deleteDiary = async (diaryId, success, fail) => {
     await instance
         .delete("diary/delete/" + diaryId)
-        .then((response) => {
-            console.log(response.data);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+        .then(success)
+        .catch(fail);
 };
 
 // 일기 수정 및 임시 저장

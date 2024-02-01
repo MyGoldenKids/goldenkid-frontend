@@ -1,4 +1,28 @@
-<script setup></script>
+<script setup>
+import { ref, onMounted } from "vue";
+import { getDiaryList } from "@/api/diary";
+import { useMemberStore } from "@/stores/member-store";
+import { useDiaryStore } from "@/stores/diary-store";
+const memberStore = useMemberStore();
+const diaryStore = useDiaryStore();
+const diaryList = ref([]);
+
+onMounted(() => {
+    getDiaryList(
+        memberStore.memberInfo.memberNo,
+        (response) => {
+            diaryList.value = response.data.data;
+        },
+        () => {
+            console.log("다이어리 목록을 불러올 수 없습니다.");
+        }
+    );
+});
+
+const goToDiaryList = (diaryId) => {
+    diaryStore.diaryId = diaryId;
+}
+</script>
 
 <template>
     <div>
@@ -6,33 +30,12 @@
             <div class="item-title">최근 나의 일기</div>
             <div class="diary-list-sub">
                 <ul>
-                    <li>
-                        <a href="#">
-                            <span>#183</span>
-                            <span>좋은 부모란 무엇인가 ?</span>
-                            <span>Jan 10</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span>#183</span>
-                            <span>좋은 부모란 무엇인가 ?</span>
-                            <span>Jan 10</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span>#183</span>
-                            <span>좋은 부모란 무엇인가 ?</span>
-                            <span>Jan 10</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span>#183</span>
-                            <span>좋은 부모란 무엇인가 ?</span>
-                            <span>Jan 10</span>
-                        </a>
+                    <li v-for="(diary, index) in diaryList" :key="index">
+                        <router-link :to="{name: 'diary-list'}" @click="goToDiaryList(diary.diaryId)">
+                            <span>#{{ diary.diaryId }}</span>
+                            <span>{{ diary.diaryTitle }}</span>
+                            <span>{{ diary.createdAt }}</span>
+                        </router-link>
                     </li>
                 </ul>
             </div>
