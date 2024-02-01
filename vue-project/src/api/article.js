@@ -1,5 +1,4 @@
 import { instance } from "@/api/axios";
-import { fileInstance } from "./fileaxios";
 import router from "@/router";
 
 // 전체 게시글 조회
@@ -32,14 +31,4 @@ const deleteArticles = async (articleId) => {
   }
 };
 
-// 파일 불러오기
-const getFileInfo = async (fileListId) => {
-    try {
-        const response = await fileInstance.get(`/file/detail/all/${fileListId}`);
-        return response.data
-    } catch (error) {
-        console.log('FILE LIST GET ERROR!', error)
-    }
-}
-
-export { getArticleList, getArticle, deleteArticles, getFileInfo };
+export { getArticleList, getArticle, deleteArticles };

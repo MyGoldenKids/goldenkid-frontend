@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { getArticle, deleteArticles, getFileInfo } from "@/api/article";
+import { getArticle, deleteArticles } from "@/api/article";
+import { getFileInfo, downloadFile } from "@/api/file";
 import { useRoute } from "vue-router";
 import router from "@/router";
 import { useArticleStore } from "@/stores/article-store";
@@ -13,6 +14,8 @@ const route = useRoute();
 const articleId = route.params.id;
 const formattedDate = ref("");
 const fileData = ref([]);
+
+// 게시글 상세 조회
 const articleInfo = async () => {
   const data = await getArticle(articleId);
   article.value = data.data;
@@ -23,19 +26,41 @@ const articleInfo = async () => {
 
 // 작성일 연-월-일 포매팅 할 함수
 const formatCreatedAt = (createdAt) => {
-    const date = new Date(createdAt);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
+  const date = new Date(createdAt);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 };
 
+// 게시글 삭제
 const deleteArticle = async (articleId) => {
   const answer = window.confirm("게시글을 삭제 하시겠습니까?");
   if (answer) {
     await deleteArticles(articleId);
     router.push("../list");
   }
+};
+
+// 파일 다운로드
+const download = async (fileId, fileName) => {
+  await downloadFile(fileId, (response) => {
+    // Blob 데이터 처리
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+
+    // 파일 이름 설정 (예: 'download.pdf')
+    link.setAttribute("download", fileName);
+
+    // 문서에 링크 추가, 클릭 이벤트 발생, 링크 제거
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // URL 해제
+    window.URL.revokeObjectURL(url);
+  });
 };
 
 onMounted(() => {
@@ -76,21 +101,28 @@ onMounted(() => {
       <div class="upload">
         <!-- 클립사진 + '파일첨부' 글자 삽입 -->
         <!-- 첨부된 파일 리스트 -->
-        <div v-if="fileData && fileData.data && fileData.data.length > 0">
+        <div
+          v-if="
+            fileData.data && fileData.data.data && fileData.data.data.length > 0
+          "
+        >
           <div class="upload-header">
             <img src="../../assets/img/Attachfile.png" alt="attach-img-err" />
             <span class="attach-title">첨부된 파일</span>
           </div>
           <div
-            v-for="(file, index) in fileData.data"
+            v-for="(file, index) in fileData.data.data"
             :key="index"
             class="fileList"
           >
-            {{ file.fileOriginalName }}
+            <button @click="download(file.fileId, file.fileOriginalName)">
+              {{ file.fileOriginalName }}
+            </button>
           </div>
         </div>
       </div>
     </div>
+
     <!-- 게시글 댓글 -->
     <div class="board-comment">
       <div class="comments-header">
@@ -229,13 +261,21 @@ onMounted(() => {
   line-height: 1.5rem;
 }
 
+.fileList button {
+  background-color: #fff8f2;
+}
+
 /* 게시글 댓글 부분 */
 .board-comment {
   padding: 1.25rem;
 }
 
 .upload-header {
-    margin-top: 3rem;
+  width: 30%;
+  margin-top: 3rem;
+  display: grid;
+  grid-template-columns: 10% 90%;
+  align-items: center;
 }
 /* 댓글 카운트 부분 */
 .comment-count {
@@ -243,12 +283,13 @@ onMounted(() => {
   font-size: 1.25rem;
 }
 .comment-count span {
-    font-weight: 800;
-    color: #89b9ad;
+  font-weight: 800;
+  color: #89b9ad;
 }
 
 /* 댓글 리스트 */
 .board-comment-sub {
+  /* background-color: pink; */
   display: grid;
   grid-template-columns: 80% 20%;
   align-items: center;
@@ -257,6 +298,7 @@ onMounted(() => {
 }
 
 .comment-writer {
+  /* background-color: pink; */
   font-weight: 300;
   padding: 1.25rem 0;
   font-size: 1.2rem;
@@ -269,6 +311,7 @@ onMounted(() => {
   padding-left: 2.3rem;
 }
 .comment-sub-right {
+  /* background-color: pink; */
   justify-self: end;
 }
 .comment-date {
@@ -277,8 +320,8 @@ onMounted(() => {
   font-size: 0.8rem;
 }
 .comment-btn button {
-    border: none;
-    background-color: #fff8f2;
+  border: none;
+  background-color: #fff8f2;
 }
 .commet-add {
   padding: 1.25rem;
