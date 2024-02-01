@@ -41,15 +41,11 @@ const submitDiary = async (data) => {
 };
 
 // 일기 삭제
-const deleteDiary = async (diaryId) => {
+const deleteDiary = async (diaryId, success, fail) => {
     await instance
         .delete("diary/delete/" + diaryId)
-        .then((response) => {
-            console.log(response.data);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+        .then(success)
+        .catch(fail);
 };
 
 // 일기 수정 및 임시 저장

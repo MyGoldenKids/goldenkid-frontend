@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { getDiaryList, getDiaryDetail } from "@/api/diary";
+import { getDiaryList, getDiaryDetail, deleteDiary } from "@/api/diary";
 import { useMemberStore } from "@/stores/member-store";
 import { useDiaryStore } from "@/stores/diary-store";
 const memberStore = useMemberStore();
@@ -38,30 +38,60 @@ const fetchDiaryDetail = (diaryId) => {
         };
     });
 };
+
+const deleteDiaryDetail = (diaryId) => {
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+        deleteDiary(diaryId, () => {
+            // 삭제 후 목록 다시 가져오기
+            getDiaryList(memberStore.memberInfo.memberNo, (response) => {
+                diaryList.value = response.data.data;
+
+                // 가장 최근 다이어리 가져오기
+                if (diaryList.value.length > 0) {
+                    fetchDiaryDetail(diaryList.value[0].diaryId);
+                } else {
+                    // 목록이 비어있을 경우 초기화
+                    diaryDetail.value = "";
+                }
+            });
+        });
+    }
+};
 </script>
 
 <template>
     <div class="diary-content">
         <div class="content-left">
-            <div class="diary-content-box">
-                <div class="title">{{ diaryDetail.diaryTitle }}</div>
-                <div class="title-under">
-                    <div class="title-sub">
-                        <span>#{{ diaryDetail.diaryId }}번째 일기</span>
-                        <span>{{ diaryDetail.cratedAt }}</span>
+            <div v-if="diaryDetail">
+                <div class="diary-content-box">
+                    <div class="title">{{ diaryDetail.diaryTitle }}</div>
+                    <div class="title-under">
+                        <div class="title-sub">
+                            <span>#{{ diaryDetail.diaryId }}번째 일기</span>
+                            <span>{{ diaryDetail.cratedAt }}</span>
+                        </div>
+                        <div class="title-btn">
+                            <button>수정</button>
+                            <button
+                                @click="deleteDiaryDetail(diaryDetail.diaryId)"
+                            >
+                                삭제
+                            </button>
+                        </div>
                     </div>
-                    <div class="title-btn">
-                        <button>수정</button>
-                        <button>삭제</button>
+                    <div class="diary-detail">
+                        <div class="diary-img">
+                            이미지 크기 얼마로 해야할지 고민중 500x300 px
+                        </div>
+                        <div class="diary-text">
+                            {{ diaryDetail.diaryContent }}
+                        </div>
                     </div>
                 </div>
-                <div class="diary-detail">
-                    <div class="diary-img">
-                        이미지 크기 얼마로 해야할지 고민중 500x300 px
-                    </div>
-                    <div class="diary-text">
-                        {{ diaryDetail.diaryContent }}
-                    </div>
+            </div>
+            <div v-else>
+                <div class="empty-diary">
+                    <div class="sub-title">😂 작성한 일기가 없어요...</div>
                 </div>
             </div>
         </div>
@@ -199,5 +229,9 @@ const fetchDiaryDetail = (diaryId) => {
 .list-title:hover span {
     color: #fff !important;
     transition-duration: 0.5s;
+}
+
+.empty-diary {
+    font-size: 3.5rem;
 }
 </style>
