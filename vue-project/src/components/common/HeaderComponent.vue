@@ -51,7 +51,7 @@ const logout = () => {
             <router-link
                 class="menu-item"
                 :class="{ active: route.path.startsWith('/jira') }"
-                to="/hospital"
+                to="/jira/home"
                 >JIRA</router-link
             >
             <router-link

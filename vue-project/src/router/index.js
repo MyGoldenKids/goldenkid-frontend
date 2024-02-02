@@ -11,6 +11,7 @@ import MyPageView from "@/views/member/MemberMyPageView.vue";
 import DiaryListView from "@/views/diary/DiaryListView.vue";
 import DiaryWriteView from "@/views/diary/DiaryWriteView.vue";
 import ErrorView from "@/views/error/ErrorView.vue";
+import JiraHomeView from "@/views/jira/JiraHomeView.vue";
 
 const requireLogin = (to, from, next) => {
     if (!sessionStorage.getItem("isLoggedIn")) { // 로그인하지 않은 경우...
@@ -101,6 +102,16 @@ const router = createRouter({
                     path: "mypage",
                     component: MyPageView,
                     beforeEnter: requireLogin,
+                },
+            ],
+        },
+        {
+            path: "/jira",
+            children: [
+                {
+                    name: "jira-home",
+                    path: "home",
+                    component: JiraHomeView,
                 },
             ],
         },
