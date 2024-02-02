@@ -1,5 +1,5 @@
 <script setup>
-import { submitDiary, deleteDiary } from "@/api/diary";
+import { submitDiary, updateDiary, deleteDiary } from "@/api/diary";
 import { ref } from "vue";
 import { useMemberStore } from "@/stores/member-store";
 import router from "@/router";
@@ -7,7 +7,7 @@ const memberStore = useMemberStore();
 
 // 다이어리 제출 폼
 const diarySubmitForm = ref({
-    diaryId: 27, // 다이어리 생성 시 받야와야 함
+    diaryId: "", // 다이어리 생성 시 받야와야 함
     memberId: memberStore.memberInfo.memberNo,
     diaryTitle: "",
     diaryContent: "",
@@ -19,36 +19,54 @@ const date = new Date().toLocaleDateString();
 
 const submitDiaryForm = () => {
     if (window.confirm("일기를 등록할까요?")) {
-        submitDiary(diarySubmitForm)
-            .then(() => {
+        submitDiary(
+            diarySubmitForm,
+            () => {
+                // 등록 성공 시 일기모음 페이지로 이동
                 router.push({ name: "diary-list" });
-            })
-            .catch((error) => {
+            },
+            (error) => {
                 console.log(error);
-            });
+            }
+        );
     }
 };
 
 const cancel = (diaryId) => {
-    console.log(diaryId);
     if (
         window.confirm(
-            "일기 등록을 취소할까요? 작성한 일기는 저장되지 않습니다."
+            "일기 작성을 취소할까요? 작성한 일기는 저장되지 않습니다."
         )
     ) {
-        deleteDiary(diaryId)
-            .then(() => {
-                router.push({name: "diary-list"})
-            })
-            .catch((error) => {
+        deleteDiary(
+            diaryId,
+            () => {
+                // 취소 시 일기모음 페이지로 이동
+                router.push({ name: "diary-list" });
+            },
+            (error) => {
                 console.log(error);
-            });
+            }
+        );
     }
+};
+
+const save = (diaryId) => {
+    updateDiary(
+        diaryId,
+        diarySubmitForm,
+        () => {
+            router.push({ name: "diary-list" }); // 다이어리 모음으로 이동
+        },
+        (error) => {
+            console.log(error);
+        }
+    );
 };
 </script>
 
 <template>
-    <form>
+    <form @submit.prevent="submitDiaryForm">
         <div class="diary-write">
             <!-- 글 작성 부분 -->
             <div class="diary-write-left">
@@ -71,7 +89,12 @@ const cancel = (diaryId) => {
                     ></textarea>
                 </div>
                 <div class="save-temp">
-                    <button type="submit">임시저장</button>
+                    <button
+                        type="button"
+                        @click="save(diarySubmitForm.diaryId)"
+                    >
+                        임시저장
+                    </button>
                 </div>
             </div>
             <div class="diary-write-right">
@@ -88,9 +111,12 @@ const cancel = (diaryId) => {
                 </div>
                 <!-- 버튼 -->
                 <div class="submit-btn">
-                    <button type="submit" @click="submitDiaryForm">등록</button>
-                    <button @click="cancel(diarySubmitForm.diaryId)">
-                        글쓰기 취소
+                    <button type="submit">등록</button>
+                    <button
+                        type="button"
+                        @click="cancel(diarySubmitForm.diaryId)"
+                    >
+                        취소
                     </button>
                 </div>
             </div>
