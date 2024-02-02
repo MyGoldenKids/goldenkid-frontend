@@ -10,9 +10,14 @@ const getArticle = (articleId, success, fail) => {
   instance.get(`article/detail/${articleId}`).then(success).catch(fail);
 };
 
+// 게시글 작성
+const writeArticle = (data, success, fail) => {
+  return instance.post("article/write", data).then(success).catch(fail);
+}
+
 // 게시글 삭제
 const deleteArticles = (articleId, success, fail) => {
   return instance.put(`article/delete/${articleId}`).then(success).catch(fail);
 };
 
-export { getArticleList, getArticle, deleteArticles };
+export { getArticleList, getArticle, deleteArticles, writeArticle };
