@@ -17,15 +17,11 @@ const getDiaryDetail = async (diaryId, success, fail) => {
 };
 
 // 일기 생성
-const createDiary = async (data) => {
+const createDiary = async (data, success, fail) => {
     await instance
-        .post("diary/create", data.value)
-        .then((response) => {
-            console.log(response.data);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+        .post("diary/create", data)
+        .then(success)
+        .catch(fail);
 };
 
 // 일기 제출

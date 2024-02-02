@@ -22,7 +22,7 @@ const route = useRouter();
                 </router-link>
             </li>
             <li>
-                <router-link to="/diary/write">
+                <router-link to="/diary/create">
                     <img
                         src="@/assets/img/marker.png"
                         alt="일기쓰기"
@@ -30,7 +30,7 @@ const route = useRouter();
                         :class="{
                             active:
                                 route.currentRoute.value.path ===
-                                '/diary/write',
+                                '/diary/create',
                         }"
                     />
                     <span class="icon-text">일기쓰기</span>
