@@ -1,7 +1,35 @@
-<script setup></script>
+<script setup>
+import { submitDiary, deleteDiary } from "@/api/diary";
+import { ref } from "vue";
+import { useMemberStore } from "@/stores/member-store";
+import router from "@/router";
+const memberStore = useMemberStore();
+
+// 다이어리 제출 폼
+const diarySubmitForm = ref({
+    diaryId: "", // 다이어리 생성 시 받야와야 함
+    memberId: memberStore.memberInfo.memberNo,
+    diaryTitle: "",
+    diaryContent: "",
+    diaryReview: "",
+    fileListId: "",
+});
+
+const date = new Date().toLocaleDateString();
+
+const submitDiaryForm = () => {
+    if (window.confirm("일기를 등록할까요?")) {
+        submitDiary(diarySubmitForm, () => {
+            router.push({ name: "diary-list" });
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+};
+</script>
 
 <template>
-    <form>
+    <form @submit.prevent="submitDiaryForm">
         <div class="diary-write">
             <!-- 글 작성 부분 -->
             <div class="diary-write-left">
@@ -10,8 +38,9 @@
                         type="text"
                         placeholder="일기 제목을 적어주세요"
                         class="write-title"
+                        v-model="diarySubmitForm.diaryTitle"
                     />
-                    <p># 189번째 일기 2024.01.19</p>
+                    <p>{{ date }}</p>
                 </div>
                 <div>
                     <textarea
@@ -19,10 +48,12 @@
                         rows="10"
                         placeholder="일기를 내용을 적어주세요"
                         class="write-content"
+                        required
+                        v-model="diarySubmitForm.diaryContent"
                     ></textarea>
                 </div>
                 <div class="save-temp">
-                    <button>임시저장</button>
+                    <button type="submit">임시저장</button>
                 </div>
             </div>
             <div class="diary-write-right">
@@ -39,8 +70,10 @@
                 </div>
                 <!-- 버튼 -->
                 <div class="submit-btn">
-                    <button>등록</button>
-                    <button>글쓰기 취소</button>
+                    <button type="submit">등록</button>
+                    <button type="submit" @click="deleteDiary">
+                        글쓰기 취소
+                    </button>
                 </div>
             </div>
         </div>
