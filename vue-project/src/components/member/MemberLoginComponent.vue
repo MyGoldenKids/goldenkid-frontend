@@ -1,11 +1,15 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { login } from "@/api/member";
 import { useMemberStore } from "@/stores/member-store";
 import router from "@/router";
 import { instance } from "@/api/axios";
 
 const store = useMemberStore();
+
+onMounted(() =>{
+    store.logout();
+})
 
 const loginInfo = ref({
     memberId: "",

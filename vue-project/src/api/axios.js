@@ -1,6 +1,7 @@
 import axios from "axios";
-import { httpStatusCode } from './http-status';
 const { VITE_SERVER_URL } = import.meta.env;
+import { httpStatusCode } from './http-status';
+import router from "@/router";
 
 export const instance = axios.create({
     baseURL: VITE_SERVER_URL,
@@ -62,8 +63,8 @@ instance.interceptors.response.use(
                     return instance(originalRequest);
                 } catch (refreshError) {
                     // Silent refresh 실패 시 로그인 페이지로 리디렉션
-                    message.error("로그인 후 이용가능합니다.");
-                    router.push("/login");
+                    window.alert("로그인 후 이용가능합니다.");
+                    router.push({ name: "login" });
                     return Promise.reject(refreshError);
                 } finally {
                     isTokenRefreshing = false;
@@ -71,7 +72,7 @@ instance.interceptors.response.use(
             }
         } else {
             // 다른 종류의 오류 처리
-            message.error(error.response.data.message);
+            window.alert(error.response.data.message);
         }
 
         return Promise.reject(error);
