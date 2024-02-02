@@ -146,12 +146,12 @@ const goArticleList = () => {
 <style scoped>
 input {
   color: #665031;
-  font-family: "BMDOHYEON";
+  font-family: "Jalnan";
 }
 
 textarea {
   color: #665031;
-  font-family: "BMDOHYEON";
+  font-family: "Jalnan";
 }
 .article {
   width: 63.813rem;

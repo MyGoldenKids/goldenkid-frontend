@@ -96,12 +96,12 @@ a {
 }
 select {
   color: #665031;
-  font-family: "BMDOHYEON";
+  font-family: "Jalnan";
 }
 
 button {
   color: #665031;
-  font-family: "BMDOHYEON";
+  font-family: "Jalnan";
 }
 
 .search {
