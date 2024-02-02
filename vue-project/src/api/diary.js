@@ -25,15 +25,11 @@ const createDiary = async (data, success, fail) => {
 };
 
 // 일기 제출
-const submitDiary = async (data) => {
+const submitDiary = async (data, success, fail) => {
     await instance
         .put("diary/submit", data.value)
-        .then((response) => {
-            console.log(response.data);
-        })
-        .catch((e) => {
-            console.log(e);
-        });
+        .then(success)
+        .catch(fail);
 };
 
 // 일기 삭제
