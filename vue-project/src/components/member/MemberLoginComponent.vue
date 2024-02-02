@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { login } from "@/api/member";
 import { useMemberStore } from "@/stores/member-store";
 import router from "@/router";
+import { instance } from "@/api/axios";
 
 const store = useMemberStore();
 
@@ -19,6 +20,12 @@ function submitForm() {
         login(
             loginInfo,
             (response) => {
+                const accessToken = response.data.token;
+                // 이미 페이지가 로드된 시점에 로그인을 수행 했으므로
+                // axios 객체의 아래 값은 초기화가 되어있지 않음으로 값을 저장.
+                // accessToken을 storage에 저장하는 경우 취약점이 발생할 수 있다.
+                // pinia-plugin-persistedstate 를 사용하는 경우 storage에 저장되는 것을 막아야한다.
+                instance.defaults.headers.common["Authorization"] = accessToken;
                 store.isLoggedIn = true; // 로그인 여부 store에 저장
                 store.memberInfo = response.data.data; // 로그인한 사용자 정보 store에 저장
                 sessionStorage.setItem("memberNo", response.data.data.memberNo);
