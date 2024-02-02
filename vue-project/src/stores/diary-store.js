@@ -5,9 +5,11 @@ export const useDiaryStore = defineStore(
     "diary-store",
     () => {
         const diaryId = ref("");
+        const diaryInfo = ref("");
 
         return {
             diaryId,
+            diaryInfo,
         };
     },
     {

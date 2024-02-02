@@ -1,80 +1,67 @@
 <script setup>
-import { submitDiary, deleteDiary } from "@/api/diary";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useMemberStore } from "@/stores/member-store";
+import { useDiaryStore } from "@/stores/diary-store";
+import { updateDiary } from "@/api/diary";
 import router from "@/router";
 const memberStore = useMemberStore();
+const diaryStore = useDiaryStore();
 
-// 다이어리 제출 폼
-const diarySubmitForm = ref({
-    diaryId: 27, // 다이어리 생성 시 받야와야 함
+const updateForm = ref({
     memberId: memberStore.memberInfo.memberNo,
-    diaryTitle: "",
-    diaryContent: "",
-    diaryReview: "",
-    fileListId: "",
+    diaryId: diaryStore.diaryInfo.diaryId,
+    diaryTitle: diaryStore.diaryInfo.diaryTitle,
+    diaryContent: diaryStore.diaryInfo.diaryContent,
+    diaryReview: diaryStore.diaryInfo.diaryReview,
+    fileListId: diaryStore.diaryInfo.fileListId,
 });
 
-const date = new Date().toLocaleDateString();
-
-const submitDiaryForm = () => {
-    if (window.confirm("일기를 등록할까요?")) {
-        submitDiary(diarySubmitForm)
-            .then(() => {
-                router.push({ name: "diary-list" });
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
+const update = () => {
+    updateDiary(
+        diaryStore.diaryInfo.diaryId,
+        updateForm,
+        () => {
+            diaryStore.diaryInfo = ""; // 수정할 다이어리 정보 초기화
+            router.push({ name: "diary-list" }); // 다이어리 모음으로 이동
+        },
+        (error) => {
+            console.log(error);
+        }
+    );
 };
 
-const cancel = (diaryId) => {
-    console.log(diaryId);
-    if (
-        window.confirm(
-            "일기 등록을 취소할까요? 작성한 일기는 저장되지 않습니다."
-        )
-    ) {
-        deleteDiary(diaryId)
-            .then(() => {
-                router.push({name: "diary-list"})
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
+const cancelUpdate = () => {
+    diaryStore.diaryInfo = ""; // 수정할 다이어리 정보 초기화
+    router.push({ name: "diary-list" }); // 다이어리 모음으로 이동
 };
 </script>
 
 <template>
-    <form>
-        <div class="diary-write">
+    <form @submit.prevent="update">
+        <div class="diary-update">
             <!-- 글 작성 부분 -->
-            <div class="diary-write-left">
-                <div class="write-box">
+            <div class="diary-update-left">
+                <div class="update-box">
                     <input
                         type="text"
                         placeholder="일기 제목을 적어주세요"
-                        class="write-title"
-                        v-model="diarySubmitForm.diaryTitle"
+                        class="update-title"
+                        v-model="updateForm.diaryTitle"
                     />
-                    <p>{{ date }}</p>
+                    <p>{{ diaryStore.diaryInfo.cratedAt }}</p>
                 </div>
                 <div>
                     <textarea
                         cols="50"
                         rows="10"
                         placeholder="일기를 내용을 적어주세요"
-                        class="write-content"
-                        v-model="diarySubmitForm.diaryContent"
+                        class="update-content"
+                        required
+                        v-model="updateForm.diaryContent"
                     ></textarea>
                 </div>
-                <div class="save-temp">
-                    <button type="submit">임시저장</button>
-                </div>
             </div>
-            <div class="diary-write-right">
+            <div class="diary-update-right">
                 <!-- 첨부파일 박스 -->
                 <div class="upload-box">
                     <label for="file">
@@ -88,10 +75,8 @@ const cancel = (diaryId) => {
                 </div>
                 <!-- 버튼 -->
                 <div class="submit-btn">
-                    <button type="submit" @click="submitDiaryForm">등록</button>
-                    <button @click="cancel(diarySubmitForm.diaryId)">
-                        글쓰기 취소
-                    </button>
+                    <button type="submit">수정</button>
+                    <button type="submit" @click="cancelUpdate">취소</button>
                 </div>
             </div>
         </div>
@@ -99,20 +84,19 @@ const cancel = (diaryId) => {
 </template>
 
 <style scoped>
-/* 다이어리 컨텐츠 */
-.diary-write {
+.diary-update {
     display: grid;
     grid-template-columns: 70% 30%;
 }
-/* 글 작성 부분 */
-.diary-write-left {
+
+.diary-update-left {
     display: grid;
     padding: 1.875rem;
 }
-.diary-write-left div {
+.diary-update-left div {
     padding: 0.625rem 1.875rem;
 }
-.write-box p {
+.update-box p {
     padding-top: 0.313rem;
     font-size: 0.8rem;
     text-align: right;
@@ -137,7 +121,7 @@ textarea:focus {
 textarea::placeholder {
     color: #89b9ad;
 }
-.write-title {
+.update-title {
     width: 100%;
     height: 1.875rem;
     padding-left: 0.625rem;
@@ -148,7 +132,7 @@ textarea::placeholder {
     font-weight: 700;
     color: #665031;
 }
-.write-content {
+.update-content {
     width: 100%;
     height: 18.75rem;
     padding: 0.625rem;
@@ -162,20 +146,9 @@ textarea::placeholder {
     font-weight: 700;
     color: #665031;
 }
-.save-temp {
-    justify-self: end;
-}
-.save-temp button {
-    padding: 0.625rem 1.2rem;
-    background-color: #89b9ad;
-    border: none;
-    box-shadow: none;
-    border-radius: 0.625rem;
-    color: #ffffff;
-}
 
 /* 파일 첨부 부분 */
-.diary-write-right {
+.diary-update-right {
     background-color: #89b9ad;
     display: grid;
     height: 100%;
