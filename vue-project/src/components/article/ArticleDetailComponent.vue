@@ -3,25 +3,35 @@ import { ref, onMounted } from "vue";
 import { getArticle, deleteArticles } from "@/api/article";
 import { getFileInfo, downloadFile } from "@/api/file";
 import { useRoute } from "vue-router";
-import router from "@/router";
+import { useRouter } from "vue-router";
 import { useArticleStore } from "@/stores/article-store";
 import { useMemberStore } from "@/stores/member-store";
 
-const store = useMemberStore();
+const memberStore = useMemberStore();
 const articleStore = useArticleStore();
 const article = ref("");
 const route = useRoute();
+const router = useRouter();
 const articleId = route.params.id;
-const formattedDate = ref("");
 const fileData = ref([]);
 
 // 게시글 상세 조회
 const articleInfo = async () => {
-  const data = await getArticle(articleId);
-  article.value = data.data;
-  formattedDate.value = formatCreatedAt(article.value.createdAt);
-  fileData.value = await getFileInfo(article.value.fileListId);
-  articleStore.articleInfo = article.value;
+  getArticle(
+    articleId,
+    async (response) => {
+      article.value = response.data.data;
+      article.value.formattedCreatedAt = formatCreatedAt(
+        article.value.createdAt
+      );
+      fileData.value = await getFileInfo(article.value.fileListId);
+      articleStore.articleInfo = article.value;
+    },
+    (error) => {
+      router.push("/404");
+      console.log(error);
+    }
+  );
 };
 
 // 작성일 연-월-일 포매팅 할 함수
@@ -82,7 +92,7 @@ onMounted(() => {
             <span>{{ article.nickname }}</span>
             <!-- ------------------------------------- -->
           </div>
-          <div class="left-item2">{{ formattedDate }}</div>
+          <div class="left-item2">{{ article.formattedCreatedAt }}</div>
           <div class="left-item2">조회수 : {{ article.hit }}</div>
           <div class="left-item2">추천수 : {{ article.recommendCount }}</div>
         </div>
@@ -129,7 +139,7 @@ onMounted(() => {
         <div class="comment-count">댓글 <span>2</span></div>
         <div class="article-delete-put">
           <!-- 본인이 작성한 글만 수정 삭제 버튼 보이기 -->
-          <div v-if="store.memberInfo.memberNo === article.memberId">
+          <div v-if="memberStore.memberInfo.memberNo === article.memberId">
             <router-link to="/article/modify"
               ><button>글수정</button></router-link
             >

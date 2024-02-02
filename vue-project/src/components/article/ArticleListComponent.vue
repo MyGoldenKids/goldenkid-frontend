@@ -6,10 +6,17 @@ import { useRouter } from "vue-router";
 // 게시글 전체 리스트 조회
 const articleList = ref("");
 const articleInfo = async () => {
-  articleList.value = await getArticleList();
-  articleList.value.forEach((article) => {
-    article.formattedCreatedAt = formatCreatedAt(article.createdAt);
-  });
+  getArticleList(
+    (response) => {
+      articleList.value = response.data.data;
+      articleList.value.forEach((article) => {
+        article.formattedCreatedAt = formatCreatedAt(article.createdAt);
+      });
+    },
+    (error) => {
+      console.error(error);
+    }
+  );
 };
 
 // 작성일 연-월-일 포매팅 할 함수
