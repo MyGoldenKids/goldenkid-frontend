@@ -14,6 +14,7 @@ import DiaryCreateView from "@/views/diary/DiaryCreateView.vue";
 import DiaryUpdateView from "@/views/diary/DiaryUpdateView.vue"
 import ErrorView from "@/views/error/ErrorView.vue";
 import JiraHomeView from "@/views/jira/JiraHomeView.vue";
+import JiraSprintView from "@/views/jira/JiraSprintView.vue";
 
 const requireLogin = (to, from, next) => {
     if (!sessionStorage.getItem("isLoggedIn")) { // 로그인하지 않은 경우...
@@ -126,6 +127,11 @@ const router = createRouter({
                     name: "jira-home",
                     path: "home",
                     component: JiraHomeView,
+                },
+                {
+                    name: "jira-sprint",
+                    path: "sprint",
+                    component: JiraSprintView,
                 },
             ],
         },
