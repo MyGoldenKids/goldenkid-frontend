@@ -11,6 +11,7 @@ import MyPageView from "@/views/member/MemberMyPageView.vue";
 import DiaryListView from "@/views/diary/DiaryListView.vue";
 import DiaryWriteView from "@/views/diary/DiaryWriteView.vue";
 import DiaryCreateView from "@/views/diary/DiaryCreateView.vue";
+import DiaryUpdateView from "@/views/diary/DiaryUpdateView.vue"
 import ErrorView from "@/views/error/ErrorView.vue";
 import JiraHomeView from "@/views/jira/JiraHomeView.vue";
 
@@ -89,6 +90,12 @@ const router = createRouter({
                     component: DiaryWriteView,
                     beforeEnter: requireLogin,
                 },
+                {
+                    name: "diary-update",
+                    path: "update/:id",
+                    component: DiaryUpdateView,
+                    beforeEnter: requireLogin,
+                }
             ],
         },
         {

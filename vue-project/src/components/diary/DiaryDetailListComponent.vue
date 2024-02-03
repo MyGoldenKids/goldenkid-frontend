@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 import { getDiaryList, getDiaryDetail, deleteDiary } from "@/api/diary";
 import { useMemberStore } from "@/stores/member-store";
 import { useDiaryStore } from "@/stores/diary-store";
+import router from "@/router";
 const memberStore = useMemberStore();
 const diaryStore = useDiaryStore();
 const diaryList = ref([]);
@@ -57,6 +58,11 @@ const deleteDiaryDetail = (diaryId) => {
         });
     }
 };
+
+const goToModify = (diaryId) => {
+    diaryStore.diaryInfo = diaryDetail.value;
+    router.push(`/diary/update/${diaryId}`);
+};
 </script>
 
 <template>
@@ -71,7 +77,7 @@ const deleteDiaryDetail = (diaryId) => {
                             <span>{{ diaryDetail.cratedAt }}</span>
                         </div>
                         <div class="title-btn">
-                            <button>수정</button>
+                            <button @click="goToModify(diaryDetail.diaryId)">수정</button>
                             <button
                                 @click="deleteDiaryDetail(diaryDetail.diaryId)"
                             >
