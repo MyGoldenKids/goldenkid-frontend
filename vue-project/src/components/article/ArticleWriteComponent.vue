@@ -4,6 +4,7 @@ import { createFileList } from "@/api/file";
 import { ref } from "vue";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
 import { useMemberStore } from "@/stores/member-store";
+import { writeArticle } from "@/api/article.js"
 
 // 게시글 작성
 const store = useMemberStore();
@@ -28,26 +29,32 @@ const createFiles = (memberNo, formData) => {
   });
 };
 
-// 게시판 작성 POST 요청
 const createArticle = async () => {
-  try {
-    if (articleTitle.value.length == 0 || articleContent.value.length == 0) {
-      window.alert("게시글의 제목/내용 이 없습니다.");
-      return;
-    }
-    await instance.post("article/write", {
+  if (articleTitle.value.length == 0 || articleContent.value.length == 0) {
+    window.alert("게시글의 제목/내용 이 없습니다.");
+    return;
+  }
+  await writeArticle(
+    {
       memberId: memberNo,
       fileListId: fileListId.value,
       articleTitle: articleTitle.value,
       articleContent: articleContent.value,
-    });
-    // 첨부파일이 없을 경우 에러 뜨지 않게 하는 코드
-    isCanceling = true;
-    router.push("list");
-  } catch (error) {
-    console.log(error);
-  }
+    },
+    (response) => {
+      if (response.status === 200) {
+        isCanceling = true;
+        router.push("list");
+      } else {
+        console.log("게시글 작성 실패");
+      }
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
 };
+
 
 // 첨부한 파일의 이름으로 넣어주는 코드
 const fileList = ref([]);
