@@ -1,7 +1,6 @@
 <script setup>
 import { useRouter } from "vue-router";
 const route = useRouter();
-
 </script>
 
 <template>
@@ -29,8 +28,9 @@ const route = useRouter();
                         class="icon"
                         :class="{
                             active:
-                                route.currentRoute.value.path ===
-                                '/diary/create',
+                                route.currentRoute.value.path !==
+                                    '/diary/home' &&
+                                route.currentRoute.value.path !== '/diary/list',
                         }"
                     />
                     <span class="icon-text">일기쓰기</span>
@@ -70,7 +70,7 @@ const route = useRouter();
     display: block;
     margin: 0 auto;
 }
-.diary-nav  ul  li  span {
+.diary-nav ul li span {
     display: inline-block;
     margin-top: 0.5rem;
 }
