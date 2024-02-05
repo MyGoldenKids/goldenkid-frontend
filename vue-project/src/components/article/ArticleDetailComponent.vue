@@ -99,9 +99,21 @@ const registerComment = async () => {
     articleId,
     comment.value,
     (response) => {
-      console.log(response.data.data);
       getCommentList();
       comment.value = "";
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+};
+
+const deleteCommentById = async (commentId) => {
+  deleteComment(
+    commentId,
+    memberStore.memberInfo.memberNo,
+    () => {
+      getCommentList();
     },
     (error) => {
       console.log(error);
@@ -199,7 +211,7 @@ onMounted(() => {
           <!-- 여기는 로그인한 회원정보 일치할 때만 보일거야  -->
           <div v-if="memberStore.memberInfo.memberNo === item.memberId" class="comment-btn">
             <button class="comment-modify">수정</button> |
-            <button class="comment-delete">삭제</button>
+            <button class="comment-delete" @click="deleteCommentById(item.commentId)">삭제</button>
           </div>
         </div>
       </div>
