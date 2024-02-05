@@ -71,6 +71,15 @@ const goToDiaryList = (diaryId) => {
     color: #89b9ad;
 }
 
+.diary-list-sub li:hover {
+    background-color: #89b9ad;
+    transition-duration: 0.5s;
+}
+.diary-list-sub li:hover span {
+    color: #fff;
+    transition-duration: 0.5s;
+}
+
 a {
     text-decoration-line: none;
 }

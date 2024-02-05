@@ -232,7 +232,7 @@ const goToModify = (diaryId) => {
     background-color: #89b9ad;
     transition-duration: 0.5s;
 }
-.list-title:hover span {
+.list-title a:hover span {
     color: #fff !important;
     transition-duration: 0.5s;
 }
