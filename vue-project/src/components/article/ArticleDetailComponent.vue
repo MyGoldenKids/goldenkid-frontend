@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import { getArticle, deleteArticles } from "@/api/article";
 import { getFileInfo, downloadFile } from "@/api/file";
+import { getCommentByArticleId, writeComment, updateComment, deleteComment } from "@/api/comment";
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 import { useArticleStore } from "@/stores/article-store";
@@ -14,6 +15,8 @@ const route = useRoute();
 const router = useRouter();
 const articleId = route.params.id;
 const fileData = ref([]);
+const comment = ref("");
+const commentList = ref([]);
 
 // 게시글 상세 조회
 const articleInfo = async () => {
@@ -28,7 +31,7 @@ const articleInfo = async () => {
       articleStore.articleInfo = article.value;
     },
     (error) => {
-      router.push("/404");
+      router.push("/error");
       console.log(error);
     }
   );
@@ -73,8 +76,24 @@ const download = async (fileId, fileName) => {
   });
 };
 
+const getCommentList = async () => {
+  getCommentByArticleId(
+    articleId,
+    (response) => {
+      commentList.value = response.data.data;
+      commentList.value.forEach((comment) => {
+        comment.createdAt = formatCreatedAt(comment.createdAt);
+      });
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+};
+
 onMounted(() => {
   articleInfo();
+  getCommentList();
 });
 </script>
 
@@ -136,7 +155,7 @@ onMounted(() => {
     <!-- 게시글 댓글 -->
     <div class="board-comment">
       <div class="comments-header">
-        <div class="comment-count">댓글 <span>2</span></div>
+        <div class="comment-count">댓글 <span>{{ commentList.length }}</span></div>
         <div class="article-delete-put">
           <!-- 본인이 작성한 글만 수정 삭제 버튼 보이기 -->
           <div v-if="memberStore.memberInfo.memberNo === article.memberId">
@@ -148,46 +167,25 @@ onMounted(() => {
         </div>
       </div>
 
-      <!-- for문 돌릴듯1 -->
-      <div class="board-comment-sub">
-        <div class="comment-sub-left">
-          <div class="comment-writer">
-            <img src="@/assets/img/basic_profile.png" alt="프로필기본이미지" />
-            <span>영소정</span>
-          </div>
-          <div class="comment-content">소중한 정보 감상이잉ㅇ</div>
+      <div v-for="(item, index) in commentList" :key="index">
+        <div class="board-comment-sub">
+          <div class="comment-sub-left">
+            <div class="comment-writer">
+              <img src="@/assets/img/basic_profile.png" alt="프로필기본이미지" />
+              <span>{{item.nickname}}</span>
+            </div>
+          <div class="comment-content">{{ item.content }}</div>
         </div>
         <div class="comment-sub-right">
-          <div class="comment-date">2024.01.20</div>
-          <!-- 여기는 로그인한 회원정복 일치할 때만 보일거야  -->
-          <div class="comment-btn">
+          <div class="comment-date">{{ item.createdAt }}</div>
+          <!-- 여기는 로그인한 회원정보 일치할 때만 보일거야  -->
+          <div v-if="memberStore.memberInfo.memberNo === item.memberId" class="comment-btn">
             <button class="comment-modify">수정</button> |
             <button class="comment-delete">삭제</button>
           </div>
         </div>
       </div>
-
-      <!-- for문 돌릴듯2 -->
-      <div class="board-comment-sub">
-        <div class="comment-sub-left">
-          <div class="comment-writer">
-            <img src="@/assets/img/basic_profile.png" alt="프로필기본이미지" />
-            <span>영소정</span>
-          </div>
-          <div class="comment-content">
-            소중한 정보 감상이잉ㅇdddddddddddddddddddd
-          </div>
-        </div>
-        <div class="comment-sub-right">
-          <div class="comment-date">2024.01.20</div>
-          <!-- 여기는 로그인한 회원정복 일치할 때만 보일거야  -->
-          <div class="comment-btn">
-            <button class="comment-modify">수정</button> |
-            <button class="comment-delete">삭제</button>
-          </div>
-        </div>
       </div>
-      <!-- for문 끝 -->
 
       <!-- 댓글 작성 폼 -->
       <div class="commet-add">
