@@ -21,4 +21,12 @@ const updateComment = async (commentId, comment, success, fail) => {
         .catch(fail);
 };
 
-export { getCommentByArticleId, writeComment, updateComment };
+// 댓글 삭제
+const deleteComment = async (commentId, memberId, success, fail) => {
+    await instance
+        .delete(`comment/delete/${commentId}/member/${memberId}`)
+        .then(success)
+        .catch(fail);
+};
+
+export { getCommentByArticleId, writeComment, updateComment, deleteComment };
