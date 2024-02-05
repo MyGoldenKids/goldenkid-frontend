@@ -15,7 +15,10 @@ const route = useRoute();
 const router = useRouter();
 const articleId = route.params.id;
 const fileData = ref([]);
-const comment = ref("");
+const comment = ref({
+  content: "",
+  memberId: memberStore.memberInfo.memberNo,
+});
 const commentList = ref([]);
 
 // 게시글 상세 조회
@@ -84,6 +87,21 @@ const getCommentList = async () => {
       commentList.value.forEach((comment) => {
         comment.createdAt = formatCreatedAt(comment.createdAt);
       });
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+};
+
+const registerComment = async () => {
+  writeComment(
+    articleId,
+    comment.value,
+    (response) => {
+      console.log(response.data.data);
+      getCommentList();
+      comment.value = "";
     },
     (error) => {
       console.log(error);
@@ -189,8 +207,8 @@ onMounted(() => {
 
       <!-- 댓글 작성 폼 -->
       <div class="commet-add">
-        <input type="text" class="add-input" placeholder="댓글작성" value="" />
-        <button class="add-btn">등록</button>
+        <input type="text" class="add-input" placeholder="댓글작성" v-model="comment.content" />
+        <button class="add-btn" @click="registerComment">등록</button>
       </div>
     </div>
   </div>
