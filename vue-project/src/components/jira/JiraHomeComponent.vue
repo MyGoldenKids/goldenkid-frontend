@@ -1,5 +1,10 @@
 <script setup>
+import { useRouter } from 'vue-router';
+const router = useRouter()
 
+const goSprint = () => {
+    router.push('sprint')
+}
 </script>
 
 <template>
@@ -20,7 +25,7 @@
                         <div>아직 계획이 없다면?</div>
                         <div>계획하기</div>
                     </button>
-                    <button class="btn">
+                    <button class="btn" @click="goSprint">
                         <div>등록한 계획이 있다면?</div>
                         <div>관리하기</div>
                     </button>
@@ -47,14 +52,14 @@
 }
 
 .jira-home-header {
-    width: 10.25rem;
+    width: 17%;
     height: auto;
     background-image: url(@/assets/img/sticker9.png);
     background-size: cover;
     padding: 0.438rem 0;
     color: #AD9478;
     font-size: 1.5rem;
-    margin: 2rem 0;
+    margin: 1rem 0;
 }
 
 .main-title {
