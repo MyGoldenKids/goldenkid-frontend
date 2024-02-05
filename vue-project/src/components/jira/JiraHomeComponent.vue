@@ -5,6 +5,9 @@ const router = useRouter()
 const goSprint = () => {
     router.push('sprint')
 }
+const goPlan = () => {
+    router.push('plan1')
+}
 </script>
 
 <template>
@@ -21,7 +24,7 @@ const goSprint = () => {
                     <p>앞으로의 일주일이 지난 일주일보다 빛날 거예요.</p>
                 </div>
                 <div class="button-wrap">
-                    <button class="btn">
+                    <button class="btn" @click="goPlan">
                         <div>아직 계획이 없다면?</div>
                         <div>계획하기</div>
                     </button>
