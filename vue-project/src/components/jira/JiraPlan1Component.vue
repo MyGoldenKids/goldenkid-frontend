@@ -1,6 +1,5 @@
 <script setup>
-import { defineComponent } from "vue";
-import { Carousel, Pagination, Slide } from "vue3-carousel";
+import { Carousel, Pagination, Slide, Navigation } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
 </script>
 
@@ -84,6 +83,8 @@ import "vue3-carousel/dist/carousel.css";
     padding: 0.625rem;
 }
 .slide-box {
+    width: 80%;
+    margin: 0 auto;
     padding: 1.25rem 0;
 }
 .slide-box-list {
@@ -150,7 +151,7 @@ import "vue3-carousel/dist/carousel.css";
 }
 
 .carousel__slide {
-    padding: 0 0 1.25rem 1.5rem 
+    padding: 0 0 1.25rem 1.5rem;
 }
 .carousel__track {
     transform-style: preserve-3d;
@@ -167,11 +168,11 @@ import "vue3-carousel/dist/carousel.css";
 }
 .carousel__slide--prev {
     opacity: 1;
-    transform: rotateY(-10deg) scale(0.95);
+    transform: rotateY(-10deg) scale(0.9);
 }
 .carousel__slide--next {
     opacity: 1;
-    transform: rotateY(10deg) scale(0.95);
+    transform: rotateY(10deg) scale(0.9);
 }
 .carousel__slide--active {
     opacity: 1;
@@ -180,5 +181,42 @@ import "vue3-carousel/dist/carousel.css";
 .carousel__item {
     padding: 0.625rem 0;
     box-sizing: border-box;
+}
+
+.nav-button {
+    position: absolute;
+    top: 50%;
+    content: "";
+    display: inline-block;
+    border: solid white; /* 화살표 색상 */
+    border-width: 0 4px 4px 0; /* 화살표 두께 */
+    padding: 20px; /* 화살표 크기 */
+    transition: transform 0.2s; /* 부드러운 전환 효과 */
+}
+
+.next,
+.prev {
+    position: absolute;
+    top: 0%;
+    border-color: rgba(208, 205, 205, 0.716);
+}
+
+.next {
+    right: calc(-140%);
+    transform: translateY(-10%) rotate(-45deg);
+}
+
+.prev {
+    left: calc(-120%);
+    transform: translateY(-10%) rotate(135deg);
+}
+
+.nav-button:hover {
+    border-color: #665031;
+    transform: translateY(-10%) rotate(-45deg) scale(1.2);
+}
+
+.prev:hover {
+    transform: translateY(-10%) rotate(135deg) scale(1.2);
 }
 </style>
