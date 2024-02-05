@@ -1,6 +1,4 @@
-<script setup>
-
-</script>
+<script setup></script>
 
 <template>
     <div class="jira-wrap">
@@ -17,21 +15,21 @@
                 <div class="todo-box">
                     <div class="todo-time">
                         <p>아이와 함께 할 활동을 추가해 주세요</p>
-                        <input type="number" value="3" readonly/>
+                        <input type="number" value="3" readonly />
                     </div>
                 </div>
                 <div class="todo-box">
                     <div class="todo-time">
                         <p>아이와 함께 할 활동을 추가해 주세요</p>
-                        <input type="number" value="2" readonly/>
+                        <input type="number" value="2" readonly />
                     </div>
                 </div>
-                <div class="sum-point">
-                    <span>5</span> HOURS
-                </div>
+                <div class="sum-point"><span>5</span> HOURS</div>
                 <div class="jira-btn">
-                    <router-link :to="{name: 'jira-plan2'}">PREV</router-link>
-                    <router-link :to="{name: 'jira-sprint'}">관리하러 가기</router-link>
+                    <router-link :to="{ name: 'jira-plan2' }">PREV</router-link>
+                    <router-link :to="{ name: 'jira-sprint' }"
+                        >관리하러 가기</router-link
+                    >
                 </div>
             </div>
         </div>
@@ -40,9 +38,9 @@
 
 <style scoped>
 .jira-wrap {
-    background-color: #AD9478;
+    background-color: #ad9478;
     text-align: center;
-    border-radius: 10px;
+    border-radius: 0.625rem;
     padding: 1.25rem;
     box-sizing: border-box;
 }
@@ -58,7 +56,7 @@
     align-content: center;
     justify-content: center;
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 0.625rem;
     height: 100%;
 }
 .jira-title h1 {
@@ -71,7 +69,7 @@
 }
 .jira-title p.font-color {
     font-size: 2rem;
-    color:#fff;
+    color: #fff;
 }
 .jira-title p:last-child {
     color: #fff;
@@ -84,13 +82,12 @@
 .todo-box {
     display: grid;
     grid-template-columns: 1fr;
-
 }
 .todo-time {
     width: 60%;
     padding: 0.625rem;
-    margin : 0.625rem auto;
-    background-color: #FFF8F2;
+    margin: 0.625rem auto;
+    background-color: #fff8f2;
     border-radius: 0.625rem;
     display: grid;
     grid-template-columns: 85% 10%;
@@ -100,17 +97,17 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
 }
 .todo-time p {
-    color: #AD9478;
+    color: #ad9478;
     font-size: 1.2rem;
 }
 .todo-time input[type="number"] {
     width: 100%;
-    height: 30px;
+    height: 1.8rem;
     font-size: 1.5rem;
-    border: 2px solid #AD9478;
-    border-radius: 0.375rem; 
-    background-color: #FFF;
-    color: #AD9478;
+    border: 2px solid #ad9478;
+    border-radius: 0.375rem;
+    background-color: #fff;
+    color: #ad9478;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: border-color 0.2s, box-shadow 0.2s;
     padding: 0 0.313rem;
@@ -127,13 +124,13 @@
 .jira-btn {
     margin: 2.5rem;
 }
-.jira-btn a{
+.jira-btn a {
     background-color: #665031;
     color: #fff;
     border: none;
     padding: 0.625rem 2.5rem;
     border-radius: 0.625rem;
     font-size: 1.5rem;
-    margin: 0  1.25rem;
+    margin: 0 1.25rem;
 }
 </style>

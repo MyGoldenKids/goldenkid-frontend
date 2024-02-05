@@ -19,10 +19,10 @@ import "vue3-carousel/dist/carousel.css";
                 <div class="content-slide">
                     <div class="slide-box">
                         <Carousel
-                            :itemsToShow="3.95"
+                            :itemsToShow="3"
                             :wrapAround="true"
                             :transition="500"
-                            :autoplay="1000"
+                            :autoplay="3000"
                         >
                             <Slide v-for="slide in 10" :key="slide">
                                 <div class="carousel__item">
@@ -35,8 +35,6 @@ import "vue3-carousel/dist/carousel.css";
                                     </div>
                                 </div>
                             </Slide>
-
-                            <!-- <template #ariaNextSlide>></template> -->
                             <template #addons>
                                 <Navigation>
                                     <template #prev>
@@ -57,12 +55,8 @@ import "vue3-carousel/dist/carousel.css";
                         <div class="todo-item select-todo">
                             해당 내용 여기로 들어옴
                         </div>
-                        <div class="todo-item">
-                            내용 안넣었을 때
-                        </div>
-                        <div class="todo-item">
-                            카드를 클릭해주세요
-                        </div>
+                        <div class="todo-item">내용 안넣었을 때</div>
+                        <div class="todo-item">카드를 클릭해주세요</div>
                     </div>
                 </div>
                 <div class="jira-btn">
@@ -77,7 +71,7 @@ import "vue3-carousel/dist/carousel.css";
 .jira-wrap {
     background-color: #ad9478;
     text-align: center;
-    border-radius: 10px;
+    border-radius: 0.625rem;
     padding: 1.25rem;
     box-sizing: border-box;
 }
@@ -90,13 +84,10 @@ import "vue3-carousel/dist/carousel.css";
     padding: 0.625rem;
 }
 .slide-box {
-    /* background-color: pink; */
-    /* height: 250px;   */
     padding: 1.25rem 0;
 }
 .slide-box-list {
-    /* height: 200px; */
-    background-color: #FFF8F2;
+    background-color: #fff8f2;
     padding: 2.5rem 1.25rem;
     border-radius: 1.25rem;
     line-height: 1.5rem;
@@ -106,6 +97,7 @@ import "vue3-carousel/dist/carousel.css";
 .todo-box {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    margin-top: 1.25rem;
 }
 .todo-item {
     padding: 0.625rem;
@@ -113,7 +105,7 @@ import "vue3-carousel/dist/carousel.css";
     background-color: inherit;
     border: 3px solid #665031;
     border-radius: 0.625rem;
-    height: 150px;
+    height: 9.38rem;
     display: grid;
     align-content: center;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
@@ -130,7 +122,7 @@ import "vue3-carousel/dist/carousel.css";
     align-content: center;
     justify-content: center;
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 0.625rem;
     height: 100%;
 }
 .jira-title h1 {
@@ -158,85 +150,35 @@ import "vue3-carousel/dist/carousel.css";
 }
 
 .carousel__slide {
-    padding: 5px;
+    padding: 0 0 1.25rem 1.5rem 
 }
-
-.carousel__viewport {
-    perspective: 2000px;
-}
-
 .carousel__track {
     transform-style: preserve-3d;
 }
-
 .carousel__slide--sliding {
     transition: 0.5s;
 }
-
 .carousel__slide {
     opacity: 0.9;
     transform: rotateY(-20deg) scale(0.9);
 }
-
 .carousel__slide--active ~ .carousel__slide {
     transform: rotateY(20deg) scale(0.9);
 }
-
 .carousel__slide--prev {
     opacity: 1;
     transform: rotateY(-10deg) scale(0.95);
 }
-
 .carousel__slide--next {
     opacity: 1;
     transform: rotateY(10deg) scale(0.95);
 }
-
 .carousel__slide--active {
     opacity: 1;
     transform: rotateY(0) scale(1.1);
 }
 .carousel__item {
     padding: 0.625rem 0;
-}
-
-.slide-box {
-}
-
-.nav-button::before {
-    content: "";
-    display: inline-block;
-    border: solid white; /* 화살표 색상 */
-    border-width: 0 4px 4px 0; /* 화살표 두께 */
-    padding: 20px; /* 화살표 크기 */
-    transition: transform 0.2s; /* 부드러운 전환 효과 */
-}
-
-.next::before,
-.prev::before {
-    position: absolute;
-    top: 0%;
-    border-color: rgba(208, 205, 205, 0.716);
-}
-
-.next::before {
-    right: calc(700% - 0px); /* 오른쪽 화살표 위치 조정 */
-    transform: translateY(-10%) rotate(-45deg);
-}
-
-.prev::before {
-    left: calc(700% - 0px);
-    /* translateY : 화살표 높낮이 결정 */
-    transform: translateY(-10%) rotate(135deg); /* 왼쪽 화살표 방향 */
-}
-
-.nav-button:hover::before {
-    border-color: rgba(100, 100, 100, 0.472); /* hover 시 화살표 색상 변경 */
-    transform: translateY(-10%) rotate(-45deg) scale(1.2); /* 오른쪽 화살표 확대 */
-}
-
-.prev:hover::before {
-    /* translateY : 화살표 높낮이 결정 */
-    transform: translateY(-10%) rotate(135deg) scale(1.2); /* 왼쪽 화살표 확대 */
+    box-sizing: border-box;
 }
 </style>
