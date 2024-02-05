@@ -13,4 +13,12 @@ const writeComment = async (articleId, comment, success, fail) => {
         .catch(fail);
 };
 
-export { getCommentByArticleId, writeComment };
+// 댓글 수정
+const updateComment = async (commentId, comment, success, fail) => {
+    await instance
+        .patch(`comment/modify/${commentId}`, comment)
+        .then(success)
+        .catch(fail);
+};
+
+export { getCommentByArticleId, writeComment, updateComment };
