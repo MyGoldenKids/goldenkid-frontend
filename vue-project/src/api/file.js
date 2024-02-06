@@ -21,4 +21,12 @@ const downloadFile = (fileId, success, fail) => {
     .catch(fail);
 };
 
-export { createFileList, getFileInfo, downloadFile };
+// 파일 수정
+const modifyFile = (fileListId, memberId, data, success, fail) => {
+  return fileInstance
+    .post(`file/upload/flist/${fileListId}/${memberId}`, data)
+    .then(success)
+    .catch(fail);
+};
+
+export { createFileList, getFileInfo, downloadFile, modifyFile };

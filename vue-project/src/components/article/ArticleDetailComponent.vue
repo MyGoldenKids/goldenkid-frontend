@@ -140,9 +140,7 @@ onMounted(() => {
         <div class="article-delete-put">
           <!-- 본인이 작성한 글만 수정 삭제 버튼 보이기 -->
           <div v-if="memberStore.memberInfo.memberNo === article.memberId">
-            <router-link to="/article/modify"
-              ><button>글수정</button></router-link
-            >
+            <router-link to="/article/modify"><button>글수정</button></router-link>
             <button @click="deleteArticle(articleId)">글삭제</button>
           </div>
         </div>
