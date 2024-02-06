@@ -7,4 +7,9 @@ export const useCalendarStore = defineStore("calendar-store", () => {
     return {
         date,
     };
+},
+{
+    persist: {
+        storage: sessionStorage,
+    },
 });

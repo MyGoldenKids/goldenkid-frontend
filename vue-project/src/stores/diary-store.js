@@ -6,10 +6,18 @@ export const useDiaryStore = defineStore(
     () => {
         const diaryId = ref("");
         const diaryInfo = ref("");
+        const createdDiaryId = ref("");
+        const selectedDraftId = ref("");
+        const draft = ref("");
+        const preview = ref("");
 
         return {
             diaryId,
             diaryInfo,
+            createdDiaryId,
+            selectedDraftId,
+            draft,
+            preview,
         };
     },
     {
