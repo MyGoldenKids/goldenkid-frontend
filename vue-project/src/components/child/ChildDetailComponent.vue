@@ -46,49 +46,76 @@ const deleteChild = (childId) => {
 </script>
 
 <template>
-    <div class="child-wrap">
-        <div
-            class="child-list"
-            v-for="(child, index) in childList"
-            :key="index"
-        >
-            <input
-                type="text"
-                v-model="child.childName"
-                :disabled="isDisabled[index]"
-                required
-            />
-            <br />
-            <input
-                type="date"
-                v-model="child.childBirth"
-                :disabled="isDisabled[index]"
-                required
-            />
-            <fieldset id="gender">
-                <input
-                    type="radio"
-                    :value="true"
-                    v-model="child.childGender"
-                    :disabled="isDisabled[index]"
-                />남
-                <input
-                    type="radio"
-                    :value="false"
-                    v-model="child.childGender"
-                    :disabled="isDisabled[index]"
-                />여
-            </fieldset>
-            <button @click="updateChild(child, index)">
-                {{ isDisabled[index] ? "수정" : "등록" }}
-            </button>
-            <button @click="deleteChild(child.childId, index)">삭제</button>
+    <!-- 애기 -->
+    <div class="kid-grid">
+        <div class="kid-list-2">
+            <div
+                class="kid-box"
+                v-for="(child, index) in childList"
+                :key="index"
+            >
+                <img src="@/assets/img/bear-profile.png" alt="금쪽프로필" />
+                <p>{{ child.childName }}</p>
+                <p v-if="child.childGender">남아</p>
+                <p v-else>여아</p>
+                <p>{{ child.childBirth }}</p>
+                <div class="mypage-grid">
+                    <div class="btn-box">
+                        <button @click="regist">수정</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-.child-list {
-    margin-top: 1rem;
+.kid-grid {
+    width: 50%;
+    margin: 0 auto;
+}
+.kid-list-1 {
+    display: grid;
+    width: 50%;
+    grid-template-columns: 1fr;
+}
+.kid-list-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+/* 애기 */
+.kid-box {
+    background-color: #e1baad;
+    text-align: center;
+    border-radius: 1.87rem;
+    color: #fff;
+    padding: 0.625rem 0;
+}
+.kid-box img {
+    width: 50%;
+}
+.kid-box p {
+    margin: 0.625rem 0;
+    font-size: 1.1rem;
+}
+
+/* 버튼 */
+.btn-box {
+    width: 50%;
+    margin: 0 auto;
+}
+.btn-box button {
+    width: 100%;
+    border: none;
+    height: 2.5rem; 
+    background-color: #fff8f2;
+    border-radius: 0.625rem;
+    margin-top: 0.625rem;
+}
+.btn-box button:hover {
+    background-color: #ad9478;
+    color: #fff;
+    transition-duration: 0.5s;
 }
 </style>
