@@ -47,6 +47,13 @@ const getDraft = async (memberId, success, fail) => {
     await instance.get(`diary/draft/${memberId}`).then(success).catch(fail);
 };
 
+const getDiaryByDate = async (data, success, fail) => {
+    await instance
+        .post(`diary/date`, data)
+        .then(success)
+        .catch(fail);
+};
+
 export {
     getDiaryList,
     getDiaryDetail,
@@ -55,4 +62,5 @@ export {
     deleteDiary,
     updateDiary,
     getDraft,
+    getDiaryByDate,
 };
