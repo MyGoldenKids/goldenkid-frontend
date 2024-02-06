@@ -25,16 +25,26 @@ instance.interceptors.request.use((config) => {
 // https://maruzzing.github.io/study/rnative/axios-interceptors%EB%A1%9C-%ED%86%A0%ED%81%B0-%EB%A6%AC%ED%94%84%EB%A0%88%EC%8B%9C-%ED%95%98%EA%B8%B0/
 
 let isTokenRefreshing = false;
+let refreshSubscribers = [];
+
+const onTokenRefreshed = (accessToken) => {
+    refreshSubscribers.map((callback) => callback(accessToken));
+    refreshSubscribers = []
+    };
+  
+  const addRefreshSubscriber = (callback) => {
+    refreshSubscribers.push(callback);
+  };
 
 instance.interceptors.response.use(
     async (response) => {
         return response;
     },
-    async (error) => {
+    async (error) => {       
         // 요청 상태 저장
         const originalRequest = error.config;
         const { status } = error.response;
-
+        
         // 페이지가 새로고침되어 저장된 accessToken이 없어진 경우.
         // 토큰 자체가 만료되어 더 이상 진행할 수 없는 경우.
         if (
@@ -54,11 +64,10 @@ instance.interceptors.response.use(
                     );
                     const newAccessToken = response.data.token;
 
-                    instance.defaults.headers.common["Authorization"] =
-                        newAccessToken;
+                    instance.defaults.headers.common["Authorization"] = newAccessToken;
 
                     originalRequest.headers.Authorization = newAccessToken;
-                    console.log(originalRequest)
+                    onTokenRefreshed(newAccessToken);
                     // 에러가 발생했던 원래의 요청을 다시 진행.
                     return instance(originalRequest);
                 } catch (refreshError) {
@@ -70,11 +79,20 @@ instance.interceptors.response.use(
                     isTokenRefreshing = false;
                 }
             }
+
+            const retryOriginalRequest = new Promise((resolve) => {
+                addRefreshSubscriber((accessToken) => {
+                  originalRequest.headers.Authorization = accessToken;
+                  resolve(instance(originalRequest));
+                });
+              });
+              return retryOriginalRequest;
+
         } else {
             // 다른 종류의 오류 처리
             window.alert(error.response.data.message);
         }
-
+        
         return Promise.reject(error);
     }
 );
