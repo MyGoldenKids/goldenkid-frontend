@@ -21,8 +21,8 @@ const modifyArticle = (data, success, fail) => {
 };
 
 // 게시글 삭제
-const deleteArticles = (articleId, success, fail) => {
+const deleteArticle = (articleId, success, fail) => {
   return instance.put(`article/delete/${articleId}`).then(success).catch(fail);
 };
 
-export { getArticleList, getArticle, writeArticle, modifyArticle, deleteArticles };
+export { getArticleList, getArticle, writeArticle, modifyArticle, deleteArticle };
