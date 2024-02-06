@@ -5,6 +5,7 @@ import ArticleListView from "@/views/article/ArticleListView.vue";
 import ArticleDetailView from "@/views/article/ArticleDetailView.vue";
 import DiaryHomeView from "@/views/diary/DiaryHomeView.vue";
 import ArticleWriteView from "@/views/article/ArticleWriteView.vue";
+import ArticleUpdateView from "@/views/article/ArticleUpdateView.vue"
 import SignupView from "@/views/member/MemberSignupView.vue";
 import LoginView from "@/views/member/MemberLoginView.vue";
 import MyPageView from "@/views/member/MemberMyPageView.vue";
@@ -52,17 +53,26 @@ const router = createRouter({
         {
             path: "/article",
             children: [
-                {
+                {   
+                    name: "article-home",
                     path: "list",
                     component: ArticleListView,
                 },
-                {
+                {   
+                    name: "article-detail",
                     path: "detail/:id",
                     component: ArticleDetailView,
                 },
-                {
+                {   
+                    name: "article-write",
                     path: "write",
                     component: ArticleWriteView,
+                    beforeEnter: requireLogin,
+                },
+                {   
+                    name: "article-modify",
+                    path: "modify",
+                    component: ArticleUpdateView,
                     beforeEnter: requireLogin,
                 },
             ],

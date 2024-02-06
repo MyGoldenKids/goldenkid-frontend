@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { getArticle, deleteArticles } from "@/api/article";
+import { getArticle, deleteArticle } from "@/api/article";
 import { getFileInfo, downloadFile } from "@/api/file";
 import { getCommentByArticleId, writeComment, updateComment, deleteComment } from "@/api/comment";
 import { useRoute } from "vue-router";
@@ -50,10 +50,10 @@ const formatCreatedAt = (createdAt) => {
 };
 
 // 게시글 삭제
-const deleteArticle = async (articleId) => {
+const deleteArticleById = async (articleId) => {
   const answer = window.confirm("게시글을 삭제 하시겠습니까?");
   if (answer) {
-    await deleteArticles(articleId);
+    await deleteArticle(articleId);
     router.push("../list");
   }
 };
@@ -213,10 +213,8 @@ onMounted(() => {
         <div class="article-delete-put">
           <!-- 본인이 작성한 글만 수정 삭제 버튼 보이기 -->
           <div v-if="memberStore.memberInfo.memberNo === article.memberId">
-            <router-link to="/article/modify"
-              ><button>글수정</button></router-link
-            >
-            <button @click="deleteArticle(articleId)">글삭제</button>
+            <router-link to="/article/modify"><button>글수정</button></router-link>
+            <button @click="deleteArticleById(articleId)">글삭제</button>
           </div>
         </div>
       </div>
