@@ -1,18 +1,42 @@
 <script setup>
-import { submitDiary, updateDiary, deleteDiary } from "@/api/diary";
-import { ref } from "vue";
+import {
+    submitDiary,
+    updateDiary,
+    deleteDiary,
+    getDiaryDetail,
+} from "@/api/diary";
+import { ref, onMounted } from "vue";
 import { useMemberStore } from "@/stores/member-store";
 import router from "@/router";
+import { useDiaryStore } from "@/stores/diary-store";
 const memberStore = useMemberStore();
+const diaryStore = useDiaryStore();
+
+onMounted(() => {
+    if (diaryStore.draft.diaryId !== "") {
+        getDiaryDetail(
+            diaryStore.selectedDraftId,
+            (response) => {
+                diaryStore.draft = response.data.data;
+            },
+            (error) => {
+                console.log(error);
+            }
+        );
+    }
+});
 
 // 다이어리 제출 폼
 const diarySubmitForm = ref({
-    diaryId: "", // 다이어리 생성 시 받야와야 함
+    diaryId:
+        diaryStore.createdDiaryId === 0
+            ? diaryStore.selectedDraftId
+            : diaryStore.createdDiaryId, // 다이어리 생성 시 받야와야 함
     memberId: memberStore.memberInfo.memberNo,
-    diaryTitle: "",
-    diaryContent: "",
-    diaryReview: "",
-    fileListId: "",
+    diaryTitle: diaryStore.draft.diaryTitle,
+    diaryContent: diaryStore.draft.diaryContent,
+    diaryReview: diaryStore.draft.diaryReview,
+    fileListId: diaryStore.draft.fileListId,
 });
 
 const date = new Date().toLocaleDateString();
@@ -24,6 +48,9 @@ const submitDiaryForm = () => {
             () => {
                 // 등록 성공 시 일기모음 페이지로 이동
                 router.push({ name: "diary-list" });
+                diaryStore.draft = "";
+                diaryStore.selectedDraftId = "";
+                diaryStore.createdDiaryId = "";
             },
             (error) => {
                 console.log(error);
@@ -43,6 +70,9 @@ const cancel = (diaryId) => {
             () => {
                 // 취소 시 일기모음 페이지로 이동
                 router.push({ name: "diary-list" });
+                diaryStore.draft = "";
+                diaryStore.selectedDraftId = "";
+                diaryStore.createdDiaryId = "";
             },
             (error) => {
                 console.log(error);
@@ -57,6 +87,9 @@ const save = (diaryId) => {
         diarySubmitForm,
         () => {
             router.push({ name: "diary-list" }); // 다이어리 모음으로 이동
+            diaryStore.draft = "";
+            diaryStore.selectedDraftId = "";
+            diaryStore.createdDiaryId = "";
         },
         (error) => {
             console.log(error);

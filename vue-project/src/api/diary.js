@@ -18,18 +18,12 @@ const getDiaryDetail = async (diaryId, success, fail) => {
 
 // 일기 생성
 const createDiary = async (data, success, fail) => {
-    await instance
-        .post("diary/create", data)
-        .then(success)
-        .catch(fail);
+    await instance.post("diary/create", data).then(success).catch(fail);
 };
 
 // 일기 제출
 const submitDiary = async (data, success, fail) => {
-    await instance
-        .put("diary/submit", data.value)
-        .then(success)
-        .catch(fail);
+    await instance.put("diary/submit", data.value).then(success).catch(fail);
 };
 
 // 일기 삭제
@@ -48,6 +42,11 @@ const updateDiary = async (diaryId, data, success, fail) => {
         .catch(fail);
 };
 
+// 임시 저장 일기 조회
+const getDraft = async (memberId, success, fail) => {
+    await instance.get(`diary/draft/${memberId}`).then(success).catch(fail);
+};
+
 export {
     getDiaryList,
     getDiaryDetail,
@@ -55,4 +54,5 @@ export {
     submitDiary,
     deleteDiary,
     updateDiary,
+    getDraft,
 };

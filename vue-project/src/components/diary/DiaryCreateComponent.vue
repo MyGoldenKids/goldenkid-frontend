@@ -3,9 +3,12 @@ import { getChildList } from "@/api/child";
 import { createDiary } from "@/api/diary";
 import { ref, onMounted } from "vue";
 import { useMemberStore } from "@/stores/member-store";
+import { useDiaryStore } from "@/stores/diary-store";
 import router from "@/router";
 const memberStore = useMemberStore();
+const diaryStore = useDiaryStore();
 const childList = ref([]);
+
 
 onMounted(() => {
     getChild(memberStore.memberInfo.memberNo);
@@ -28,7 +31,8 @@ const goToDiaryWrite = (child) => {
             memberId: memberStore.memberInfo.memberNo,
             childId: child,
         },
-        () => {
+        (response) => {
+            diaryStore.createdDiaryId = response.data.data;
             // 생성 성공하면 작성 페이지로 이동
             router.push({ name: "diary-write" });
         },
