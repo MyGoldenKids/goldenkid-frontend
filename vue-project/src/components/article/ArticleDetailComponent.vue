@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import { getArticle, deleteArticles } from "@/api/article";
 import { getFileInfo, downloadFile } from "@/api/file";
+import { getCommentByArticleId, writeComment, updateComment, deleteComment } from "@/api/comment";
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 import { useArticleStore } from "@/stores/article-store";
@@ -14,6 +15,11 @@ const route = useRoute();
 const router = useRouter();
 const articleId = route.params.id;
 const fileData = ref([]);
+const comment = ref({
+  content: "",
+  memberId: memberStore.memberInfo.memberNo,
+});
+const commentList = ref([]);
 
 // 게시글 상세 조회
 const articleInfo = async () => {
@@ -28,7 +34,7 @@ const articleInfo = async () => {
       articleStore.articleInfo = article.value;
     },
     (error) => {
-      router.push("/404");
+      router.push("/error");
       console.log(error);
     }
   );
@@ -73,8 +79,75 @@ const download = async (fileId, fileName) => {
   });
 };
 
+const getCommentList = async () => {
+  getCommentByArticleId(
+    articleId,
+    (response) => {
+      commentList.value = response.data.data.map(comment => ({
+        ...comment,
+        isEditing: false, // 수정 상태 추가
+        editingContent: comment.content, // 수정 중인 내용 저장
+      }));
+      commentList.value.forEach((comment) => {
+        comment.createdAt = formatCreatedAt(comment.createdAt);
+      });
+    },      
+    (error) => {
+      console.log(error);
+    }
+  );
+};
+
+const registerComment = async () => {
+  writeComment(
+    articleId,
+    comment.value,
+    (response) => {
+      getCommentList();
+      comment.value = "";
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+};
+
+const deleteCommentById = async (commentId) => {
+  deleteComment(
+    commentId,
+    memberStore.memberInfo.memberNo,
+    () => {
+      getCommentList();
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+};
+
+const editComment = (commentId) => {
+  commentList.value.forEach((c) => {
+    if (c.commentId === commentId) {
+      c.isEditing = true; // 현재 클릭된 댓글을 수정 모드로 설정
+      c.editingContent = c.content; // 현재 내용을 수정 중인 내용으로 초기화
+    } else {
+      c.isEditing = false; // 나머지는 수정 모드 해제
+    }
+  });
+};
+
+const saveEditedComment = async (commentId) => {
+  const commentToSave = commentList.value.find((c) => c.commentId === commentId);
+  if (commentToSave) {
+    await updateComment(commentId, { memberId: memberStore.memberInfo.memberNo, content: commentToSave.editingContent });
+    commentToSave.isEditing = false; // 수정 모드 해제
+    getCommentList(); // 댓글 목록 새로고침
+  }
+};
+
 onMounted(() => {
   articleInfo();
+  getCommentList();
 });
 </script>
 
@@ -136,7 +209,7 @@ onMounted(() => {
     <!-- 게시글 댓글 -->
     <div class="board-comment">
       <div class="comments-header">
-        <div class="comment-count">댓글 <span>2</span></div>
+        <div class="comment-count">댓글 <span>{{ commentList.length }}</span></div>
         <div class="article-delete-put">
           <!-- 본인이 작성한 글만 수정 삭제 버튼 보이기 -->
           <div v-if="memberStore.memberInfo.memberNo === article.memberId">
@@ -146,51 +219,42 @@ onMounted(() => {
         </div>
       </div>
 
-      <!-- for문 돌릴듯1 -->
-      <div class="board-comment-sub">
-        <div class="comment-sub-left">
-          <div class="comment-writer">
-            <img src="@/assets/img/basic_profile.png" alt="프로필기본이미지" />
-            <span>영소정</span>
+      <div v-for="(item, index) in commentList" :key="index">
+        <div class="board-comment-sub">
+          <div class="comment-sub-left">
+            <div class="comment-writer">
+              <img src="@/assets/img/basic_profile.png" alt="프로필기본이미지" />
+              <span>{{item.nickname}}</span>
+            </div>
+          <!-- <div class="comment-content">{{ item.content }}</div> -->
+          <div v-if="item.isEditing" class="comment-edit">
+            <input type="text" v-model="item.editingContent" />
           </div>
-          <div class="comment-content">소중한 정보 감상이잉ㅇ</div>
-        </div>
-        <div class="comment-sub-right">
-          <div class="comment-date">2024.01.20</div>
-          <!-- 여기는 로그인한 회원정복 일치할 때만 보일거야  -->
-          <div class="comment-btn">
-            <button class="comment-modify">수정</button> |
-            <button class="comment-delete">삭제</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- for문 돌릴듯2 -->
-      <div class="board-comment-sub">
-        <div class="comment-sub-left">
-          <div class="comment-writer">
-            <img src="@/assets/img/basic_profile.png" alt="프로필기본이미지" />
-            <span>영소정</span>
-          </div>
-          <div class="comment-content">
-            소중한 정보 감상이잉ㅇdddddddddddddddddddd
+          <div v-else>
+            <span>{{ item.content }}</span>
           </div>
         </div>
         <div class="comment-sub-right">
-          <div class="comment-date">2024.01.20</div>
-          <!-- 여기는 로그인한 회원정복 일치할 때만 보일거야  -->
-          <div class="comment-btn">
-            <button class="comment-modify">수정</button> |
-            <button class="comment-delete">삭제</button>
+          <div class="comment-date">{{ item.createdAt }}</div>
+          <!-- 여기는 로그인한 회원정보 일치할 때만 보일거야  -->
+          <div v-if="memberStore.memberInfo.memberNo === item.memberId" class="comment-btn">
+          <div v-if="!item.isEditing">
+            <button class="comment-modify" @click="editComment(item.commentId)">수정</button> |
+            <button class="comment-delete" @click="deleteCommentById(item.commentId)">삭제</button>
+            </div>
+            <div v-else>
+              <button @click="saveEditedComment(item.commentId)">저장</button> |
+              <button class="comment-cancel" @click="item.isEditing = false">취소</button>
+            </div>
           </div>
         </div>
       </div>
-      <!-- for문 끝 -->
+      </div>
 
       <!-- 댓글 작성 폼 -->
       <div class="commet-add">
-        <input type="text" class="add-input" placeholder="댓글작성" value="" />
-        <button class="add-btn">등록</button>
+        <input type="text" class="add-input" placeholder="댓글작성" v-model="comment.content" />
+        <button class="add-btn" @click="registerComment">등록</button>
       </div>
     </div>
   </div>
@@ -377,5 +441,19 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   border-bottom: 0.063rem solid #ad9478;
+}
+.comment-edit input {
+  border-radius: 3.125rem;
+  height: 3.125rem;
+  border: 0.125rem solid #89b9ad;
+  padding-left: 1.25rem;
+  background-color: #fff8f2;
+  box-sizing: border-box;
+}
+.comment-edit input:focus {
+  border: 0.125rem solid #89b9ad;
+  box-sizing: border-box;
+  border-radius: 3.125rem;
+  outline: 0.063rem solid #89b9ad;
 }
 </style>
