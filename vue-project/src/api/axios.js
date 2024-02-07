@@ -8,7 +8,7 @@ export const instance = axios.create({
     withCredentials: true, // true로 바뀌야 함
 });
 
-instance.defaults.headers.common["Authorization"] = "";
+// instance.defaults.headers.common["Authorization"] = "";
 instance.defaults.headers.post["Content-Type"] = "application/json";
 instance.defaults.headers.put["Content-Type"] = "application/json";
 
@@ -31,10 +31,10 @@ const onTokenRefreshed = (accessToken) => {
     refreshSubscribers.map((callback) => callback(accessToken));
     refreshSubscribers = []
     };
-  
-  const addRefreshSubscriber = (callback) => {
+
+    const addRefreshSubscriber = (callback) => {
     refreshSubscribers.push(callback);
-  };
+};
 
 instance.interceptors.response.use(
     async (response) => {
@@ -62,11 +62,6 @@ instance.interceptors.response.use(
                     const response = await instance.post(
                         "auth/silent-refresh"
                     );
-                    const newAccessToken = response.data.token;
-
-                    instance.defaults.headers.common["Authorization"] = newAccessToken;
-
-                    originalRequest.headers.Authorization = newAccessToken;
                     onTokenRefreshed(newAccessToken);
                     // 에러가 발생했던 원래의 요청을 다시 진행.
                     return instance(originalRequest);
@@ -82,11 +77,11 @@ instance.interceptors.response.use(
 
             const retryOriginalRequest = new Promise((resolve) => {
                 addRefreshSubscriber((accessToken) => {
-                  originalRequest.headers.Authorization = accessToken;
-                  resolve(instance(originalRequest));
+                originalRequest.headers.Authorization = accessToken;
+                resolve(instance(originalRequest));
                 });
-              });
-              return retryOriginalRequest;
+            });
+            return retryOriginalRequest;
 
         } else {
             // 다른 종류의 오류 처리
