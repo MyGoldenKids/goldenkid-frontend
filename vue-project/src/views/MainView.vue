@@ -156,11 +156,11 @@ const goDiary = () => {
 }
 
 .box-item img {
-    width: 95%;
-    height: 95%;
-    border-radius: 1.25rem;
-    box-sizing: border-box;
-    cursor: pointer;
-    margin: 0 auto;
+  width: 95%;
+  height: 95%;
+  border-radius: 1.25rem;
+  box-sizing: border-box;
+  cursor: pointer;
+  margin: 0 auto;
 }
 </style>

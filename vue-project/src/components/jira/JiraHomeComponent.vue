@@ -87,7 +87,7 @@ import "vue3-carousel/dist/carousel.css";
 }
 
 .jira-dash {
-  border: 4px dashed #665031;
+  border: 0.25rem dashed #665031;
   border-radius: 1.25rem;
   box-sizing: border-box;
 }
@@ -204,7 +204,7 @@ hr {
   border-radius: 1.25rem;
   line-height: 1.8rem;
   box-sizing: border-box;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0rem 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
 }
 
 .slide-box-list.active {
@@ -230,8 +230,8 @@ hr {
   content: "";
   display: inline-block;
   border: solid white; /* 화살표 색상 */
-  border-width: 0 4px 4px 0; /* 화살표 두께 */
-  padding: 20px; /* 화살표 크기 */
+  border-width: 0 0.25rem 0.25rem 0; /* 화살표 두께 */
+  padding: 1.25rem; /* 화살표 크기 */
   transition: transform 0.2s; /* 부드러운 전환 효과 */
 }
 
