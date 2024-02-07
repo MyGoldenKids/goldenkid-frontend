@@ -1,13 +1,16 @@
 <script setup>
 import { useRouter } from "vue-router";
+import { useSurveyStore } from "@/stores/survey-store";
 
 const router = useRouter();
+const surveyStore = useSurveyStore();
 
 const goSignup = () => {
   router.push("/member/signup");
 };
 
-const goSurvey = () => {
+const goSurvey = (value) => {
+  surveyStore.category = value;
   router.push("/survey");
 };
 
@@ -45,12 +48,12 @@ const goDiary = () => {
       <div class="box-item button-item1">
         <h1>혹시 내가 금쪽이 ?</h1>
         <p>객관적으로 양육태도 바라보기</p>
-        <button @click="goSurvey">부모 자가진단</button>
+        <button @click="goSurvey(1)">부모 자가진단</button>
       </div>
       <div class="box-item button-item2">
         <h1>혹시 내아이가 금쪽이 ?</h1>
         <p>ADHD, 발달장애, 틱 자가진단</p>
-        <button @click="goSurvey">증상 확인하기</button>
+        <button @click="goSurvey(0)">증상 확인하기</button>
       </div>
       <div class="box-item button-item3">
         <img src="@/assets/img/diary_btn.png" alt="error" @click="goDiary" />
