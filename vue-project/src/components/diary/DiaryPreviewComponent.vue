@@ -21,7 +21,7 @@ const formatDate = (date) => {
         <img src="../../assets/img/sticker5.png" class="sticker1" />
         <img src="../../assets/img/sticker5.png" class="sticker2" />
         <p class="preview-temp-text">
-            {{ formatDate(store.date) }}<br /><br />
+            {{ formatDate(new Date(store.date)) }}<br /><br />
             <!-- 해당 날짜에 작성한 일기가 없는 경우 -->
             <div v-if="diaryStore.preview.length === 0"> 
                 캘린더 날짜를 누르면 해당 일자 게시글 미리보기를 여기서 볼 수 있어요 :D

@@ -13,7 +13,7 @@ const memberStore = useMemberStore();
 const diaryStore = useDiaryStore();
 
 onMounted(() => {
-    if (diaryStore.draft.diaryId !== "") {
+    if (diaryStore.selectedDraftId !== "") {
         getDiaryDetail(
             diaryStore.selectedDraftId,
             (response) => {
@@ -29,7 +29,7 @@ onMounted(() => {
 // 다이어리 제출 폼
 const diarySubmitForm = ref({
     diaryId:
-        diaryStore.createdDiaryId === 0
+        diaryStore.createdDiaryId === ""
             ? diaryStore.selectedDraftId
             : diaryStore.createdDiaryId, // 다이어리 생성 시 받야와야 함
     memberId: memberStore.memberInfo.memberNo,
