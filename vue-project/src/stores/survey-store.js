@@ -25,9 +25,4 @@ export const useSurveyStore = defineStore("survey-store", () => {
         parentComment,
         childComment,
     };
-},
-{
-    persist: {
-        storage: sessionStorage,
-    },
 });
