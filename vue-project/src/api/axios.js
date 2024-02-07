@@ -27,8 +27,8 @@ instance.interceptors.request.use((config) => {
 let isTokenRefreshing = false;
 let refreshSubscribers = [];
 
-const onTokenRefreshed = (accessToken) => {
-    refreshSubscribers.map((callback) => callback(accessToken));
+const onTokenRefreshed = () => {
+    refreshSubscribers.map((callback) => callback());
     refreshSubscribers = []
     };
 
@@ -62,7 +62,7 @@ instance.interceptors.response.use(
                     const response = await instance.post(
                         "auth/silent-refresh"
                     );
-                    onTokenRefreshed(newAccessToken);
+                    onTokenRefreshed();
                     // 에러가 발생했던 원래의 요청을 다시 진행.
                     return instance(originalRequest);
                 } catch (refreshError) {
@@ -76,8 +76,7 @@ instance.interceptors.response.use(
             }
 
             const retryOriginalRequest = new Promise((resolve) => {
-                addRefreshSubscriber((accessToken) => {
-                originalRequest.headers.Authorization = accessToken;
+                addRefreshSubscriber(() => {
                 resolve(instance(originalRequest));
                 });
             });
