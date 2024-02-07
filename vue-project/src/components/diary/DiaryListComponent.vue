@@ -30,7 +30,7 @@ const goToDiaryList = (diaryId) => {
             <div class="item-title">최근 나의 일기</div>
             <div class="diary-list-sub">
                 <ul>
-                    <li v-for="(diary, index) in diaryList" :key="index">
+                    <li v-for="(diary, index) in diaryList.slice(0, 5)" :key="index">
                         <router-link :to="{name: 'diary-list'}" @click="goToDiaryList(diary.diaryId)">
                             <span>#{{ diary.diaryId }}</span>
                             <span>{{ diary.diaryTitle }}</span>
@@ -64,6 +64,11 @@ const goToDiaryList = (diaryId) => {
     padding: 0.4rem;
     margin: 0.2rem auto;
     border: 2px solid #89b9ad;
+}
+
+.diary-list-sub li a {
+    display: block;
+    width: 100%;
 }
 .diary-list-sub span {
     font-size: 0.8rem;
