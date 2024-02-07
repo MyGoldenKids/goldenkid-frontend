@@ -280,13 +280,13 @@ onMounted(() => {
 }
 .title-sub {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 55% 45%;
   align-items: center;
   padding: 0.625rem 1.25rem;
 }
 .title-sub-left {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 30% 20% 20% 20%;
   align-items: center;
   padding: 0.625rem 0;
 }
@@ -294,8 +294,7 @@ onMounted(() => {
   font-weight: 400;
   font-size: 1.1rem;
   display: grid;
-  grid-template-columns: 30% 60%;
-  gap: 0.313rem;
+  grid-template-columns: 20% 60%;
   align-items: center;
 }
 .left-item2 {
