@@ -16,6 +16,7 @@ import DiaryUpdateView from "@/views/diary/DiaryUpdateView.vue"
 import ErrorView from "@/views/error/ErrorView.vue";
 import JiraHomeView from "@/views/jira/JiraHomeView.vue";
 import JiraSprintView from "@/views/jira/JiraSprintView.vue";
+import JiraPlan0View from "@/views/jira/JiraPlan0View.vue";
 import JiraPlan1View from "@/views/jira/JiraPlan1View.vue";
 import JiraPlan2View from "@/views/jira/JiraPlan2View.vue";
 import JiraPlan3View from "@/views/jira/JiraPlan3View.vue";
@@ -145,6 +146,11 @@ const router = createRouter({
                     name: "jira-sprint",
                     path: "sprint",
                     component: JiraSprintView,
+                },
+                {
+                    name: "jira-plan0",
+                    path: "plan0",
+                    component: JiraPlan0View,
                 },
                 {
                     name: "jira-plan1",
