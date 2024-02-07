@@ -29,7 +29,7 @@ const getDiaryPreview = async () => {
     await getDiaryByDate(
         {
             memberId: memberStore.memberInfo.memberNo,
-            createdAt: formatDate(calendarStore.date),
+            createdAt: formatDate(new Date(calendarStore.date)),
         },
         (response) => {
             diaryStore.preview = response.data.data;
