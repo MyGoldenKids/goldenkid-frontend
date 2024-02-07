@@ -2,7 +2,7 @@ import { instance } from "./axios";
 
 // 스프린트 생성
 const createSprint = async (data, success, fail) => {
-    await instance.post("jira/sprint", data).then(success).catch(fail);
+    await instance.post("jira/sprint/create", data).then(success).catch(fail);
 };
 
 // 스프린트 조회
