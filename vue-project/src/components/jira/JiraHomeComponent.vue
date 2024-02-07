@@ -1,119 +1,275 @@
 <script setup>
-import { useRouter } from 'vue-router';
-const router = useRouter()
+import { Carousel, Slide, Navigation } from "vue3-carousel";
+import "vue3-carousel/dist/carousel.css";
 
-const goSprint = () => {
-    router.push('sprint')
-}
-const goPlan = () => {
-    router.push('plan1')
-}
 </script>
 
 <template>
-    <div>
-        <div class="jira-wrap">
-            <div class="jira-dash">
-                <div class="jira-home-header">JIRA</div>
-                <div class="main-title">내가 <span>직접</span> 만들어나가는 나와 내 아이의 <span>일주일</span></div>
-                <div class="title-line"></div>
-                <div class="jira-subtitle">한 치 앞도 모르는 육아 생활! 앞으로의 일주일을 미리 계획하고 싶진 않으신가요?</div>
-                <div class="content">
-                    <p><span>금쪽이 해방일지</span>는 아이와 함께할 일주일을 계획하는 도구입니다.</p>
-                    <p>미리 일정을 짜면서 특별한 순간들을 예측하고, 일상에 색다른 기대감을 더해보세요.</p>
-                    <p>앞으로의 일주일이 지난 일주일보다 빛날 거예요.</p>
+  <div class="jira-wrap">
+    <div class="jira-dash">
+      <div class="jira-home-header">JIRA</div>
+      <div class="underline">
+        <h1>HISTORY</h1>
+      </div>
+      <!-- carousel 시작 -->
+      <div class="mini-underline">
+        <div class="slide-box">
+          <Carousel :itemsToShow="4" :transition="600">
+            <Slide v-for="slide in 10" :key="slide">
+              <div class="carousel__item">
+                <div class="slide-box-list">
+                  <h2>200129</h2>
+                  <h1>{{ slide }}번째 스프린트</h1>
+                  <div class="finished-story">
+                    <div>완료된 스토리</div>
+                    <span>2/3</span>
+                  </div>
                 </div>
-                <div class="button-wrap">
-                    <button class="btn" @click="goPlan">
-                        <div>아직 계획이 없다면?</div>
-                        <div>계획하기</div>
-                    </button>
-                    <button class="btn" @click="goSprint">
-                        <div>등록한 계획이 있다면?</div>
-                        <div>관리하기</div>
-                    </button>
-                </div>
-            </div>
+              </div>
+            </Slide>
+
+            <template #addons>
+              <Navigation>
+                <template #prev>
+                  <div class="nav-button prev"></div>
+                </template>
+                <template #next>
+                  <div class="nav-button next"></div>
+                </template>
+              </Navigation>
+            </template>
+          </Carousel>
         </div>
-    </div>        
+      </div>
+      <!-- carousel 끝 -->
+
+      <hr />
+
+      <div class="todolist-wrap">
+        <div class="todolist">
+          <span>살 것 메모하고 시장가서 메모한 것만 사오기</span>
+          <span>
+            <span>1</span>
+          </span>
+        </div>
+        <div class="progress">
+          <span>진행중</span>
+        </div>
+        <div class="todolist">
+          <span>저녁식사 상차림부터같이 준비하고 뒷정리 같이 하기</span>
+          <span>
+            <span>2</span>
+          </span>
+        </div>
+        <div class="progress">
+          <span>완료</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
+@font-face {
+  font-family: "yg-jalnan";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
 .jira-wrap {
-    background-color: #AD9478;
-    text-align: center;
-    border-radius: 1.25rem;
-    padding: 1.25rem;
-    box-sizing: border-box;
+  background-color: #ad9478;
+  text-align: center;
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  box-sizing: border-box;
 }
 
 .jira-dash {
-    border: 4px dashed #665031;
-    display: grid;
-    justify-items: center;
-    border-radius: 1.25rem;
+  border: 0.25rem dashed #665031;
+  border-radius: 1.25rem;
+  box-sizing: border-box;
 }
 
 .jira-home-header {
-    width: 17%;
-    height: auto;
-    background-image: url(@/assets/img/sticker9.png);
-    background-size: cover;
-    padding: 0.438rem 0;
-    color: #AD9478;
-    font-size: 1.5rem;
-    margin: 1rem 0;
+  width: 10.25rem;
+  height: auto;
+  background-image: url(@/assets/img/sticker9.png);
+  background-size: cover;
+  padding: 0.438rem 0;
+  color: #ad9478;
+  font-size: 1.8rem;
+  margin: 1.2rem auto;
 }
 
-.main-title {
-    color: #FFF8F2;
-    font-size: 2.4rem;
-    margin-bottom: 2rem;
+.underline {
+  border-bottom: 0.25rem solid #665031;
+  width: 95%;
+  display: grid;
+  justify-items: left;
+  margin: 0 2rem;
+  margin-bottom: 3rem;
+}
+.underline h1 {
+  font-size: 2.5rem;
+  margin: 1rem 0;
 }
 
-.title-line {
-    width: 23.188rem;
-    border-bottom: 0.25rem solid #665031;
-    margin-bottom: 3.7rem;
+.mini-underline {
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.jira-subtitle {
-    color: #FFF8F2;
-    font-size: 1.6rem;
-    margin-bottom: 0.7rem;
+hr {
+  border: 0.125rem solid #665031;
+  width: 45%;
+  margin: 1.25rem auto;
 }
 
-.content {
-    color: #FFF8F2;
-    font-size: 1.35rem;
+.todolist-wrap {
+  display: grid;
+  grid-template-columns: 77% 18%;
+  gap: 5%;
+  width: 80%;
+  padding: 1.25rem;
+  margin: 0 auto;
 }
 
-.content p {
-    margin-top: 0.8rem;
-    color: #FFF8F2;
+.todolist {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.7rem 1.5rem;
+  background-color: #fff8f2;
+  border-radius: 1.25rem;
+  width: 100%;
+  margin: 0.25rem 0;
 }
 
-.button-wrap {
-    margin: 2rem;
+.todolist > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.btn {
-    border-radius: 1.25rem;
-    border: none;
-    background-color: #665031;
-    width: 24rem;
-    height: 9.5rem;
-    margin: 1.7rem;
+.todolist :last-child {
+  background-color: #665031;
+  color: #fff8f2;
+  border-radius: 0.7rem;
+  padding: 0.3rem 0.5rem;
+}
+.slide-box-list span {
+  background-color: #665031;
+  color: #fff8f2;
+  border-radius: 1.25rem;
+  padding: 0 0.5rem;
+  font-size: small;
 }
 
-.btn :first-child{
-    color: #FFF8F2;
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
+.finished-story {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.progress {
+  box-sizing: border-box;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  margin: 0.25rem 0;
+  padding: 0.7rem 1rem;
+  background-color: #665031;
+  border-radius: 1.25rem;
+  width: 100%;
 }
 
-.btn :last-child{
-    font-size: 2.7rem;
-    color: #FFF8F2;
+.progress > span {
+  text-align: center;
+  color: #fff8f2;
+}
+
+.slide-box {
+  width: 80%;
+  margin: 0 auto;
+  padding: 1.25rem 0;
+}
+.slide-box h1 {
+  font-size: 1.5rem;
+  margin: 0.5rem 0;
+}
+.slide-box-list {
+  background-color: #fff8f2;
+  padding: 2.5rem 1.25rem;
+  border-radius: 1.25rem;
+  line-height: 1.8rem;
+  box-sizing: border-box;
+  box-shadow: 0rem 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+}
+
+.slide-box-list.active {
+  border: 0.25rem solid #665031;
+}
+
+.carousel__track {
+  transform-style: preserve-3d;
+}
+
+.carousel__slide--sliding {
+  transition: 0.5s;
+}
+
+.carousel__item {
+  padding: 0.625rem 0;
+  box-sizing: border-box;
+}
+
+.nav-button {
+  position: absolute;
+  top: 50%;
+  content: "";
+  display: inline-block;
+  border: solid white; /* 화살표 색상 */
+  border-width: 0 0.25rem 0.25rem 0; /* 화살표 두께 */
+  padding: 1.25rem; /* 화살표 크기 */
+  transition: transform 0.2s; /* 부드러운 전환 효과 */
+}
+
+.next,
+.prev {
+  position: absolute;
+  top: 0%;
+  transform: translateY(-50%);
+  background-color: transparent;
+  border-color: #665031;
+  cursor: pointer;
+}
+
+.next {
+  right: -180%;
+  transform: translateY(-50%) rotate(-45deg);
+}
+
+.prev {
+  left: -180%;
+  transform: translateY(-50%) rotate(135deg);
+}
+
+.nav-button:hover {
+  border-color: #665031;
+  transform: translateY(-50%) rotate(-45deg) scale(1.2);
+}
+
+.prev:hover {
+  transform: translateY(-50%) rotate(135deg) scale(1.2);
+}
+
+.carousel__prev,
+.carousel__next {
+  display: none;
+}
+
+.slide-box-list:hover {
+  transform: scale(1.1);
 }
 </style>
