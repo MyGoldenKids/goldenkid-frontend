@@ -22,12 +22,15 @@ import JiraPlan2View from "@/views/jira/JiraPlan2View.vue";
 import JiraPlan3View from "@/views/jira/JiraPlan3View.vue";
 
 const requireLogin = (to, from, next) => {
-    if (!sessionStorage.getItem("isLoggedIn")) { // 로그인하지 않은 경우...
-        alert("로그인 후 이용가능합니다.");
-        next("/member/login"); // 로그인 페이지로 이동
-    } else {
-        next();
-    }
+    import("@/stores/member-store").then(({ useMemberStore }) => {
+        const memberStore = useMemberStore();
+        if (!memberStore.isLoggedIn) {
+            alert("로그인 후 이용가능합니다.");
+            next("/member/login");
+        } else {
+            next();
+        }
+    });
 };
 
 const router = createRouter({
