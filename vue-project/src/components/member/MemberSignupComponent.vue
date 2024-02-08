@@ -271,9 +271,11 @@ input[type="tel"] {
 .message-text {
     position: absolute;
     text-align: left;
-    top: 15px;
+    top: 22px;
     right: -15px;
     transform: translate(100%, 100%);
+    font-size: 0.8rem;
+    color: #e1baad;
 }
 
 .custom-checkbox input[type="checkbox"] {
