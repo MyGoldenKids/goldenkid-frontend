@@ -7,6 +7,8 @@ import { useFileStore } from "@/stores/file-store";
 import {
   getFileInfo,
   modifyFile,
+  deleteFile,
+  createFileList,
 } from "@/api/file";
 import { modifyArticle } from "@/api/article";
 
@@ -22,12 +24,33 @@ const fileStore = useFileStore();
 const fileListId = ref(articleStore.articleInfo.fileListId);
 let isCanceling = false; //onBeforeRouteLeave, 게시글 등록, 게시글 등록 취소 동시 사용시에 필요합니다.
 
+const createFiles = async(memberNo, formData) => {
+  for (let file of fileList.value) {
+    formData.append("files", file);
+  }
+  isCanceling = true;
+  const fileListId = await createFileList(memberNo, formData);
+
+  return fileListId;
+};
+
 // 게시판 수정 PUT 요청
-const updateArticle = async () => {
+const updateArticle = async() => {
   if (articleTitle.value.length == 0 || articleContent.value.length == 0) {
     window.alert("게시글의 제목/내용 이 없습니다.");
     return;
   }
+
+  // 파일 리스트 아이디가 없는데 파일 첨부할것이 있다면?
+  if (fileListId.value == 0 && isFormDataEmpty(formData)) {
+    // fileListId를 새로 생성한다.
+    fileListId.value = await createFiles(memberNo, formData);
+  } else {
+    // 이미 있다면 하던대로 하자.
+    await updateFiles(fileListId.value, memberNo, formData);
+  }
+
+  // 이제 게시판 수정하러가자
   await modifyArticle(
     {
       articleId: articleId.value,
@@ -51,7 +74,7 @@ const updateArticle = async () => {
 
 // 첨부한 파일의 이름으로 넣어주는 코드
 const fileList = ref([]);
-
+const deleteFileList = [];
 const printFileList = async () => {
   if (articleStore.articleInfo.fileListId) {
     const response = await getFileInfo(fileListId.value);
@@ -63,23 +86,53 @@ const printFileList = async () => {
 };
 
 const handleFileChange = (event) => {
-  fileList.value = Array.from(event.target.files);
-  updateFiles(fileListId.value, memberNo, formData);
+  for (const file of Array.from(event.target.files)) {
+    fileList.value.push(file);
+  }
 };
 
-const formData = new FormData();
-const updateFiles = (fileListId, memberId, formData) => {
-  for (let file of fileList.value) {
-    formData.append("files", file);
+// 삭제 버튼 누르면
+const deleteButton = (idx) => {
+  // 기존에 저장한 파일이라면?
+  if (fileList.value[idx].fileId) {
+    deleteFileList.push(fileList.value[idx].fileId);
   }
-  isCanceling = true;
-  modifyFile(fileListId, memberId, formData, (response) => {
-    if (response.status === 200) {
-    } else {
-      console.log("파일 업로드 실패");
+
+  // 자바스크립트 전용 0번 인덱스 삭제 로직
+  if (idx >= 0 && idx < fileList.value.length) {
+    fileList.value.splice(idx, 1);
+  } else {
+    fileList.value.splice(idx, idx);
+  }
+}
+
+const formData = new FormData();
+
+const updateFiles = async (fileListId, memberId, formData) => {
+  // 삭제할 부분 삭제
+  for (let fileId of deleteFileList) {
+    await deleteFile(fileId);
+  }
+
+  for (let file of fileList.value) {
+    // 새로 추가한 파일은 추가한다.
+    if(file.memberId !== memberId) {
+      formData.append("files", file);
+      }
     }
-  });
+
+    
+  isCanceling = true;
+  if(!isFormDataEmpty(formData)) {
+    await modifyFile(fileListId, memberId, formData);
+  }
+  
+  
 };
+// 폼에 아무것도 없는지 확인
+const isFormDataEmpty = (formData) => {
+  return Array.from(formData.entries()).length === 0;
+}
 
 // 뒤로가기 이벤트 발생 시 alert 기능
 onBeforeRouteLeave((to, from) => {
@@ -99,12 +152,14 @@ const goArticleList = () => {
   );
   if (answer) {
     isCanceling = true;
-    return router.push("/list");
+    // return router.push("/list");
+    return router.go(-1);
   }
 };
 
 onMounted(() => {
   printFileList();
+  // handleFileChange
 });
 </script>
 
@@ -156,8 +211,13 @@ onMounted(() => {
           />
         </form>
         <div v-for="(file, index) in fileList" :key="index" class="fileList">
-          <div v-if="file">
+          <div v-if="file.fileOriginalName">
             {{ file.fileOriginalName }}
+            <button type="button" @click="deleteButton(index)">삭제</button>
+          </div>
+          <div v-else>
+            {{ file.name }}
+            <button type="button" @click="deleteButton(index)">삭제</button>
           </div>
         </div>
       </div>
@@ -167,7 +227,7 @@ onMounted(() => {
         <!-- 게시글 등록 버튼 -->
         <div class="write-control-btn">
           <!-- <button type="submit" @click="goArticleList">취소</button> -->
-          <button @click="goArticleList">취소</button>
+          <button type="button" @click="goArticleList">취소</button>
           <button type="submit">등록</button>
         </div>
       </div>
