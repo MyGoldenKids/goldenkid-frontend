@@ -14,7 +14,6 @@ export const useMemberStore = defineStore(
         const logout = () => {
             isLoggedIn.value = false; // 로그인 여부 false로 갱신
             memberInfo.value = ""; // 로그인한 사용자 정보 초기화
-            sessionStorage.clear(); // 세션
         };
 
         return {
