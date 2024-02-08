@@ -30,7 +30,8 @@ const createArticle = async() => {
     window.alert("게시글의 제목/내용 이 없습니다.");
     return;
   }
-  if(fileList.value.length > 0) {
+
+  if (fileList.value.length > 0) {
     fileListId.value = await createFiles(memberNo, formData);
   }
   
