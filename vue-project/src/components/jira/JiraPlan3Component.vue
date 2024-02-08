@@ -1,4 +1,21 @@
-<script setup></script>
+<script setup>
+import { useJiraCreateStore } from "@/stores/jira-create-store";
+import { useMemberStore } from "@/stores/member-store";
+import {Story} from "@/models/story";
+import {createSprint, createStory} from "@/api/jira";
+
+const jiraStore = useJiraCreateStore();
+const memberStore = useMemberStore();
+const sprintInfo = jiraStore.sprintInfo;
+const storyList = jiraStore.storyList;
+const memberInfo = memberStore.memberInfo;
+const makeSprint = () => {
+    console.log(sprintInfo.value, memberInfo.value)
+    // createSprint({...sprintInfo.value, memberInfo}, (data) => {
+    //     console.log(data.data)
+    // })
+}
+</script>
 
 <template>
     <div class="jira-wrap">
@@ -9,27 +26,19 @@
                     이번 주 내 아이와의 이야기가 완성됐어요. <br />
                     이제 관리하러 가볼까요 ? <br />
                 </p>
-                <p>기간 : 2024.02.11 ~ 2024.02.18</p>
+                <p>기간 : {{sprintInfo.value.startDate}} ~ {{sprintInfo.value.endDate}}</p>
             </div>
             <div class="jira-content">
-                <div class="todo-box">
-                    <div class="todo-time">
-                        <p>아이와 함께 할 활동을 추가해 주세요</p>
-                        <input type="number" value="3" readonly />
+                <div class="todo-box" v-for="(item, index) in storyList" :key="index">
+                    <div class="todo-time" v-if="(item instanceof Story)">
+                        <p>{{item.storyContent}}</p>
+                        <input type="number" :value="item.storyPoint" readonly />
                     </div>
                 </div>
-                <div class="todo-box">
-                    <div class="todo-time">
-                        <p>아이와 함께 할 활동을 추가해 주세요</p>
-                        <input type="number" value="2" readonly />
-                    </div>
-                </div>
-                <div class="sum-point"><span>5</span> HOURS</div>
+                <div class="sum-point"><span>{{jiraStore.totalStoryPoints}}</span> HOURS</div>
                 <div class="jira-btn">
                     <router-link :to="{ name: 'jira-plan2' }">PREV</router-link>
-                    <router-link :to="{ name: 'jira-sprint' }"
-                        >관리하러 가기</router-link
-                    >
+                    <router-link :to="{ name: 'jira-sprint' }" @click="makeSprint()">관리하러 가기</router-link>
                 </div>
             </div>
         </div>
