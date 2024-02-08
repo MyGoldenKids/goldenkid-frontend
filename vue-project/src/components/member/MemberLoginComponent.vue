@@ -25,9 +25,6 @@ function submitForm() {
             (response) => {
                 store.isLoggedIn = true; // 로그인 여부 store에 저장
                 store.memberInfo = response.data.data; // 로그인한 사용자 정보 store에 저장
-                sessionStorage.setItem("memberNo", response.data.data.memberNo);
-                sessionStorage.setItem("nickname", response.data.data.nickname);
-                sessionStorage.setItem("isLoggedIn", true);
                 router.push("/");
             },
             () => {

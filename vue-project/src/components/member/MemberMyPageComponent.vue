@@ -8,7 +8,7 @@ import {
 import { useMemberStore } from "@/stores/member-store";
 import router from "@/router";
 const store = useMemberStore();
-const memberNo = sessionStorage.getItem("memberNo");
+const memberNo = store.memberInfo.memberNo;
 const memberDetail = ref({
     memberNo: memberNo,
     password: "", 
@@ -35,7 +35,6 @@ function submitForm() {
         memberDetail,
         () => {
             // 회원정보 수정 시 수정한 닉네임으로 업데이트
-            sessionStorage.setItem("nickname", memberDetail.value.nickname);
             store.memberInfo.nickname = memberDetail.value.nickname;
             alert("회원정보가 변경되었습니다.");
         },
@@ -49,7 +48,6 @@ function signOut(memberNo) {
     deleteMember(memberNo);
     store.isLoggedIn = false; // 로그인 여부 false로 갱신
     store.memberInfo = ""; // 로그인한 사용자 정보 초기화
-    sessionStorage.clear(); // 세션 storage 초기화
     router.push("/"); // 탈퇴 후 메인 페이지로 이동
 }
 </script>

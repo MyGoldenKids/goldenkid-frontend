@@ -15,25 +15,27 @@ const articleContent = ref("");
 let isCanceling = false; //onBeforeRouteLeave, 게시글 등록, 게시글 등록 취소 동시 사용시에 필요합니다.
 const formData = new FormData();
 
-const createFiles = (memberNo, formData) => {
+const createFiles = async(memberNo, formData) => {
   for (let file of fileList.value) {
     formData.append("files", file);
   }
   isCanceling = true;
-  createFileList(memberNo, formData, (response) => {
-    if (response.status === 200) {
-      fileListId.value = response.data.data;
-    } else {
-      console.log("파일 업로드 실패");
-    }
-  });
+  const fileListId = await createFileList(memberNo, formData);
+
+  return fileListId;
 };
 
-const createArticle = async () => {
+
+const createArticle = async() => {
   if (articleTitle.value.length == 0 || articleContent.value.length == 0) {
     window.alert("게시글의 제목/내용 이 없습니다.");
     return;
   }
+
+  if (fileList.value.length > 0) {
+    fileListId.value = await createFiles(memberNo, formData);
+  }
+  
   await writeArticle(
     {
       memberId: memberNo,
@@ -59,9 +61,19 @@ const createArticle = async () => {
 // 첨부한 파일의 이름으로 넣어주는 코드
 const fileList = ref([]);
 const handleFileChange = (event) => {
-  fileList.value = Array.from(event.target.files);
-  createFiles(memberNo, formData);
+  for (const file of Array.from(event.target.files)) {
+    fileList.value.push(file);
+  }
 };
+
+// 삭제 버튼
+const deleteButton = (idx) => {
+  if (idx >= 0 && idx < fileList.value.length) {
+    fileList.value.splice(idx, 1);
+  } else {
+    fileList.value.splice(idx, idx);
+  }
+}
 
 // 뒤로가기 이벤트 발생 시 alert 기능
 onBeforeRouteLeave((to, from) => {
@@ -81,7 +93,8 @@ const goArticleList = () => {
   );
   if (answer) {
     isCanceling = true;
-    return router.push("/list");
+    // return router.push("/list");
+    return router.go(-1);
   }
 };
 </script>
@@ -135,6 +148,7 @@ const goArticleList = () => {
         </form>
         <div v-for="(file, index) in fileList" :key="index" class="fileList">
           {{ file.name }}
+          <button type="button" @click="deleteButton(index)">삭제</button>
         </div>
       </div>
 
@@ -142,7 +156,7 @@ const goArticleList = () => {
       <div class="write-control-bar">
         <!-- 게시글 등록 버튼 -->
         <div class="write-control-btn">
-          <button type="submit" @click="goArticleList">취소</button>
+          <button type="button" @click="goArticleList">취소</button>
           <button type="submit">등록</button>
         </div>
       </div>

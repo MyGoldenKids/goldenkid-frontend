@@ -45,7 +45,13 @@ const goToDiaryWrite = (child) => {
 
 <template>
     <div class="diary-main">
-    <div class="diary-title">어떤 금쪽이에게 쓸까요?</div>
+    <div class="diary-title">
+        <div v-if="childList.length === 0">
+        <div class="diary-subtitle">등록된 금쪽이 정보가 없습니다.</div>
+            <router-link :to="{ name: 'mypage'}" class="register-btn">금쪽이 등록하기</router-link>
+        </div>
+        <div v-else>어떤 아이에게 쓸까요?</div>
+    </div>
     <div class="child-list child box-2">
         <div v-for="(child, index) in childList" :key="index" @click="goToDiaryWrite(child.childId)">
             <div class="profile-box">
@@ -74,6 +80,27 @@ const goToDiaryWrite = (child) => {
 .diary-title {
     font-size: 2rem;
     margin: 2.5rem 0;
+}
+.diary-subtitle {
+    font-size: 2rem;
+    margin-bottom: 4rem;
+}
+
+.register-btn {
+    font-size: 1.5rem;
+    color: #fff8f2;
+    padding: 1.2rem 1.8rem;
+    border-radius: 1.25rem;
+    border: none;
+    background-color: #89b9ad;
+    box-sizing: border-box;
+    box-shadow: 0rem 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+}
+
+.register-btn:hover {
+    background-color:#e1baad;
+    transform: scale(1.1);
+
 }
 
 /* 아이 프로필 */
