@@ -3,7 +3,7 @@ import { instance } from "./axios";
 // 아이 정보 등록
 const registerChild = async (data) => {
     await instance
-        .post("child/register", data.value)
+        .post("child/register", data)
         .then((response) => {
             console.log(response.data);
         })
@@ -23,12 +23,12 @@ const getChildList = async (memberId, success, fail) => {
 }
 
 // 아이 정보 수정
-const updateChildInfo = async(child, success, fail) => {
+const updateChildInfo = async (child, success, fail) => {
     await instance.put("child/modify", child).then(success).catch(fail);
 }
 
 // 아이 정보 삭제
-const deleteChildInfo = async(childId, success, fail) => {
+const deleteChildInfo = async (childId, success, fail) => {
     await instance.delete(`child/delete/${childId}`).then(success).catch(fail);
 }
 
