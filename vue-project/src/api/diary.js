@@ -38,7 +38,7 @@ const deleteDiary = async (diaryId, success, fail) => {
 // 일기 수정 및 임시 저장
 const updateDiary = async (diaryId, data, success, fail) => {
     await instance
-        .put("diary/update/" + diaryId, data.value)
+        .put("diary/update/" + diaryId, data)
         .then(success)
         .catch(fail);
 };

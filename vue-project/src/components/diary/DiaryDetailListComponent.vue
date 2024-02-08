@@ -59,8 +59,10 @@ const fetchDiaryDetail = async (diaryId) => {
     fileListId.value = diaryDetail.value.fileListId;
     if(fileListId.value){
         fileData.value = await getFileInfo(fileListId.value);
-        const fileId = fileData.value.data.data[0].fileId;
-        imageUrl.value = `${VITE_SERVER_URL}/file/download/${fileId}`;
+        if(fileData.value.data.data.length > 0){
+            const fileId = fileData.value.data.data[0].fileId;
+            imageUrl.value = `${VITE_SERVER_URL}/file/download/${fileId}`;
+        }
     } else {
         fileData.value = { data: { data: [] } };
         imageUrl.value = "";
@@ -275,6 +277,7 @@ const goToModify = (diaryId) => {
 .list-title a:hover {
     background-color: #89b9ad;
     transition-duration: 0.5s;
+    cursor: pointer;
 }
 .list-title a:hover span {
     color: #fff !important;
@@ -301,5 +304,11 @@ const goToModify = (diaryId) => {
 
 .fileList button {
     background-color: #fff8f2;
+}
+
+.fileList button:hover {
+    background-color: #e1baad;
+    transition-duration: 0.5s;
+    cursor: pointer;
 }
 </style>

@@ -274,6 +274,10 @@ textarea::placeholder {
     color: #ffffff;
 }
 
+.save-temp button:hover {
+    transform: scale(1.1);
+}
+
 /* 파일 첨부 부분 */
 .diary-write-right {
     background-color: #89b9ad;
@@ -336,5 +340,21 @@ textarea::placeholder {
     border-radius: 0.625rem;
     background-color: #fff;
     color: #89b9ad;
+}
+
+.submit-btn button:hover {
+    transform: scale(1.1);
+}
+
+.fileList button {
+    margin-left: 0.313rem;
+    background-color: #fff;
+    border-radius: 0.625rem;
+    padding: 0.313rem;
+    color: #89b9ad;
+}
+
+.fileList button:hover {
+    transform: scale(1.1);
 }
 </style>
