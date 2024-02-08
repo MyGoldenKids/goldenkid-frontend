@@ -25,17 +25,12 @@ const createFiles = async(memberNo, formData) => {
   return fileListId;
 };
 
-// 폼에 아무것도 없는지 확인
-const isFormDataEmpty = (formData) => {
-  return Array.from(formData.entries()).length === 0;
-}
-
 const createArticle = async() => {
   if (articleTitle.value.length == 0 || articleContent.value.length == 0) {
     window.alert("게시글의 제목/내용 이 없습니다.");
     return;
   }
-  if (!isFormDataEmpty(formData)) {
+  if(fileList.value.length > 0) {
     fileListId.value = await createFiles(memberNo, formData);
   }
   
