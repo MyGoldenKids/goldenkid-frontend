@@ -25,7 +25,6 @@ const createFiles = async(memberNo, formData) => {
   return fileListId;
 };
 
-
 const createArticle = async() => {
   if (articleTitle.value.length == 0 || articleContent.value.length == 0) {
     window.alert("게시글의 제목/내용 이 없습니다.");
