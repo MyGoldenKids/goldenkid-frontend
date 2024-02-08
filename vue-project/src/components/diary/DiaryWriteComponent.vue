@@ -74,7 +74,6 @@ const submitDiaryForm = async () => {
     if (window.confirm("일기를 등록할까요?")) {
         if(fileList.value.length > 0) {
             diarySubmitForm.value.fileListId = await createFiles(memberNo, formData);
-            console.log(diarySubmitForm.value);
         }
 
 
