@@ -1,6 +1,4 @@
 <script setup>
-import { Carousel, Slide, Navigation } from "vue3-carousel";
-import "vue3-carousel/dist/carousel.css";
 import { VueperSlides, VueperSlide } from "vueperslides";
 import "vueperslides/dist/vueperslides.css";
 </script>
