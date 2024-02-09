@@ -64,8 +64,7 @@ function submitForm() {
                                     id="remember-check"
                                 />아이디 저장
                             </label>
-                        </div>
-                        <a href="#" class="a-btn">카카오톡 계정으로 시작하기</a>
+                        </div>                        
                         <router-link to="/member/signup" class="a-btn"
                             >회원가입</router-link
                         >
@@ -122,9 +121,6 @@ label {
     padding-left: 0.625rem;
     color: #ddd;
 }
-/* .login-box > input:focus {
-    display: none;
-} */
 
 /* 로그인 박스 button */
 .login-box button {
@@ -146,6 +142,10 @@ label {
     padding-top: 0.625rem;
     align-items: center;
 }
+
+.check-box input {
+    margin-right: 0.625rem;
+}
 /* 로그인 a태그 버튼 */
 .a-btn {
     display: block;
@@ -153,8 +153,15 @@ label {
     text-align: center;
     padding: 0.8rem 0;
     border: 3px solid #89b9ad;
-    margin-top: 0.625rem;
+    box-sizing: border-box;
     background-color: inherit;
     border-radius: 10px;
 }
+
+.a-btn:hover {
+    background-color: #89b9ad;
+    color: #fff;
+    transition: 0.3s;
+}
+
 </style>
