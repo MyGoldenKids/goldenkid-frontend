@@ -41,7 +41,7 @@ const editChild = (childId) => {
 };
 
 // 수정하다가 취소버튼 눌렀을 때
-const cancleEdit = (childId) => {
+const cancelEdit = (childId) => {
     childList.value.forEach((c) => {
         if (c.childId === childId) {
             c.isEditing = false;
@@ -49,10 +49,18 @@ const cancleEdit = (childId) => {
     });
 };
 
-// 금쪽이 수정 sbmit
+// 금쪽이 수정 submit
 const updateChild = async (childId) => {
     const childToSave = childList.value.find((c) => c.childId === childId);
     if (childToSave) {
+        if(!editingChildName.value) {
+            alert("이름을 입력해주세요.");
+            return;
+        }
+        if(!editingChildBirth.value) {
+            alert("생년월일을 입력해주세요.");
+            return;
+        }
         try {
             await updateChildInfo({
                 childId: childId,
@@ -74,7 +82,7 @@ const newChild = () => {
 };
 
 // 금쪽이 추가 취소
-const cancleAdd = () => {
+const cancelAdd = () => {
     isAdding.value = false;
 
 };
@@ -82,6 +90,14 @@ const cancleAdd = () => {
 // 새 금쪽이 등록
 const addChild = async () => {
     try {
+        if(!addChildName.value) {
+            alert("이름을 입력해주세요.");
+            return;
+        }
+        if(!addChildBirth.value) {
+            alert("생년월일을 입력해주세요.");
+            return;
+        }
         await registerChild({
             memberId: memberNo,
             childName: addChildName.value,
@@ -135,7 +151,7 @@ const deleteChild = (childId) => {
                     <div class="mypage-grid">
                         <div class="btn-box">
                             <button @click="updateChild(child.childId)">저장</button>
-                            <button @click="cancleEdit(child.childId)">취소</button>
+                            <button @click="cancelEdit(child.childId)">취소</button>
                         </div>
                     </div>
                 </div>
@@ -177,7 +193,7 @@ const deleteChild = (childId) => {
                 <div class="mypage-grid">
                     <div class="btn-box">
                         <button @click="addChild">저장</button>
-                        <button @click="cancleAdd">취소</button>
+                        <button @click="cancelAdd">취소</button>
                     </div>
                 </div>
             </div>
