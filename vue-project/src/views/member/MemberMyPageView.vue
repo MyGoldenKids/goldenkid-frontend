@@ -1,4 +1,5 @@
 <script setup>
+import MemberLeftComponent from "@/components/member/MemberLeftComponent.vue";
 import MemberMyPageComponent from "@/components/member/MemberMyPageComponent.vue";
 import ChildRegisterComponent from "@/components/child/ChildRegisterComponent.vue";
 import ChildDetailComponent from "@/components/child/ChildDetailComponent.vue";
@@ -6,9 +7,7 @@ import ChildDetailComponent from "@/components/child/ChildDetailComponent.vue";
 
 <template>
     <div class="user-wrap">
-        <div class="wrap-left">
-            <h1>금쪽이 해방일지</h1>
-        </div>
+        <MemberLeftComponent></MemberLeftComponent>
         <div class="wrap-right">
             <h1 class="mypage-title">MYPAGE</h1>
             <MemberMyPageComponent></MemberMyPageComponent>
@@ -25,8 +24,10 @@ import ChildDetailComponent from "@/components/child/ChildDetailComponent.vue";
 
 <style scoped>
 .user-wrap {
+    width: 100%;
+    /* background-color: blanchedalmond; */
     display: grid;
-    grid-template-columns: 40% 60%;
+    grid-template-columns: minmax(200px, 40%) 60%;
     height: 100vh;
 }
 .user-title {
