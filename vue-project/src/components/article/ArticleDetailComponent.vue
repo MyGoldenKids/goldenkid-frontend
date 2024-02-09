@@ -99,12 +99,17 @@ const getCommentList = async () => {
 };
 
 const registerComment = async () => {
+  // 댓글 내용이 없을 경우 경고창 띄우기
+  if (!comment.value.content) {
+    alert("댓글을 입력해주세요.");
+    return;
+  }
   writeComment(
     articleId,
     comment.value,
     (response) => {
       getCommentList();
-      comment.value = "";
+      comment.value.content = ""; // 댓글 작성 후 입력창 초기화
     },
     (error) => {
       console.log(error);
