@@ -68,10 +68,13 @@ function submitForm() {
 }
 
 function signOut() {
-    deleteMember(memberNo);
-    store.isLoggedIn = false; // 로그인 여부 false로 갱신
-    store.memberInfo = ""; // 로그인한 사용자 정보 초기화
-    router.push("/"); // 탈퇴 후 메인 페이지로 이동
+    if (confirm("정말로 회원탈퇴 하시겠습니까?")) {
+        deleteMember(memberNo);
+        store.isLoggedIn = false; // 로그인 여부 false로 갱신
+        store.memberInfo = ""; // 로그인한 사용자 정보 초기화
+        sessionStorage.clear(); // 세션 스토리지 초기화
+        router.push("/"); // 탈퇴 후 메인 페이지로 이동
+    }
 }
 </script>
 
