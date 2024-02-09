@@ -144,6 +144,10 @@ const editComment = (commentId) => {
 const saveEditedComment = async (commentId) => {
   const commentToSave = commentList.value.find((c) => c.commentId === commentId);
   if (commentToSave) {
+    if(!commentToSave.editingContent) {
+      alert("수정할 내용을 입력해주세요.");
+      return;
+    }
     await updateComment(commentId, { memberId: memberStore.memberInfo.memberNo, content: commentToSave.editingContent });
     commentToSave.isEditing = false; // 수정 모드 해제
     getCommentList(); // 댓글 목록 새로고침
