@@ -34,6 +34,12 @@ const requireLogin = (to, from, next) => {
 };
 
 const router = createRouter({
+    scrollBehavior(to, from, savedPosition) {
+        // 자가진단 페이지로 이동할 때 스크롤을 h1 태그로 이동
+        if(to.path === '/survey') {
+            return { el: 'h1', top: 0 }
+        }
+    },
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
