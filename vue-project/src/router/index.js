@@ -1,21 +1,20 @@
 import { createRouter, createWebHistory } from "vue-router";
 import MainViewVue from "@/views/MainView.vue";
 import SurveyViewVue from "@/views/survey/SurveyView.vue";
-import ArticleListView from "@/views/article/ArticleListView.vue";
-import ArticleDetailView from "@/views/article/ArticleDetailView.vue";
-import DiaryHomeView from "@/views/diary/DiaryHomeView.vue";
-import ArticleWriteView from "@/views/article/ArticleWriteView.vue";
-import ArticleUpdateView from "@/views/article/ArticleUpdateView.vue"
 import SignupView from "@/views/member/MemberSignupView.vue";
 import LoginView from "@/views/member/MemberLoginView.vue";
 import MyPageView from "@/views/member/MemberMyPageView.vue";
+import ErrorView from "@/views/error/ErrorView.vue";
+import ArticleListView from "@/views/article/ArticleListView.vue";
+import ArticleDetailView from "@/views/article/ArticleDetailView.vue";
+import ArticleWriteView from "@/views/article/ArticleWriteView.vue";
+import ArticleUpdateView from "@/views/article/ArticleUpdateView.vue"
+import DiaryHomeView from "@/views/diary/DiaryHomeView.vue";
 import DiaryListView from "@/views/diary/DiaryListView.vue";
 import DiaryWriteView from "@/views/diary/DiaryWriteView.vue";
 import DiaryCreateView from "@/views/diary/DiaryCreateView.vue";
 import DiaryUpdateView from "@/views/diary/DiaryUpdateView.vue"
-import ErrorView from "@/views/error/ErrorView.vue";
 import JiraHomeView from "@/views/jira/JiraHomeView.vue";
-import JiraSprintView from "@/views/jira/JiraSprintView.vue";
 import JiraPlan0View from "@/views/jira/JiraPlan0View.vue";
 import JiraPlan1View from "@/views/jira/JiraPlan1View.vue";
 import JiraPlan2View from "@/views/jira/JiraPlan2View.vue";
@@ -150,11 +149,6 @@ const router = createRouter({
                     name: "jira-home",
                     path: "home",
                     component: JiraHomeView,
-                },
-                {
-                    name: "jira-sprint",
-                    path: "sprint",
-                    component: JiraSprintView,
                 },
                 {
                     name: "jira-plan0",
