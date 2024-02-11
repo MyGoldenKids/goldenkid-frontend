@@ -1,6 +1,37 @@
 <script setup>
 import { Carousel, Pagination, Slide, Navigation } from "vue3-carousel";
+import { useJiraCreateStore } from "@/stores/jira-create-store";
+import { ref } from "vue";
+import { Story } from "@/models/story";
 import "vue3-carousel/dist/carousel.css";
+
+const store = useJiraCreateStore();
+const storyList = store.storyList;
+const idx = ref(0);
+
+const activityList = [new Story("아이와 함께 할 활동들 적을 공간 / 아이와 함께 할 활동들 적을 공간"),
+new Story("아이와 함께 할 활동들 적을 공간 / 아이와 함께 할 활동들 적을 공간"),
+new Story("아이와 함께 할 활동들 적을 공간 / 아이와 함께 할 활동들 적을 공간"),
+new Story("아이와 함께 할 활동들 적을 공간 / 아이와 함께 할 활동들 적을 공간")];
+
+function injectStory(story) {
+    if (idx.value > 3) {
+        window.alert("최대 4개의 스토리까지만 추가 가능합니다.")
+        return;
+    }
+    storyList[idx.value++] = story;
+}
+
+function removeStory(index) {
+    if (storyList[index] instanceof Story) {
+        storyList[index] = undefined;
+        let notUndefined = storyList.filter(story => story !== undefined);
+        let undefinedItems = storyList.filter(story => story === undefined);
+        storyList.value = notUndefined.concat(undefinedItems);
+        idx.value--;
+    }
+}
+
 </script>
 
 <template>
@@ -23,13 +54,12 @@ import "vue3-carousel/dist/carousel.css";
                             :transition="500"
                             :autoplay="3000"
                         >
-                            <Slide v-for="slide in 10" :key="slide">
+                            <Slide v-for="(slide, index) in activityList" :key="index">
                                 <div class="carousel__item">
                                     <div class="slide-box-list">
-                                        <h1>활동 1번</h1>
-                                        <p>
-                                            아이와 함께 할 활동들 적을 공간 /
-                                            아이와 함께 할 활동들 적을 공간
+                                        <h1>활동 {{index + 1}}번</h1>
+                                        <p @click="injectStory(slide)">
+                                            {{ slide.storyContent }}
                                         </p>
                                     </div>
                                 </div>
@@ -48,15 +78,12 @@ import "vue3-carousel/dist/carousel.css";
                         </Carousel>
                     </div>
                     <div class="todo-box">
-                        <div class="todo-item select-todo">
-                            내용 클릭했을 때
-                        </div>
-                        <div class="todo-item select-todo">
-                            해당 내용 여기로 들어옴
-                        </div>
-                        <div class="todo-item">내용 안넣었을 때</div>
-                        <div class="todo-item">카드를 클릭해주세요</div>
+                    <div class="todo-item" :class="{'select-todo': item instanceof Story}"
+                            v-for="(item, index) in storyList" :key="index" 
+                            @click="removeStory(index)">
+                        {{ item !== undefined ? item.storyContent : "내용 안넣었을 때" }}
                     </div>
+                </div>
                 </div>
                 <div class="jira-btn">
                     <router-link :to="{ name: 'jira-plan2' }">NEXT</router-link>

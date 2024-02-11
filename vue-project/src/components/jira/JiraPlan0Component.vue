@@ -1,5 +1,8 @@
 <script setup>
-
+    import { useJiraCreateStore } from "@/stores/jira-create-store";
+    const store = useJiraCreateStore();
+    const sprintInfo = store.sprintInfo;
+    sprintInfo.value = {sprintTitle: "", startDate: "", endDate: ""};
 </script>
 
 <template>
@@ -16,15 +19,15 @@
             <div class="content-title">
                 <form class="sprint-form">
 
-                <input type="text" placeholder="제목을 입력하세요">
+                <input type="text" placeholder="제목을 입력하세요" v-model="sprintInfo.value.sprintTitle">
                 <div class="date-form">
                 <div class="start-date">
                     <div>시작일</div>
-                    <input type="date">
+                    <input type="date" v-model="sprintInfo.value.startDate">
                 </div>
                 <div class="end-date">
-                    <div>종료일</div>
-                    <input type="date">
+                    <div>종료일</div >
+                    <input type="date" v-model="sprintInfo.value.endDate">
                 </div>
                 </div>
                 </form>
