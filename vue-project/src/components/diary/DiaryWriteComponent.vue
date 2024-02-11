@@ -118,7 +118,7 @@ const cancel = (diaryId) => {
 const save = (diaryId) => {
     updateDiary(
         diaryId,
-        diarySubmitForm,
+        diarySubmitForm.value,
         () => {
             router.push({ name: "diary-list" }); // 다이어리 모음으로 이동
             diaryStore.draft = "";
