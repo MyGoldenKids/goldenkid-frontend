@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { getDiaryList, getDiaryDetail, deleteDiary } from "@/api/diary";
+import { getFileInfo, downloadFile } from "@/api/file";
 import { useMemberStore } from "@/stores/member-store";
 import { useDiaryStore } from "@/stores/diary-store";
 import router from "@/router";
@@ -8,36 +9,64 @@ const memberStore = useMemberStore();
 const diaryStore = useDiaryStore();
 const diaryList = ref([]);
 const diaryDetail = ref("");
+const fileData = ref([]);
+const fileListId = ref("");
+const imageUrl = ref("");
+const { VITE_SERVER_URL } = import.meta.env;
 
-onMounted(() => {
-    getDiaryList(
-        memberStore.memberInfo.memberNo,
-        (response) => {
-            diaryList.value = response.data.data;
-
-            // 최근 다이어리 모음에서 선택한 값이 있는 경우
-            if (diaryStore.diaryId) {
-                fetchDiaryDetail(diaryStore.diaryId); // 다어이리 모음에서 선택한 다이어리 정보 가져오기
-                diaryStore.diaryId = ""; // 가져온 후에는 초기화
-            }
-            // 가장 최근 다이어리 가져오기
-            else if (!diaryDetail.value && diaryList.value.length > 0) {
-                fetchDiaryDetail(diaryList.value[0].diaryId);
-            }
-        },
-        () => {
-            console.log("다이어리 목록을 불러올 수 없습니다.");
-        }
-    );
+onMounted(async () => {
+    const response = await getDiaryList(memberStore.memberInfo.memberNo);
+    diaryList.value = response.data.data;
+    
+    // 최근 다이어리 모음에서 선택한 값이 있는 경우
+    if (diaryStore.diaryId) {
+        await fetchDiaryDetail(diaryStore.diaryId); // 다어이리 모음에서 선택한 다이어리 정보 가져오기
+        diaryStore.diaryId = ""; // 가져온 후에는 초기화
+    }
+    // 가장 최근 다이어리 가져오기
+    else if (!diaryDetail.value && diaryList.value.length > 0) {
+        await fetchDiaryDetail(diaryList.value[0].diaryId);
+    }
 });
 
-const fetchDiaryDetail = (diaryId) => {
-    getDiaryDetail(diaryId, (response) => {
-        diaryDetail.value = {
-            ...response.data.data,
-            diaryId: diaryId,
-        };
+// 파일 다운로드
+const download = async (fileId, fileName) => {
+        await downloadFile(fileId, (response) => {
+        // Blob 데이터 처리
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+
+        // 파일 이름 설정 (예: 'download.pdf')
+        link.setAttribute("download", fileName);
+
+        // 문서에 링크 추가, 클릭 이벤트 발생, 링크 제거
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // URL 해제
+        window.URL.revokeObjectURL(url);
     });
+};
+
+const fetchDiaryDetail = async (diaryId) => {
+    const response = await getDiaryDetail(diaryId);
+    diaryDetail.value = {
+        ...response.data.data,
+        diaryId: diaryId,
+    };
+    fileListId.value = diaryDetail.value.fileListId;
+    if(fileListId.value){
+        fileData.value = await getFileInfo(fileListId.value);
+        if(fileData.value.data.data.length > 0){
+            const fileId = fileData.value.data.data[0].fileId;
+            imageUrl.value = `${VITE_SERVER_URL}/file/download/${fileId}`;
+        }
+    } else {
+        fileData.value = { data: { data: [] } };
+        imageUrl.value = "";
+    }
 };
 
 const deleteDiaryDetail = (diaryId) => {
@@ -86,12 +115,29 @@ const goToModify = (diaryId) => {
                         </div>
                     </div>
                     <div class="diary-detail">
-                        <div class="diary-img">
-                            이미지 크기 얼마로 해야할지 고민중 500x300 px
-                        </div>
+                        
+                            <div v-if="imageUrl !== '' && imageUrl !== 'null' && imageUrl !== 'undefined' && imageUrl !== null">
+                                <div class="diary-img">
+                                    <img :src="imageUrl" alt="diary-img-err" height="300px" width="500px"/>
+                                </div>
+                            </div>
+                        
                         <div class="diary-text">
                             {{ diaryDetail.diaryContent }}
                         </div>
+                        <div class="upload">
+                            <div v-if="fileData.data && fileData.data.data && fileData.data.data.length > 0 ">
+                                <div class="upload-header">
+                                    <img src="../../assets/img/Attachfile.png" alt="attach-img-err" />
+                                    <span class="attach-title">첨부된 파일</span>
+                                </div>
+                            <div v-for="(file, index) in fileData.data.data" :key="index" class="fileList">
+                                <button @click="download(file.fileId, file.fileOriginalName)">
+                                    {{ file.fileOriginalName }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -183,11 +229,11 @@ const goToModify = (diaryId) => {
 }
 
 .diary-img {
-    background-color: chocolate;
+    /* background-color: chocolate; */
     margin: 0 1.2rem 1.2rem;
     /* 일기상세에서 보여줄 이미지 크기 정해야함 (임시) */
-    width: 500px;
-    height: 300px;
+    width: 31.25rem;
+    height: 18.75rem;
 }
 .diary-text {
     line-height: 2.2rem;
@@ -231,6 +277,7 @@ const goToModify = (diaryId) => {
 .list-title a:hover {
     background-color: #89b9ad;
     transition-duration: 0.5s;
+    cursor: pointer;
 }
 .list-title a:hover span {
     color: #fff !important;
@@ -239,5 +286,29 @@ const goToModify = (diaryId) => {
 
 .empty-diary {
     font-size: 3.5rem;
+}
+
+.upload-header {
+    width: 30%;
+    margin-top: 3rem;
+    display: grid;
+    grid-template-columns: 10% 90%;
+    align-items: center;
+}
+
+.upload span {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-left: 1rem;
+}
+
+.fileList button {
+    background-color: #fff8f2;
+}
+
+.fileList button:hover {
+    background-color: #e1baad;
+    transition-duration: 0.5s;
+    cursor: pointer;
 }
 </style>

@@ -5,25 +5,31 @@ const hasInput = ref(false);
 const message = ref("");
 
 const checkId = (member_id) => {
-  if (member_id.trim() !== "") {
-    hasInput.value = true;
-    instance
-      .post("member/idcheck/" + member_id)
-      .then((response) => {
-        if (response.data.data === 0) {
-          message.value = "중복된 아이디가 존재합니다!";
+    return new Promise((resolve, reject) => {
+        if (member_id.trim() !== "") {
+            hasInput.value = true;
+            instance
+                .post("member/idcheck/" + member_id)
+                .then((response) => {
+                    if (response.data.data === 0) {
+                        message.value = "중복된 아이디가 존재합니다!";
+                        resolve(true);
+                    } else {
+                        message.value = "사용가능한 아이디입니다.";
+                        resolve(false);
+                    }
+                })
+                .catch((e) => {
+                    console.log(e);
+                    reject(e);
+                });
         } else {
-          message.value = "사용가능한 아이디입니다.";
+            hasInput.value = false;
+            message.value = "";
+            resolve(false);
         }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  } else {
-    hasInput.value = false;
-    message.value = "";
-  }
-};
+    })
+}
 
 const signup = (data, success, fail) => {
   instance.post("member/signup", data.value).then(success).catch(fail);
