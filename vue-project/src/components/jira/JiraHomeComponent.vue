@@ -1,7 +1,30 @@
 <script setup>
 import { Carousel, Slide, Navigation } from "vue3-carousel";
+import { getSprintList, getStoryList } from "@/api/jira";
+import { useMemberStore } from "@/stores/member-store";
+import { ref, onMounted } from "vue";
 import "vue3-carousel/dist/carousel.css";
 
+const store = useMemberStore();
+const sprintList = ref([]);
+const storyList = ref([]);
+onMounted(() => {
+  getSprintList(store.memberInfo.memberNo, (data) => {
+    sprintList.value = data.data.data;
+    sprintList.value.forEach((sprint) => {
+      let startDate = new Date(sprint.startDate);
+      let endDate = new Date(sprint.endDate);
+      sprint.startDate = startDate.toLocaleDateString().replace(/\.$/, "");
+      sprint.endDate = endDate.toLocaleDateString().replace(/\.$/, "");
+    });
+  });
+});
+
+const getSprintDetail = (sprintId) => {
+  getStoryList(sprintId, store.memberInfo.memberNo, (data) => {
+    storyList.value = data.data.data;
+  });
+};
 </script>
 
 <template>
@@ -15,11 +38,16 @@ import "vue3-carousel/dist/carousel.css";
       <div class="mini-underline">
         <div class="slide-box">
           <Carousel :itemsToShow="4" :transition="600">
-            <Slide v-for="slide in 10" :key="slide">
+            <Slide
+              v-for="(sprint, index) in sprintList"
+              :key="sprint"
+              @click="getSprintDetail(sprint.sprintId)"
+            >
               <div class="carousel__item">
                 <div class="slide-box-list">
-                  <h2>200129</h2>
-                  <h1>{{ slide }}번째 스프린트</h1>
+                  <h1>{{ index + 1 }}번째 스프린트</h1>
+                  <div>{{ sprint.sprintTitle }}</div>
+                  <div>{{ sprint.startDate }} ~ {{ sprint.endDate }}</div>
                   <div class="finished-story">
                     <div>완료된 스토리</div>
                     <span>2/3</span>
@@ -46,24 +74,19 @@ import "vue3-carousel/dist/carousel.css";
       <hr />
 
       <div class="todolist-wrap">
-        <div class="todolist">
-          <span>살 것 메모하고 시장가서 메모한 것만 사오기</span>
-          <span>
-            <span>1</span>
-          </span>
-        </div>
-        <div class="progress">
-          <span>진행중</span>
-        </div>
-        <div class="todolist">
-          <span>저녁식사 상차림부터같이 준비하고 뒷정리 같이 하기</span>
-          <span>
-            <span>2</span>
-          </span>
-        </div>
-        <div class="progress">
-          <span>완료</span>
-        </div>
+        <template v-for="(story, index) in storyList" :key="story">
+          <div class="todolist">
+            <span>{{ story.storyContent }}</span>
+            <span>
+              <span>{{ story.storyPoint }}</span>
+            </span>
+          </div>
+          <div class="progress">
+            <span v-if="story.storyStatus === 0">해야할 일</span>
+            <span v-else-if="story.storyStatus === 1">진행 중</span>
+            <span v-else>완료됨</span>
+          </div>
+        </template>
       </div>
     </div>
   </div>
