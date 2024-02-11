@@ -46,8 +46,8 @@ const goDiary = () => {
 
     <div class="button-box">
       <div class="box-item button-item1">
-        <h1>혹시 내가 금쪽이 ?</h1>
-        <p>객관적으로 양육태도 바라보기</p>
+        <h1>내 정신건강 상태는 ?</h1>
+        <p>육아로 인한 스트레스, 우울증 자가진단</p>
         <button @click="goSurvey(1)">부모 자가진단</button>
       </div>
       <div class="box-item button-item2">
