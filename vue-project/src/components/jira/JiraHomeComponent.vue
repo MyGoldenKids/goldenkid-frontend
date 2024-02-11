@@ -78,7 +78,7 @@ const getSprintDetail = (sprintId) => {
           <div class="todolist">
             <span>{{ story.storyContent }}</span>
             <span>
-              <span>{{ story.storyPoint }}</span>
+              <span>{{ story.storyPoint }}시간</span>
             </span>
           </div>
           <div class="progress">
