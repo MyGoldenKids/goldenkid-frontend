@@ -2,11 +2,10 @@
 import {
     submitDiary,
     updateDiary,
-    deleteDiary,
-    getDiaryDetail,
+    deleteDiary
 } from "@/api/diary";
 import { createFileList } from "@/api/file";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { useMemberStore } from "@/stores/member-store";
 import router from "@/router";
 import { useDiaryStore } from "@/stores/diary-store";
@@ -14,20 +13,6 @@ const memberStore = useMemberStore();
 const diaryStore = useDiaryStore();
 const formData = new FormData();
 const memberNo = memberStore.memberInfo.memberNo;
-
-onMounted(() => {
-    if (diaryStore.selectedDraftId !== "") {
-        getDiaryDetail(
-            diaryStore.selectedDraftId,
-            (response) => {
-                diaryStore.draft = response.data.data;
-            },
-            (error) => {
-                console.log(error);
-            }
-        );
-    }
-});
 
 const createFiles = async(memberNo, formData) => {
     for (let file of fileList.value) {
