@@ -219,6 +219,11 @@ const resultView = async () => {
     color: #fff;
 }
 
+.radio-text:hover {
+    background-color: #89b9ad;
+    color: #fff;
+}
+
 .select-box {
     width: 80%;
     margin: 0 auto;
