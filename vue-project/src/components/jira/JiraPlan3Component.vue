@@ -3,31 +3,35 @@ import { useJiraCreateStore } from "@/stores/jira-create-store";
 import { useMemberStore } from "@/stores/member-store";
 import { Story } from "@/models/story";
 import { createSprint, createStory } from "@/api/jira";
+import { useRouter } from "vue-router";
 
 const jiraStore = useJiraCreateStore();
 const memberStore = useMemberStore();
 const sprintInfo = jiraStore.sprintInfo;
 const storyList = jiraStore.storyList;
 const memberInfo = memberStore.memberInfo;
-const makeSprint = () => {
+const router = useRouter();
+
+const makeSprint = async () => {
   console.log(sprintInfo.value, memberInfo);
   const sprintRequestBody = {
     ...sprintInfo.value,
     memberId: memberInfo.memberNo,
   };
-  createSprint(sprintRequestBody, (data) => {
-    storyList.forEach((story) => {
+  await createSprint(sprintRequestBody, async (data) => {
+    for (const story of storyList) {
       if (story instanceof Story) {
         const storyRequestBody = {
           ...story,
           sprintId: data.data.data,
           memberId: memberInfo.memberNo,
         };
-        createStory(storyRequestBody, (data) => {
+        await createStory(storyRequestBody, (data) => {
           console.log(data);
         });
       }
-    });
+    }
+    await router.push({name: "jira-home"});
   });
 };
 </script>
@@ -58,9 +62,7 @@ const makeSprint = () => {
         </div>
         <div class="jira-btn">
           <router-link :to="{ name: 'jira-plan2' }">PREV</router-link>
-          <router-link :to="{ name: 'jira-sprint' }" @click="makeSprint()"
-            >관리하러 가기</router-link
-          >
+          <button @click="makeSprint()">관리하러 가기</button>
         </div>
       </div>
     </div>
@@ -155,7 +157,8 @@ const makeSprint = () => {
 .jira-btn {
   margin: 2.5rem;
 }
-.jira-btn a {
+.jira-btn a,
+button {
   background-color: #665031;
   color: #fff;
   border: none;
