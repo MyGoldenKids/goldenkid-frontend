@@ -39,7 +39,7 @@ const formatDate = (date) => {
 <style scoped>
 .preview {
     width: 70%;
-    height: 12.5rem;
+    height: 13.5rem;
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -49,7 +49,7 @@ const formatDate = (date) => {
     position: relative;
 }
 .preview-temp-text {
-    width: 70%;
+    width: 80%;
     font-size: 1rem;
     line-height: 1.5;
 }
