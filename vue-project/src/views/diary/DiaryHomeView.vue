@@ -1,6 +1,5 @@
 <script setup>
 import DiaryNavComponent from "@/components/diary/DiaryNavComponent.vue";
-import DiaryProfileComponent from "@/components/diary/DiaryProfileComponent.vue";
 import DiaryCalendarComponent from "@/components/diary/DiaryCalendarComponent.vue";
 import DiaryPreviewComponent from "@/components/diary/DiaryPreviewComponent.vue";
 import DiaryListComponent from "@/components/diary/DiaryListComponent.vue";
@@ -11,9 +10,7 @@ import DiaryIngComponent from "@/components/diary/DiaryIngComponent.vue";
     <div class="diary">
         <DiaryNavComponent></DiaryNavComponent>
         <div>
-            <!-- <DiaryHeaderComponent></DiaryHeaderComponent> -->
             <div class="diary-main">
-                <DiaryProfileComponent></DiaryProfileComponent>
                 <div class="diary-content">
                     <!--다이어리 홈 위젯 상단 -->
                     <div class="content-top">
@@ -45,7 +42,7 @@ import DiaryIngComponent from "@/components/diary/DiaryIngComponent.vue";
 }
 .diary-main {
     display: grid;
-    grid-template-columns: 20% 80%;
+    /* grid-template-columns: 20% 80%; */
     padding: 1.2rem;
 }
 .diary-content {
