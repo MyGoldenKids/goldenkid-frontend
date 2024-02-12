@@ -16,14 +16,15 @@ const isErrorPage = computed(() => route.name === "NotFound");
 
 <template>
     <div class="app-container">
-        <div class="wrap">
-            <div v-if="!isLoginPage && !isSignupPage && !isMyPage && !isErrorPage">
+        <div v-if="!isLoginPage && !isSignupPage && !isMyPage && !isErrorPage">
+            <div class="wrap">
                 <HeaderComponent></HeaderComponent>
-            </div>
-            <RouterView></RouterView>
-            <div v-if="!isLoginPage && !isSignupPage && !isMyPage && !isErrorPage">
+                <RouterView></RouterView>
                 <FooterComponent></FooterComponent>
             </div>
+        </div>
+        <div v-else>
+            <RouterView></RouterView>
         </div>
     </div>
 </template>
