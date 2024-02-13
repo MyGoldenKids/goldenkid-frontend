@@ -2,29 +2,43 @@
 import {
     submitDiary,
     updateDiary,
-    deleteDiary,
-    getDiaryDetail,
+    deleteDiary
 } from "@/api/diary";
-import { ref, onMounted } from "vue";
+import { createFileList } from "@/api/file";
+import { ref } from "vue";
 import { useMemberStore } from "@/stores/member-store";
 import router from "@/router";
 import { useDiaryStore } from "@/stores/diary-store";
 const memberStore = useMemberStore();
 const diaryStore = useDiaryStore();
+const formData = new FormData();
+const memberNo = memberStore.memberInfo.memberNo;
 
-onMounted(() => {
-    if (diaryStore.selectedDraftId !== "") {
-        getDiaryDetail(
-            diaryStore.selectedDraftId,
-            (response) => {
-                diaryStore.draft = response.data.data;
-            },
-            (error) => {
-                console.log(error);
-            }
-        );
+const createFiles = async(memberNo, formData) => {
+    for (let file of fileList.value) {
+        formData.append("files", file);
     }
-});
+    const fileListId = await createFileList(memberNo, formData);
+
+    return fileListId;
+};
+
+// 첨부한 파일의 이름으로 넣어주는 코드
+const fileList = ref([]);
+const handleFileChange = (event) => {
+    for (const file of Array.from(event.target.files)) {
+        fileList.value.push(file);
+    }
+};
+
+// 삭제 버튼
+const deleteButton = (idx) => {
+    if (idx >= 0 && idx < fileList.value.length) {
+        fileList.value.splice(idx, 1);
+    } else {
+        fileList.value.splice(idx, idx);
+    }
+}
 
 // 다이어리 제출 폼
 const diarySubmitForm = ref({
@@ -41,9 +55,14 @@ const diarySubmitForm = ref({
 
 const date = new Date().toLocaleDateString();
 
-const submitDiaryForm = () => {
+const submitDiaryForm = async () => {
     if (window.confirm("일기를 등록할까요?")) {
-        submitDiary(
+        if(fileList.value.length > 0) {
+            diarySubmitForm.value.fileListId = await createFiles(memberNo, formData);
+        }
+
+
+        await submitDiary(
             diarySubmitForm,
             () => {
                 // 등록 성공 시 일기모음 페이지로 이동
@@ -84,7 +103,7 @@ const cancel = (diaryId) => {
 const save = (diaryId) => {
     updateDiary(
         diaryId,
-        diarySubmitForm,
+        diarySubmitForm.value,
         () => {
             router.push({ name: "diary-list" }); // 다이어리 모음으로 이동
             diaryStore.draft = "";
@@ -133,6 +152,7 @@ const save = (diaryId) => {
             <div class="diary-write-right">
                 <!-- 첨부파일 박스 -->
                 <div class="upload-box">
+                <form @submit.prevent="upLoadFile" enctype="multipart/form-data">
                     <label for="file">
                         <img
                             src="../../assets/img/AddNew.png"
@@ -140,7 +160,12 @@ const save = (diaryId) => {
                         />
                         <span class="attach-content">파일찾기</span>
                     </label>
-                    <input type="file" id="file" />
+                    <input type="file" id="file" name="files" @change="handleFileChange" multiple/>
+                </form>
+                </div>
+                <div v-for="(file, index) in fileList" :key="index" class="fileList">
+                        {{ file.name }}
+                    <button type="button" @click="deleteButton(index)">삭제</button>
                 </div>
                 <!-- 버튼 -->
                 <div class="submit-btn">
@@ -233,6 +258,10 @@ textarea::placeholder {
     color: #ffffff;
 }
 
+.save-temp button:hover {
+    transform: scale(1.1);
+}
+
 /* 파일 첨부 부분 */
 .diary-write-right {
     background-color: #89b9ad;
@@ -295,5 +324,21 @@ textarea::placeholder {
     border-radius: 0.625rem;
     background-color: #fff;
     color: #89b9ad;
+}
+
+.submit-btn button:hover {
+    transform: scale(1.1);
+}
+
+.fileList button {
+    margin-left: 0.313rem;
+    background-color: #fff;
+    border-radius: 0.625rem;
+    padding: 0.313rem;
+    color: #89b9ad;
+}
+
+.fileList button:hover {
+    transform: scale(1.1);
 }
 </style>

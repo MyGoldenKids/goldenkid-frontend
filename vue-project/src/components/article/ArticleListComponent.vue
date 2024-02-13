@@ -1,5 +1,5 @@
 <script setup>
-import { getArticleList } from "@/api/article.js";
+import { getArticleList, searchArticle } from "@/api/article.js";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
@@ -18,6 +18,25 @@ const articleInfo = async () => {
     }
   );
 };
+
+const category = ref("title");
+const serachContent = ref("");
+
+const search = () => {
+  searchArticle(
+    category.value,
+    serachContent.value,
+    (response) => {
+      articleList.value = response.data.data;
+      articleList.value.forEach((article) => {
+        article.formattedCreatedAt = formatCreatedAt(article.createdAt);
+      });
+    },
+    (error) => {
+      console.error(error);
+    }
+  );
+}
 
 // 작성일 연-월-일 포매팅 할 함수
 const formatCreatedAt = (createdAt) => {
@@ -42,14 +61,17 @@ onMounted(articleInfo);
     <div class="board-top">
       <div class="search">
         <div class="select-box">
-          <select name="search" class="sel">
-            <option value="">제목</option>
-            <option value="">내용</option>
-            <option value="">작성자</option>
+          <select v-model="category" name="search" class="sel">
+            <option value="title">제목</option>
+            <option value="content">내용</option>
+            <option value="nickname">작성자</option>
           </select>
         </div>
         <div class="search-box">
-          <input type="text" />
+          <input type="text" @keyup.enter="search" v-model="serachContent"/>
+          <button type="button" @click="search">
+            <img src="@/assets/img/SearchButton01.png">
+          </button>
         </div>
       </div>
       <div class="write">
@@ -172,6 +194,9 @@ button {
   box-sizing: border-box;
   border-radius: 1.25rem;
   outline: 0.063rem solid #ad9478;
+}
+.search-box button {
+  position: absolute;
 }
 
 table {

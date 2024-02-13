@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { checkId, message, signup } from "@/api/member";
 import router from "@/router";
 
@@ -12,9 +12,60 @@ const member = ref({
 
 const checked = ref(false); // 체크박스 체크여부
 const passwordValidate = ref(""); // 비밀번호 확인
+const passwordMessage = ref(""); // 비밀번호 유효성 메시지
+
+let checkedId = false
+let checkedPwd = false
+
+watch(() => member.value.memberId, (newVal) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (newVal) {
+        if (emailRegex.test(newVal)) {
+            const checkDuplicate = async () => {
+                try {
+                    const isDuplicate = await checkId(newVal);
+                    if (!isDuplicate) {
+                        checkedId = true;
+                    } else {
+                        message.value = "이미 사용중인 이메일입니다.";
+                        checkedId = false;
+                    }
+                } catch (error) {
+                    console.error(error);
+                    checkedId = false;
+                }
+            };
+            checkDuplicate();
+        } else {
+            message.value = "유효하지 않은 이메일입니다.";
+            checkedId = false;
+        }
+    } else {
+        message.value = "";
+        checkedId = false;
+    }
+});
+
+watch(() => member.value.password, (newVal) => {
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,16}$/;
+
+    if (newVal) {
+        if (passwordRegex.test(newVal)) {
+            passwordMessage.value = "유효한 비밀번호입니다.";
+            checkedPwd = true;
+        } else {
+            passwordMessage.value = "영문, 숫자, 특수문자를 포함해야합니다.";
+            checkedPwd = false;
+        }
+    } else {
+        passwordMessage.value = "";
+        checkedPwd = false; 
+    }
+});
 
 function submitForm() {
-    if (checked.value && passwordValidate.value == member.value.password) {
+    if (checked.value && checkedId && checkedPwd && passwordValidate.value == member.value.password) {
         signup(
             member,
             () => {
@@ -32,6 +83,8 @@ function submitForm() {
     } else if (passwordValidate.value != member.value.password) {
         // 비밀번호 불일치
         alert("비밀번호를 확인해주세요!");
+    }  else{
+        alert("입력값을 확인해주세요!")
     }
 }
 </script>
@@ -207,9 +260,11 @@ input[type="tel"] {
 .message-text {
     position: absolute;
     text-align: left;
-    top: 15px;
+    top: 22px;
     right: -15px;
     transform: translate(100%, 100%);
+    font-size: 0.8rem;
+    color: #e1baad;
 }
 
 .custom-checkbox input[type="checkbox"] {

@@ -2,15 +2,16 @@ import { instance } from "./axios";
 
 // 일기 모음 조회
 const getDiaryList = async (memberId, success, fail) => {
-    await instance
+    return await instance
         .get("diary/list/" + memberId)
         .then(success)
         .catch(fail);
+
 };
 
 // 일기 상세 조회
 const getDiaryDetail = async (diaryId, success, fail) => {
-    await instance
+    return await instance
         .get("diary/detail/" + diaryId)
         .then(success)
         .catch(fail);
@@ -37,7 +38,7 @@ const deleteDiary = async (diaryId, success, fail) => {
 // 일기 수정 및 임시 저장
 const updateDiary = async (diaryId, data, success, fail) => {
     await instance
-        .put("diary/update/" + diaryId, data.value)
+        .put("diary/update/" + diaryId, data)
         .then(success)
         .catch(fail);
 };

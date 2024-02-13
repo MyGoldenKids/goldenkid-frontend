@@ -93,4 +93,9 @@ const switchTab = (value) => {
     background-color: #89B9AD;
     color: #fff;
 }
+
+.tab-left:hover, .tab-right:hover {
+    background-color: #89B9AD;
+    color: #fff;
+}
 </style>

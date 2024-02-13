@@ -1,4 +1,21 @@
-<script setup></script>
+<script setup>
+import {useJiraCreateStore} from "@/stores/jira-create-store";
+import {computed} from "vue";
+import {Story} from "@/models/story";
+const store = useJiraCreateStore();
+
+const sprintInfo = store.sprintInfo;
+
+const totalStoryPoints = computed(() => {
+    return store.storyList.reduce((total, story) => {
+        if (story instanceof Story && story.storyPoint !== undefined) {
+            return total + parseInt(story.storyPoint);
+        }
+        return total;
+    }, 0);
+});
+store.totalStoryPoints = totalStoryPoints;
+</script>
 
 <template>
     <div class="jira-wrap">
@@ -10,22 +27,16 @@
                     일주일 동안 아이와 함께 활동할 <br />
                     목표 시간을 정해 보세요 😊 <br />
                 </p>
-                <p>기간 : 2024.02.11 ~ 2024.02.18</p>
+                <p>기간 : {{sprintInfo.value.startDate}} ~ {{sprintInfo.value.endDate}}</p>
             </div>
             <div class="jira-content">
-                <div class="todo-box">
-                    <div class="todo-time">
-                        <p>아이와 함께 할 활동을 추가해 주세요</p>
-                        <input type="number" required />
+                <div class="todo-box" v-for="(story, index) in store.storyList" :key="index">
+                    <div class="todo-time" v-if="story !== undefined">
+                        <p>{{story.storyContent}}</p>
+                        <input type="number" required v-model="story.storyPoint" min="0"/>
                     </div>
                 </div>
-                <div class="todo-box">
-                    <div class="todo-time">
-                        <p>아이와 함께 할 활동을 추가해 주세요</p>
-                        <input type="number" required />
-                    </div>
-                </div>
-                <div class="sum-point"><span>11</span> HOURS</div>
+                <div class="sum-point"><span>{{totalStoryPoints}}</span> HOURS</div>
                 <div class="jira-btn">
                     <router-link :to="{ name: 'jira-plan1' }">PREV</router-link>
                     <router-link :to="{ name: 'jira-plan3' }">NEXT</router-link>
