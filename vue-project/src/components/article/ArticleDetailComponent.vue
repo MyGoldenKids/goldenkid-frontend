@@ -1,6 +1,7 @@
 <script setup>
+import _ from 'lodash'
 import { ref, onMounted } from "vue";
-import { getArticle, deleteArticle } from "@/api/article";
+import { getArticle, deleteArticle, recommendArticle, checkRecommendArticle } from "@/api/article";
 import { getFileInfo, downloadFile } from "@/api/file";
 import { getCommentByArticleId, writeComment, updateComment, deleteComment } from "@/api/comment";
 import { useRoute } from "vue-router";
@@ -20,13 +21,16 @@ const comment = ref({
   memberId: memberStore.memberInfo.memberNo,
 });
 const commentList = ref([]);
-
+const recommendCount = ref("");
+const isRecommendedLocal = ref(false);
+const isRecommendedServer = ref(false);
 // 게시글 상세 조회
 const articleInfo = async () => {
   getArticle(
     articleId,
     async (response) => {
       article.value = response.data.data;
+      recommendCount.value = article.value.recommendCount
       article.value.formattedCreatedAt = formatCreatedAt(
         article.value.createdAt
       );
@@ -39,6 +43,53 @@ const articleInfo = async () => {
     }
   );
 };
+
+const checkRecommend = () => {
+  checkRecommendArticle(
+    articleId,
+    memberStore.memberInfo.memberNo,
+    (response) => {
+      const status = response.data.data;
+      if (status === 1) {
+        isRecommendedServer.value = true;
+      } else {
+        isRecommendedServer.value = false;
+      }
+      isRecommendedLocal.value = isRecommendedServer.value
+    }
+  )
+}
+
+const debounceRecommend = _.debounce(async() => {
+  if (isRecommendedLocal.value !== isRecommendedServer.value) {
+    recommendArticle(
+    {
+      articleId: Number(articleId),
+      memberId: memberStore.memberInfo.memberNo,
+    },
+    (response) => {
+      const retValue = response.data.data;
+    },
+    (error) => {
+      console.error(error);
+    }
+  )
+  isRecommendedServer.value = !isRecommendedServer.value;
+  }
+}, 500);
+
+
+const recommend = () => {
+  if (isRecommendedLocal.value) {
+    article.value.recommendCount -= 1;
+  } else {
+    article.value.recommendCount += 1;
+  }
+  isRecommendedLocal.value = !isRecommendedLocal.value
+  
+  debounceRecommend();
+  
+}
 
 // 작성일 연-월-일 포매팅 할 함수
 const formatCreatedAt = (createdAt) => {
@@ -157,6 +208,10 @@ const saveEditedComment = async (commentId) => {
 onMounted(() => {
   articleInfo();
   getCommentList();
+  // 로그인 상태라면 추천을 했는지 확인
+  if (memberStore.isLoggedIn) {
+    checkRecommend();
+  }
 });
 </script>
 
@@ -180,7 +235,7 @@ onMounted(() => {
         </div>
         <div class="title-sub-right">
           <div class="right-item">
-            <button class="like-btn">추천하기 ❤</button>
+            <button class="default-like-btn" type="button" @click="recommend" :disabled="!memberStore.isLoggedIn">추천하기 ❤</button>
           </div>
         </div>
       </div>
@@ -325,6 +380,14 @@ onMounted(() => {
   float: right;
   justify-self: end;
 }
+.default-like-btn {
+  width: 100%;
+  padding: 0.625rem;
+  border: 0.063rem solid #665031;
+  background-color: #fff8f2;
+  font-size: 0.7rem;
+}
+
 .like-btn {
   width: 100%;
   padding: 0.625rem;
