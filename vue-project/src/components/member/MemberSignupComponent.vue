@@ -90,89 +90,78 @@ function submitForm() {
 </script>
 
 <template>
-    <div class="user-wrap">
-        <div class="user-wrap-left">
-            <h1>금쪽이 해방일지</h1>
-        </div>
-        <div class="user-wrap-right">
-            <div class="signup-form">
-                <h1>SIGN UP</h1>
-                <form @submit.prevent="submitForm">
-                    <div class="sign-grid">
-                        <div class="sign-item message">
-                            <label for="memberId" class="label"
-                                ><span>*</span> 아이디</label
-                            >
-                            <input
-                                type="email"
-                                v-model="member.memberId"
-                                required
-                            />
-                            <span class="message-text">{{ message }}</span>
-                        </div>
-                        <div class="sign-item">
-                            <label for="password" class="label"
-                                ><span>*</span> 비밀번호</label
-                            >
-                            <input
-                                type="password"
-                                required
-                                v-model="member.password"
-                                placeholder="8자리 이상 특수문자 1자 이상 포함"
-                            />
-                            <span class="message-text">{{ passwordMessage }}</span>
-                        </div>
-                        <div class="sign-item">
-                            <label for="passwordValidate" class="label"
-                                ><span>*</span> 비밀번호 확인</label
-                            >
-                            <input type="password" v-model="passwordValidate" />
-                        </div>
-                        <div class="sign-item">
-                            <label for="nickname" class="label"
-                                ><span>*</span> 닉네임</label
-                            >
-                            <input
-                                type="text"
-                                required
-                                v-model="member.nickname"
-                            />
-                        </div>
-                        <div class="sign-item">
-                            <label for="phoneNumber" class="label"
-                                ><span>*</span> 연락처</label
-                            >
-                            <input
-                                type="tel"
-                                required
-                                v-model="member.phoneNumber"
-                                pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"
-                                placeholder="010-xxxx-xxxx"
-                            />
-                            <span class="message-text">{{ phoneNumberMessage }}</span>
-                        </div>
-                        <div class="sign-item">
-                            <input type="checkbox" v-model="checked" />
-                            <label for="checkbox"
-                                >개인정보 이용 동의(필수)</label
-                            >
-                        </div>
-                        <div class="sign-item">
-                            <button type="submit">가입하기</button>
-                        </div>
+    <div class="user-wrap-right">
+        <div class="signup-form">
+            <h1>SIGN UP</h1>
+            <form @submit.prevent="submitForm">
+                <div class="sign-grid">
+                    <div class="sign-item message">
+                        <label for="memberId" class="label"
+                            ><span>*</span> 아이디</label
+                        >
+                        <input
+                            type="email"
+                            v-model="member.memberId"
+                            required
+                            @keyup="checkId(member.memberId)"
+                        />
+                        <span class="message-text">{{ message }}</span>
                     </div>
-                </form>
-            </div>
+                    <div class="sign-item">
+                        <label for="password" class="label"
+                            ><span>*</span> 비밀번호</label
+                        >
+                        <input
+                            type="password"
+                            required
+                            v-model="member.password"
+                            placeholder="8자리 이상 특수문자 1자 이상 포함"
+                        />
+                    </div>
+                    <div class="sign-item">
+                        <label for="passwordValidate" class="label"
+                            ><span>*</span> 비밀번호 확인</label
+                        >
+                        <input type="password" v-model="passwordValidate" />
+                    </div>
+                    <div class="sign-item">
+                        <label for="nickname" class="label"
+                            ><span>*</span> 닉네임</label
+                        >
+                        <input
+                            type="text"
+                            required
+                            v-model="member.nickname"
+                        />
+                    </div>
+                    <div class="sign-item">
+                        <label for="phoneNumber" class="label"
+                            ><span>*</span> 연락처</label
+                        >
+                        <input
+                            type="tel"
+                            required
+                            v-model="member.phoneNumber"
+                            placeholder="010-xxxx-xxxx"
+                        />
+                    </div>
+                    <div class="sign-item">
+                        <input type="checkbox" v-model="checked" />
+                        <label for="checkbox"
+                            >개인정보 이용 동의(필수)</label
+                        >
+                    </div>
+                    <div class="sign-item">
+                        <button type="submit">가입하기</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
+
 </template>
 
 <style scoped>
-.user-wrap {
-    display: grid;
-    grid-template-columns: 40% 60%;
-    height: 100vh;
-}
 .user-wrap-right {
     /* background-color: pink; */
     display: grid;
