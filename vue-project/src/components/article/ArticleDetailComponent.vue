@@ -104,6 +104,10 @@ const registerComment = async () => {
     alert("댓글을 입력해주세요.");
     return;
   }
+  if(comment.value.content.length > 45) {
+    alert("댓글은 45자 이내로 작성해주세요.");
+    return;
+  }
   writeComment(
     articleId,
     comment.value,
@@ -146,6 +150,10 @@ const saveEditedComment = async (commentId) => {
   if (commentToSave) {
     if(!commentToSave.editingContent) {
       alert("수정할 내용을 입력해주세요.");
+      return;
+    }
+    if(commentToSave.editingContent.length > 45) {
+      alert("댓글은 45자 이내로 작성해주세요.");
       return;
     }
     await updateComment(commentId, { memberId: memberStore.memberInfo.memberNo, content: commentToSave.editingContent });
