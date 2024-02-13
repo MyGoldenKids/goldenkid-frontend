@@ -30,4 +30,14 @@ const searchArticle = (category, serachContent, success, fail) => {
   instance.get(`article/list/search?${category}=${serachContent}`).then(success).catch(fail);
 }
 
-export { getArticleList, getArticle, writeArticle, modifyArticle, deleteArticle, searchArticle };
+// 게시글 추천
+const recommendArticle = (data, success, fail) => {
+  instance.patch(`article/recommend`, data).then(success).catch(fail);
+}
+
+// 게시글 추천 확인
+const checkRecommendArticle = (articleId, memberId, success, fail) => {
+  instance.get(`article/recommend/${articleId}/member/${memberId}`).then(success).catch(fail);
+}
+
+export { getArticleList, getArticle, writeArticle, modifyArticle, deleteArticle, searchArticle, recommendArticle, checkRecommendArticle };
