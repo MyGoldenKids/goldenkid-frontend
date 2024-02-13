@@ -45,30 +45,30 @@ const goToDiaryWrite = (child) => {
 
 <template>
     <div class="diary-main">
-    <div class="diary-title">
-        <div v-if="childList.length === 0">
-        <div class="diary-subtitle">등록된 금쪽이 정보가 없습니다.</div>
-            <router-link :to="{ name: 'mypage'}" class="register-btn">금쪽이 등록하기</router-link>
+        <div class="diary-title">
+            <div v-if="childList.length === 0">
+                <div class="diary-subtitle">등록된 금쪽이 정보가 없습니다.</div>
+                <router-link :to="{ name: 'mypage' }" class="register-btn">금쪽이 등록하기</router-link>
+            </div>
+            <div v-else>어떤 아이에게 쓸까요?</div>
         </div>
-        <div v-else>어떤 아이에게 쓸까요?</div>
-    </div>
-    <div class="child-list child box-2">
-        <div v-for="(child, index) in childList" :key="index" @click="goToDiaryWrite(child.childId)">
-            <div class="profile-box">
-                <div class="profile-img">
-                    <img src="@/assets/img/bear-profile.png" alt="프로필" class="profile"/>
-                </div>
-                <div class="profile-text">
-                    <h1>{{ child.childName }}</h1>
-                    <p>
-                    <div v-if="child.childGender">남자</div>
-                    <div v-else>여자</div>
-                    </p>
-                <p>{{ child.childBirth }}</p>
+        <div :class="{ 'child-list-1': childList.length <= 1, 'child-list-2': childList.length > 1 }">
+            <div v-for="(child, index) in childList" :key="index" @click="goToDiaryWrite(child.childId)">
+                <div class="profile-box">
+                    <div class="profile-img">
+                        <img src="@/assets/img/bear-profile.png" alt="프로필" class="profile" />
+                    </div>
+                    <div class="profile-text">
+                        <h1>{{ child.childName }}</h1>
+                        <p>
+                        <div v-if="child.childGender">남자</div>
+                        <div v-else>여자</div>
+                        </p>
+                        <p>{{ child.childBirth }}</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 </template>
 
@@ -77,10 +77,12 @@ const goToDiaryWrite = (child) => {
     display: grid;
     padding: 1.2rem;
 }
+
 .diary-title {
     font-size: 2rem;
     margin: 2.5rem 0;
 }
+
 .diary-subtitle {
     font-size: 2rem;
     margin-bottom: 4rem;
@@ -98,25 +100,28 @@ const goToDiaryWrite = (child) => {
 }
 
 .register-btn:hover {
-    background-color:#e1baad;
+    background-color: #e1baad;
     transform: scale(1.1);
 
 }
 
 /* 아이 프로필 */
-.child-list {
+/* 1명일 때  */
+.child-list-1 {
+    width: 20%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+/* 2명일 때 */
+.child-list-2 {
     width: 40%;
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 2.5rem;
 }
-
-/* 1명일 때  */
-/* .child-box-1 {
-    display: grid;
-    grid-template-columns: 1fr;
-} */
 
 .profile-box {
     padding: 0.625rem;
