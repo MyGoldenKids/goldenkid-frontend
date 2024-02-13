@@ -56,6 +56,22 @@ const diarySubmitForm = ref({
 const date = new Date().toLocaleDateString();
 
 const submitDiaryForm = async () => {
+    if(diarySubmitForm.value.diaryTitle === undefined) {
+        alert("제목을 입력해주세요");
+        return;
+    }
+    if(diarySubmitForm.value.diaryContent === undefined) {
+        alert("내용을 입력해주세요");
+        return;
+    }
+    if(diarySubmitForm.value.diaryTitle.length > 100) {
+        alert("제목은 100자 이내로 입력해주세요");
+        return;
+    }
+    if(diarySubmitForm.value.diaryContent.length > 3000) {
+        alert("내용은 3000자 이내로 입력해주세요");
+        return;
+    }
     if (window.confirm("일기를 등록할까요?")) {
         if(fileList.value.length > 0) {
             diarySubmitForm.value.fileListId = await createFiles(memberNo, formData);
@@ -101,6 +117,22 @@ const cancel = (diaryId) => {
 };
 
 const save = (diaryId) => {
+    if(diarySubmitForm.value.diaryTitle === '') {
+        alert("제목을 입력해주세요");
+        return;
+    }
+    if(diarySubmitForm.value.diaryContent === '') {
+        alert("내용을 입력해주세요");
+        return;
+    }
+    if(diarySubmitForm.value.diaryTitle.length > 100) {
+        alert("제목은 100자 이내로 입력해주세요");
+        return;
+    }
+    if(diarySubmitForm.value.diaryContent.length > 3000) {
+        alert("내용은 3000자 이내로 입력해주세요");
+        return;
+    }
     updateDiary(
         diaryId,
         diarySubmitForm.value,

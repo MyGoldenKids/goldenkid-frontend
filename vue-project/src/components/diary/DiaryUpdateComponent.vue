@@ -72,11 +72,27 @@ const isFormDataEmpty = (formData) => {
 }
 
 const update = async () => {
-    console.log(fileListId.value)
     if(!fileListId.value && isFormDataEmpty(formData)){
         fileListId.value = await createFiles(memberStore.memberInfo.memberNo, formData);
     } else {
         await updateFiles(fileListId.value, memberStore.memberInfo.memberNo, formData);
+    }
+
+    if(updateForm.value.diaryTitle === '') {
+        alert("제목을 입력해주세요");
+        return;
+    }
+    if(updateForm.value.diaryContent === '') {
+        alert("내용을 입력해주세요");
+        return;
+    }
+    if(updateForm.value.diaryTitle.length > 100) {
+        alert("제목은 100자 이내로 입력해주세요");
+        return;
+    }
+    if(updateForm.value.diaryContent.length > 3000) {
+        alert("내용은 3000자 이내로 입력해주세요");
+        return;
     }
 
     await updateDiary(
@@ -135,6 +151,7 @@ const cancelUpdate = () => {
                         type="text"
                         placeholder="일기 제목을 적어주세요"
                         class="update-title"
+                        required
                         v-model="updateForm.diaryTitle"
                     />
                     <p>{{ diaryStore.diaryInfo.cratedAt }}</p>
