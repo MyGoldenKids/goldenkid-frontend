@@ -32,7 +32,7 @@ const isSprintEndDatePassed = () => {
   const today = new Date();
   const latestSprint = sprintList.value[sprintList.value.length - 1];
   const endDate = new Date(latestSprint.endDate);
-  if (endDate < today) {
+  if (sprintList.value.length > 0 && endDate.getTime() < today.getTime()) {
     return true;
   }
   return false;
@@ -40,11 +40,15 @@ const isSprintEndDatePassed = () => {
 
 const router = useRouter();
 const goMakeSprint = () => {
-  if (!isSprintEndDatePassed()) {
-    alert('아직 이번 주 스프린트가 끝나지 않았어요!');
-    return;
-  }
+  // if (!isSprintEndDatePassed()) {
+  //   alert('아직 이번 주 스프린트가 끝나지 않았어요!');
+  //   return;
+  // }
   router.push("/jira/plan0");
+};
+
+const goSignUp = () => {
+  router.push("/member/signup");
 };
 </script>
 
@@ -52,14 +56,14 @@ const goMakeSprint = () => {
   <div class="jira-wrap">
     <div class="jira-dash">
       <div class="jira-home-header">
-        <span>JIRA</span>
+        <span>기억의 책</span>
       </div>
       <div class="underline">
         <div class="history">
           <h1>HISTORY</h1>
         </div>
         <div class="go-make-sprint-btn" @click="goMakeSprint">
-          <button>스토리 만들기</button>
+          <button>에피소드 만들기</button>
         </div>
       </div>
       <!-- slide 시작 -->
@@ -96,11 +100,13 @@ const goMakeSprint = () => {
           </VueperSlides>
         </div>
         <div v-else class="no-history-wrap">
-          <div class="no-history">아직 만들어진 SPRINT가 없어요 :(</div>
-          <div>JIRA가 처음이라면?</div>
+          <div class="no-history">아직 만들어진 에피소드가 없어요 :(</div>
+          <div>금쪽이 해방일지가 처음이라면?
+            <span class="make-story-btn" @click="goSignUp">회원가입 하기</span>
+          </div>
           <div>
-            우측 상단 <span class="make-story-btn">스토리 만들기</span>
-            CLICK!
+            기억의 책이 처음이라면?
+            <span class="make-story-btn" @click="goMakeSprint">에피소드 만들기</span>
           </div>
         </div>
       </div>
@@ -110,7 +116,7 @@ const goMakeSprint = () => {
 
       <template v-if="storyList.length === 0">
         <div class="is-firsttime">
-          <p>SPRINT를 등록하면 이 곳에서 나의 STORY를 볼 수 있어요.</p>
+          <p>에피소드를 등록하면 이 곳에서 나의 스토리를 볼 수 있어요.</p>
         </div>
       </template>
       <div class="todolist-wrap">
@@ -166,6 +172,7 @@ const goMakeSprint = () => {
   display: inline-block;
   margin: 0.45rem 0 0 0;
   color: #ad9478;
+  font-size: x-large;
 }
 
 .underline {
@@ -333,5 +340,6 @@ hr {
   background-color: #665031;
   padding: 0.8%;
   border-radius: 0.75rem;
+  cursor: pointer;
 }
 </style>
