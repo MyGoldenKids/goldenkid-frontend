@@ -44,7 +44,7 @@ const goDiary = () => {
           더해보세요. <br />앞으로의 일주일이 지난 일주일보다 빛날거에요.
         </div>
         <div class="go-signup">
-          로그인 후 <span>JIRA</span> 기록하기
+          로그인 후 <span>PLAN</span> 기록하기
           <button @click="goJira">GO</button>
         </div>
       </div>

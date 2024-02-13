@@ -56,7 +56,7 @@ const goSignUp = () => {
   <div class="jira-wrap">
     <div class="jira-dash">
       <div class="jira-home-header">
-        <span>기억의 책</span>
+        <span>금쪽플래너</span>
       </div>
       <div class="underline">
         <div class="history">
@@ -110,7 +110,7 @@ const goSignUp = () => {
             <span class="make-story-btn" @click="goSignUp">회원가입 하기</span>
           </div>
           <div>
-            기억의 책이 처음이라면?
+            금쪽플래너가 처음이라면?
             <span class="make-story-btn" @click="goMakeSprint"
               >에피소드 만들기</span
             >
