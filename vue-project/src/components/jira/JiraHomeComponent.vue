@@ -1,5 +1,5 @@
 <script setup>
-import { changeStoryStatus, getSprintList, getStoryList } from "@/api/jira";
+import { changeStoryStatus, getSprintList, getStoryList, deleteStory } from "@/api/jira";
 import { useMemberStore } from "@/stores/member-store";
 import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
@@ -10,7 +10,8 @@ import "vue3-carousel/dist/carousel.css";
 const store = useMemberStore();
 const sprintList = ref([]);
 const storyList = ref([]);
-onMounted(() => {
+
+const getSprint = () => {
   getSprintList(store.memberInfo.memberNo, (data) => {
     sprintList.value = data.data.data;
     sprintList.value.sort((a, b) => {
@@ -33,7 +34,19 @@ onMounted(() => {
       });
     });
   });
+}
+onMounted(() => {
+  getSprint();
 });
+
+const deleteIndex = (idx) => {
+  // 자바스크립트 전용 0번 인덱스 삭제 로직
+  if (idx >= 0 && idx < storyList.value.length) {
+    storyList.value.splice(idx, 1);
+  } else {
+    storyList.value.splice(idx, idx);
+  }
+}
 
 const getSprintDetail = (index) => {
   storyList.value = sprintList.value[index].sprintDetail;
@@ -52,9 +65,14 @@ const handleStatusChange = async (event, storyId) => {
 };
 
 const isSprintEndDatePassed = () => {
+  if (sprintList.value.length === 0) {
+    return true;
+  }
+  
   const today = new Date();
   const latestSprint = sprintList.value[sprintList.value.length - 1];
   const endDate = new Date(latestSprint.endDate);
+
   if (sprintList.value.length > 0 && endDate.getTime() < today.getTime()) {
     return true;
   }
@@ -63,10 +81,12 @@ const isSprintEndDatePassed = () => {
 
 const router = useRouter();
 const goMakeSprint = () => {
-  // if (!isSprintEndDatePassed()) {
-  //   alert('아직 이번 주 스프린트가 끝나지 않았어요!');
-  //   return;
-  // }
+  // enddate가 오늘날짜보다 크면 만들기 못가게 막기
+  // 아니면 push
+  if (!isSprintEndDatePassed()) {
+    alert('아직 끝나지 않은 스프린트가 있어요!');
+    return;
+  }
   router.push("/jira/plan0");
 };
 
@@ -74,6 +94,33 @@ const goSignUp = () => {
   router.push("/member/signup");
 };
 
+// 스토리 삭제
+const deleteStoryById = (storyId, index) => {
+  const answer = window.confirm("스토리를 삭제 하시겠습니까?");
+
+  if(storyList.value.length === 1) {
+    window.alert("스토리는 최소 1개가 있어야 합니다.")
+    return
+  }
+
+  if (answer) {
+    const story = storyList.value.find((story) => story.storyId === storyId);
+    if (story) {
+      deleteStory(
+        storyId,
+        store.memberInfo.memberNo,
+        (response) => {
+          console.log(response.data.data)
+          deleteIndex(index);
+          //????? 아마 여기에 부르는거 하면 쌉가능 
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    }
+  }
+};
 </script>
 
 <template>
@@ -199,7 +246,7 @@ const goSignUp = () => {
                 <img
                   src="../../assets/img/delete_red.png"
                   alt="delete_btn_err"
-                  @click="deleteStory"
+                  @click="deleteStoryById(story.storyId, index)"
                 />
               </span>
             </span>
