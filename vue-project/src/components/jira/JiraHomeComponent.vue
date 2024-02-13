@@ -86,6 +86,10 @@ const goSignUp = () => {
               <template v-slot:content>
                 <div class="slide__item">
                   <div class="slide-box-list">
+                    <div class="sprint-header-wrap">
+                      <h2>날짜날짜</h2>
+                      <div class="on-air-btn">진행 중</div>
+                    </div>
                     <h1>{{ index + 1 }}번째 스프린트</h1>
                     <div>{{ sprint.sprintTitle }}</div>
                     <div>{{ sprint.startDate }} ~ {{ sprint.endDate }}</div>
@@ -101,12 +105,15 @@ const goSignUp = () => {
         </div>
         <div v-else class="no-history-wrap">
           <div class="no-history">아직 만들어진 에피소드가 없어요 :(</div>
-          <div>금쪽이 해방일지가 처음이라면?
+          <div>
+            금쪽이 해방일지가 처음이라면?
             <span class="make-story-btn" @click="goSignUp">회원가입 하기</span>
           </div>
           <div>
             기억의 책이 처음이라면?
-            <span class="make-story-btn" @click="goMakeSprint">에피소드 만들기</span>
+            <span class="make-story-btn" @click="goMakeSprint"
+              >에피소드 만들기</span
+            >
           </div>
         </div>
       </div>
@@ -341,5 +348,21 @@ hr {
   padding: 0.8%;
   border-radius: 0.75rem;
   cursor: pointer;
+}
+
+/* 진행중 버튼 */
+.sprint-header-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.on-air-btn {
+  background-color: crimson;
+  color: #fff8f2;
+  border-radius: 1.25rem;
+  font-size: small;
+  padding: 0.1rem 0.5rem;
 }
 </style>
