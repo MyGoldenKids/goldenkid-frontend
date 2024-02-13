@@ -22,11 +22,16 @@ onMounted(() => {
       let createdAt = new Date(sprint.createdAt);
       sprint.startDate = startDate.toLocaleDateString().replace(/\.$/, "");
       sprint.endDate = endDate.toLocaleDateString().replace(/\.$/, "");
-      sprint.createdAt = createdAt.toLocaleDateString().replace(/\.$/, "").replace(/\. /g, "-");
+      sprint.createdAt = createdAt
+        .toLocaleDateString()
+        .replace(/\.$/, "")
+        .replace(/\. /g, "-");
       await getStoryList(sprint.sprintId, store.memberInfo.memberNo, (data) => {
-          sprint.sprintDetail = data.data.data;
-          sprint.totalLength =  Object.keys(sprint.sprintDetail).length;
-          sprint.completedCnt = sprint.sprintDetail.filter((story) => story.storyStatus === 2).length;
+        sprint.sprintDetail = data.data.data;
+        sprint.totalLength = Object.keys(sprint.sprintDetail).length;
+        sprint.completedCnt = sprint.sprintDetail.filter(
+          (story) => story.storyStatus === 2
+        ).length;
       });
     });
   });
@@ -77,39 +82,79 @@ const goSignUp = () => {
       <!-- slide 시작 -->
       <div class="mini-underline">
         <div class="slide-box" v-if="sprintList.length > 0">
-          <VueperSlides
-            class="no-shadow"
-            :visible-slides="3"
-            slide-multiple
-            :gap="3"
-            :slide-ratio="1 / 4"
-            :dragging-distance="200"
-            :breakpoints="{ 800: { visibleSlides: 2, slideMultiple: 2 } }"
+          <div
+            v-if="sprintList.length < 3"
+            :class="{
+              'list-1': sprintList.length == 1,
+              'list-2': sprintList.length == 2,
+            }"
           >
-            <VueperSlide
+            <div
+              class="kid-box"
               v-for="(sprint, index) in sprintList"
               :key="sprint"
               @click="getSprintDetail(index)"
             >
-              <template v-slot:content>
-                <div class="slide__item">
-                  <div class="slide-box-list">
-                    <div class="sprint-header-wrap">
-                      <h2>{{sprint.createdAt}}</h2>
-                      <div v-if="sprint.sprintStatus" class="on-air-btn">진행 중</div>
-                    </div>
-                    <h1>{{ index + 1 }}번째 스프린트</h1>
-                    <div>{{ sprint.sprintTitle }}</div>
-                    <div>{{ sprint.startDate }} ~ {{ sprint.endDate }}</div>
-                    <div class="finished-story">
-                      <div>완료된 스토리</div>
-                      <span>{{sprint.completedCnt}}/{{sprint.totalLength}}</span>
+              <div class="slide__item">
+                <div class="slide_box_list">
+                  <div class="sprint-header-wrap">
+                    <h2>{{ sprint.createdAt }}</h2>
+                    <div v-if="sprint.sprintStatus" class="on-air-btn">
+                      진행 중
                     </div>
                   </div>
+                  <h1>#{{ index + 1 }} {{ sprint.sprintTitle }}</h1>
+                  <div>{{ sprint.startDate }} ~ {{ sprint.endDate }}</div>
+                  <div class="finished-story">
+                    <div>완료된 스토리</div>
+                    <span
+                      >{{ sprint.completedCnt }}/{{ sprint.totalLength }}</span
+                    >
+                  </div>
                 </div>
-              </template>
-            </VueperSlide>
-          </VueperSlides>
+              </div>
+            </div>
+          </div>
+          <div v-else>
+            <VueperSlides
+              class="no-shadow"
+              :visible-slides="3"
+              slide-multiple
+              :gap="3"
+              :slide-ratio="1 / 4"
+              :dragging-distance="200"
+              :breakpoints="{ 800: { visibleSlides: 2, slideMultiple: 2 } }"
+            >
+              <VueperSlide
+                v-for="(sprint, index) in sprintList"
+                :key="sprint"
+                @click="getSprintDetail(index)"
+              >
+                <template v-slot:content>
+                  <div class="slide__item">
+                    <div class="slide-box-list">
+                      <div class="sprint-header-wrap">
+                        <h2>{{ sprint.createdAt }}</h2>
+                        <div v-if="sprint.sprintStatus" class="on-air-btn">
+                          진행 중
+                        </div>
+                      </div>
+                      <h1>#{{ index + 1 }} {{ sprint.sprintTitle }}</h1>
+                      <div>{{ sprint.startDate }} ~ {{ sprint.endDate }}</div>
+                      <div class="finished-story">
+                        <div>완료된 스토리</div>
+                        <span
+                          >{{ sprint.completedCnt }}/{{
+                            sprint.totalLength
+                          }}</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </template>
+              </VueperSlide>
+            </VueperSlides>
+          </div>
         </div>
         <div v-else class="no-history-wrap">
           <div class="no-history">아직 만들어진 에피소드가 없어요 :(</div>
@@ -131,7 +176,7 @@ const goSignUp = () => {
 
       <template v-if="storyList.length === 0">
         <div class="is-firsttime">
-          <p>에피소드를 등록하면 이 곳에서 나의 스토리를 볼 수 있어요.</p>
+          <p>에피소드를 클릭하면 이 곳에서 나의 스토리를 볼 수 있어요.</p>
         </div>
       </template>
       <div class="todolist-wrap">
@@ -143,9 +188,16 @@ const goSignUp = () => {
             </span>
           </div>
           <div class="progress">
-            <span v-if="story.storyStatus === 0">해야할 일</span>
-            <span v-else-if="story.storyStatus === 1">진행 중</span>
-            <span v-else>완료됨</span>
+            <div class="select-box">
+              <select name="search" class="sel">
+                <option value="">해야할 일</option>
+                <option value="">진행 중</option>
+                <option value="">완료됨</option>
+              </select>
+            </div>
+            <!-- <span v-if="story.storyStatus === 0">해야할 일</span> -->
+            <!-- <span v-else-if="story.storyStatus === 1">진행 중</span> -->
+            <!-- <span v-else>완료됨</span> -->
           </div>
         </template>
       </div>
@@ -154,9 +206,6 @@ const goSignUp = () => {
 </template>
 
 <style scoped>
-.vueperslides {
-  box-sizing: border-box;
-}
 .jira-wrap {
   background-color: #ad9478;
   text-align: center;
@@ -169,7 +218,7 @@ const goSignUp = () => {
   border: 0.313rem dashed #665031;
   border-radius: 1.25rem;
   box-sizing: border-box;
-  padding: 2rem;
+  padding: 2rem 2rem 4em;
 }
 
 .jira-home-header {
@@ -228,10 +277,14 @@ const goSignUp = () => {
 hr {
   border: 0.125rem solid #665031;
   width: 45%;
-  margin: 2rem auto 3rem auto;
+  margin: 2rem auto;
 }
 
-/* Carousel 시작 */
+/* Slide 시작 */
+.slider-container {
+  display: flex;
+  justify-content: center;
+}
 .slide-box-list span {
   background-color: #665031;
   color: #fff8f2;
@@ -246,6 +299,12 @@ hr {
   align-items: center;
 }
 
+.finished-story :last-child {
+  border: solid 0.23rem #665031;
+  padding: 0.5vw 0.7vw 0.3vw 0.7vw;
+  border-radius: 1rem;
+}
+
 .progress > span {
   text-align: center;
   color: #fff8f2;
@@ -254,20 +313,41 @@ hr {
 .slide-box {
   width: 82%;
   margin: 0 auto;
-  padding: 1.25rem 0;
 }
 .slide-box h1 {
-  font-size: 1.3rem;
+  font-size: 1.3vw;
   margin: 0.5rem 0;
 }
+
+/* 슬라이드 3개 이상일 때 적용되는 css  */
 .slide-box-list {
   background-color: #fff8f2;
-  padding: 2.5rem 1.25rem;
+  padding: 2rem 1.25rem;
   border-radius: 1.25rem;
-  line-height: 1.8rem;
+  line-height: 1.5vw;
   box-sizing: border-box;
   box-shadow: 0rem 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
   margin: 0.5rem;
+  font-size: 1vw;
+  width: 17vw;
+}
+
+/* 슬라이드 2개 이상일 때 적용되는 css */
+.slide_box_list {
+  background-color: #fff8f2;
+  padding: 2rem 1.25rem;
+  border-radius: 1.25rem;
+  line-height: 1.5vw;
+  box-sizing: border-box;
+  box-shadow: 0rem 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+  margin: 0.5rem auto;
+  font-size: 1.3vw;
+  width: 24vw;
+}
+
+.slide_box_list h1 {
+  font-size: 1.5vw;
+  margin: 0.5rem 0;
 }
 
 .slide-box-list.active {
@@ -280,9 +360,24 @@ hr {
 .slide__item {
   padding: 0.625rem 0;
   box-sizing: border-box;
+  flex: 0 0 auto;
 }
 
-/* Carousel 아래 */
+.list-1 {
+  display: grid;
+  width: 50%;
+  margin: 2.25rem auto 0 auto;
+  grid-template-columns: 1fr;
+}
+
+.list-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 2.25rem;
+}
+
+/* Slide 아래 */
 .todolist {
   box-sizing: border-box;
   display: flex;
@@ -370,7 +465,47 @@ hr {
   background-color: crimson;
   color: #fff8f2;
   border-radius: 1.25rem;
-  font-size: small;
+  font-size: 0.8vw;
   padding: 0.1rem 0.5rem;
+}
+
+.sel {
+  font-family: "jalnan";
+  font-size: medium;
+  width: 100%;
+  background-color: transparent;
+  box-sizing: border-box;
+  padding: 0.625rem;
+  color: #fff8f2;
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  margin: 0 auto;
+}
+
+.select-box {
+  display: flex;
+  justify-content: center;
+}
+.sel option {
+  display: block;
+  background: #fff8f2;
+  color: #665031;
+}
+
+.sel:focus {
+  border: 0.063rem solid transparent;
+  box-sizing: border-box;
+  border-radius: 1.25rem;
+  outline: 0.125rem solid transparent;
+  cursor: pointer;
+}
+
+select {
+  text-align-last: center;
+  text-align: left;
+  -ms-text-align-last: left;
+  -moz-text-align-last: left;
 }
 </style>
