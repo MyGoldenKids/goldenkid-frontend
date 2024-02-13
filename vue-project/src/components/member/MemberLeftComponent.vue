@@ -11,27 +11,44 @@ const goMain = () => {
 };
 </script>
 
-<template> 
-    <div class="wrap-left" :style="{ backgroundImage: `url(${bgImage})`}">
+<template>
+    <div class="wrap-left">
+        <div class="background-img" :style="{ backgroundImage: `url(${bgImage})` }"></div>
         <button @click="goMain" class="center-button">금쪽이 해방일지</button>
     </div>
 </template>
 
 <style scoped>
-.wrap-left {    
-    display: grid;
-    align-items: center;
-    justify-items: center;
-    background-size: 100%;
+.wrap-left {
+    position: relative;
+}
+
+.background-img {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 60%;
+    background-size: cover;
+    background-position: center;
     background-repeat: no-repeat;
-    background-position: left bottom;
+
 }
 
 .center-button {
-    transform: translateY(-2000%);
-    background-color: #fff8f2;
-    width: 10.63rem;
-    height: 3.125px;
-    font-size: 1.25rem;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    background-color: inherit;
+    font-size: 3rem;
+    font-weight: 900;
+    font-family: 'NanumNeuRisNeuRisCe';
+    transform: scale(1);
+    transition-duration: 0.3s;
+}
+
+.center-button:hover {
+    transform: scale(1.2);
+    transition-duration: 0.3s;
 }
 </style>
