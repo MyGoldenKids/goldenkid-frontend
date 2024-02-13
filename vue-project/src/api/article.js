@@ -25,4 +25,9 @@ const deleteArticle = (articleId, success, fail) => {
   return instance.put(`article/delete/${articleId}`).then(success).catch(fail);
 };
 
-export { getArticleList, getArticle, writeArticle, modifyArticle, deleteArticle };
+// 게시글 검색
+const searchArticle = (category, serachContent, success, fail) => {
+  instance.get(`article/list/search?${category}=${serachContent}`).then(success).catch(fail);
+}
+
+export { getArticleList, getArticle, writeArticle, modifyArticle, deleteArticle, searchArticle };
