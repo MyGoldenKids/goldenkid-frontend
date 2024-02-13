@@ -98,18 +98,19 @@ const goSignUp = () => {
               <div class="slide__item">
                 <div class="slide_box_list">
                   <div class="sprint-header-wrap">
-                    <h2>{{ sprint.createdAt }}</h2>
+                    <h1>#{{ index + 1 }} {{ sprint.sprintTitle }}</h1>
                     <div v-if="sprint.sprintStatus" class="on-air-btn">
                       진행 중
                     </div>
                   </div>
-                  <h1>#{{ index + 1 }} {{ sprint.sprintTitle }}</h1>
-                  <div>{{ sprint.startDate }} ~ {{ sprint.endDate }}</div>
-                  <div class="finished-story">
-                    <div>완료된 스토리</div>
-                    <span
-                      >{{ sprint.completedCnt }}/{{ sprint.totalLength }}</span
-                    >
+                  <div>{{ sprint.startDate }} - {{ sprint.endDate }}</div>
+                  <div>
+                    완료된 스토리 : {{ sprint.completedCnt }}/{{
+                      sprint.totalLength
+                    }}
+                  </div>
+                  <div class="end-ep">
+                    <button>에피소드 완성</button>
                   </div>
                 </div>
               </div>
@@ -134,20 +135,19 @@ const goSignUp = () => {
                   <div class="slide__item">
                     <div class="slide-box-list">
                       <div class="sprint-header-wrap">
-                        <h2>{{ sprint.createdAt }}</h2>
+                        <h1>#{{ index + 1 }} {{ sprint.sprintTitle }}</h1>
                         <div v-if="sprint.sprintStatus" class="on-air-btn">
                           진행 중
                         </div>
                       </div>
-                      <h1>#{{ index + 1 }} {{ sprint.sprintTitle }}</h1>
-                      <div>{{ sprint.startDate }} ~ {{ sprint.endDate }}</div>
-                      <div class="finished-story">
-                        <div>완료된 스토리</div>
-                        <span
-                          >{{ sprint.completedCnt }}/{{
-                            sprint.totalLength
-                          }}</span
-                        >
+                      <div>{{ sprint.startDate }} - {{ sprint.endDate }}</div>
+                      <div>
+                        완료된 스토리 : {{ sprint.completedCnt }}/{{
+                          sprint.totalLength
+                        }}
+                      </div>
+                      <div class="end-ep">
+                        <button>에피소드 완성</button>
                       </div>
                     </div>
                   </div>
@@ -182,7 +182,16 @@ const goSignUp = () => {
       <div class="todolist-wrap">
         <template v-for="(story, index) in storyList" :key="story">
           <div class="todolist">
-            <span>{{ story.storyContent }}</span>
+            <span>
+              <span>{{ story.storyContent }}</span>
+              <span class="img-margin">
+                <img
+                  src="../../assets/img/delete_red.png"
+                  alt="delete_btn_err"
+                  @click="deleteStory"
+                />
+              </span>
+            </span>
             <span>
               <span>{{ story.storyPoint }}시간</span>
             </span>
@@ -343,6 +352,7 @@ hr {
   margin: 0.5rem auto;
   font-size: 1.3vw;
   width: 24vw;
+  text-align: start;
 }
 
 .slide_box_list h1 {
@@ -382,33 +392,51 @@ hr {
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
-  padding: 0.7rem 1.5rem;
+  padding: 0.4rem 1.5rem;
   background-color: #fff8f2;
   border-radius: 1.25rem;
   width: 100%;
   margin: 0.25rem 0;
+  font-size: 1.1vw;
 }
 
 .todolist > span {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 0.5rem;
 }
 
-.todolist :last-child {
+.todolist :last-child span {
   background-color: #665031;
   color: #fff8f2;
   border-radius: 0.7rem;
-  padding: 0.3rem 0.5rem;
+  padding: 0.5rem 0.7rem;
 }
 
 .todolist-wrap {
   display: grid;
   grid-template-columns: 77% 18%;
   gap: 5%;
-  width: 80%;
+  width: 90%;
   padding: 1.25rem;
   margin: 0 auto;
+}
+
+.img-margin {
+  margin: 0 0.7vw;
+}
+
+span > img {
+  width: 1.6vw;
+  height: auto;
+  cursor: pointer;
+  background-color: transparent;
+  transition: transform 0.2s ease-in-out;
+}
+
+span > img:hover {
+  transform: scale(1.2);
 }
 
 .progress {
@@ -417,7 +445,7 @@ hr {
   justify-content: center;
   align-items: center;
   margin: 0.25rem 0;
-  padding: 0.7rem 1rem;
+  padding: 0.4rem 1rem;
   background-color: #665031;
   border-radius: 1.25rem;
   width: 100%;
@@ -462,16 +490,16 @@ hr {
 }
 
 .on-air-btn {
-  background-color: crimson;
-  color: #fff8f2;
+  background-color: #e1baad;
+  color: #665031;
   border-radius: 1.25rem;
-  font-size: 0.8vw;
-  padding: 0.1rem 0.5rem;
+  font-size: 0.9vw;
+  padding: 0.313rem 0.625rem;
 }
 
 .sel {
   font-family: "jalnan";
-  font-size: medium;
+  font-size: 1.1vw;
   width: 100%;
   background-color: transparent;
   box-sizing: border-box;
@@ -507,5 +535,17 @@ select {
   text-align: left;
   -ms-text-align-last: left;
   -moz-text-align-last: left;
+}
+
+.end-ep {
+  display: flex;
+  justify-content: right;
+}
+.end-ep button {
+  background-color: #665031;
+  color: #fff8f2;
+  border-radius: 1.25rem;
+  padding: 0.5rem 1rem;
+  font-size: 1vw;
 }
 </style>
