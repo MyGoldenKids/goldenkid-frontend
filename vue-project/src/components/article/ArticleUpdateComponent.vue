@@ -41,6 +41,16 @@ const updateArticle = async() => {
     return;
   }
 
+  if(articleTitle.value.length > 100) {
+    window.alert("게시글의 제목은 100자 이하로 작성해주세요.");
+    return;
+  }
+
+  if(articleContent.value.length > 3000) {
+    window.alert("게시글의 내용은 3000자 이하로 작성해주세요.");
+    return;
+  }
+
   // 파일 리스트 아이디가 없는데 파일 첨부할것이 있다면?
   if (fileListId.value == 0 && isFormDataEmpty(formData)) {
     // fileListId를 새로 생성한다.

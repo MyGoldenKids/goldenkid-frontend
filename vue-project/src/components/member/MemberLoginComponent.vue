@@ -36,59 +36,44 @@ function submitForm() {
 </script>
 
 <template>
-    <div class="user-wrap">
-        <div class="wrap-left">
-            <h1>금쪽이 해방일지</h1>
-        </div>
-
-        <div class="wrap-right">
-            <div>
-                <div class="user-title">LOGIN</div>
-                <form @submit.prevent="submitForm">
-                    <div class="login-box">
-                        <input
-                            type="text"
-                            placeholder="ID"
-                            v-model="loginInfo.memberId"
-                        />
-                        <input
-                            type="password"
-                            placeholder="PW"
-                            v-model="loginInfo.password"
-                        />
-                        <button type="submit">로그인</button>
-                        <div class="check-box">
-                            <label for="remember-check">
-                                <input
-                                    type="checkbox"
-                                    id="remember-check"
-                                />아이디 저장
-                            </label>
-                        </div>                        
-                        <router-link to="/member/signup" class="a-btn"
-                            >회원가입</router-link
-                        >
+    <div class="wrap-right">
+        <div>
+            <div class="user-title">LOGIN</div>
+            <form @submit.prevent="submitForm">
+                <div class="login-box">
+                    <input
+                        type="text"
+                        placeholder="ID"
+                        v-model="loginInfo.memberId"
+                    />
+                    <input
+                        type="password"
+                        placeholder="PW"
+                        v-model="loginInfo.password"
+                    />
+                    <button type="submit">로그인</button>
+                    <div class="check-box">
+                        <label for="remember-check">
+                            <input
+                                type="checkbox"
+                                id="remember-check"
+                            />아이디 저장
+                        </label>
                     </div>
-                </form>
-            </div>
+                    <router-link to="/member/signup" class="a-btn"
+                        >회원가입</router-link
+                    >
+                </div>
+            </form>
         </div>
     </div>
 </template>
 
 <style scoped>
-.user-wrap {
-    /* background-color: blanchedalmond; */
-    display: grid;
-    grid-template-columns: 40% 60%;
-    height: 100vh;
-}
 .user-title {
     text-align: center;
     font-size: 3rem;
     color: #89b9ad;
-}
-.wrap-left {
-    display: grid;
 }
 .wrap-right {
     display: grid;

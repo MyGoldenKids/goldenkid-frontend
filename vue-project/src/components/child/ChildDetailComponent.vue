@@ -57,6 +57,10 @@ const updateChild = async (childId) => {
             alert("이름을 입력해주세요.");
             return;
         }
+        if(editingChildName.value.length > 20) {
+            alert("이름은 20자 이내로 입력해주세요.");
+            return;
+        }
         if (!editingChildBirth.value) {
             alert("생년월일을 입력해주세요.");
             return;
@@ -92,6 +96,10 @@ const addChild = async () => {
     try {
         if (!addChildName.value) {
             alert("이름을 입력해주세요.");
+            return;
+        }
+        if(addChildName.value.length > 20) {
+            alert("이름은 20자 이내로 입력해주세요.");
             return;
         }
         if (!addChildBirth.value) {
