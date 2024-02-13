@@ -11,6 +11,7 @@ export const instance = axios.create({
 // instance.defaults.headers.common["Authorization"] = "";
 instance.defaults.headers.post["Content-Type"] = "application/json";
 instance.defaults.headers.put["Content-Type"] = "application/json";
+instance.defaults.headers.patch["Content-Type"] = "application/json";
 
 // Request, Response 시 설정한 내용을 적용.
 instance.interceptors.request.use((config) => {
