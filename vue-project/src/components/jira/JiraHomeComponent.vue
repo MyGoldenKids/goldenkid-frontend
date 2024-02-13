@@ -105,7 +105,7 @@ const goSignUp = () => {
         </div>
         <div v-else class="no-history-wrap">
           <div class="no-history">아직 만들어진 에피소드가 없어요 :(</div>
-          <div>
+          <div v-if="!store.isLoggedIn">
             금쪽이 해방일지가 처음이라면?
             <span class="make-story-btn" @click="goSignUp">회원가입 하기</span>
           </div>
