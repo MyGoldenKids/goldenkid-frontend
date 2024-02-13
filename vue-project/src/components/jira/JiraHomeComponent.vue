@@ -13,19 +13,27 @@ const storyList = ref([]);
 onMounted(() => {
   getSprintList(store.memberInfo.memberNo, (data) => {
     sprintList.value = data.data.data;
-    sprintList.value.forEach((sprint) => {
+    sprintList.value.sort((a, b) => {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+    sprintList.value.forEach(async (sprint) => {
       let startDate = new Date(sprint.startDate);
       let endDate = new Date(sprint.endDate);
+      let createdAt = new Date(sprint.createdAt);
       sprint.startDate = startDate.toLocaleDateString().replace(/\.$/, "");
       sprint.endDate = endDate.toLocaleDateString().replace(/\.$/, "");
+      sprint.createdAt = createdAt.toLocaleDateString().replace(/\.$/, "").replace(/\. /g, "-");
+      await getStoryList(sprint.sprintId, store.memberInfo.memberNo, (data) => {
+          sprint.sprintDetail = data.data.data;
+          sprint.totalLength =  Object.keys(sprint.sprintDetail).length;
+          sprint.completedCnt = sprint.sprintDetail.filter((story) => story.storyStatus === 2).length;
+      });
     });
   });
 });
 
-const getSprintDetail = (sprintId) => {
-  getStoryList(sprintId, store.memberInfo.memberNo, (data) => {
-    storyList.value = data.data.data;
-  });
+const getSprintDetail = (index) => {
+  storyList.value = sprintList.value[index].sprintDetail;
 };
 
 const isSprintEndDatePassed = () => {
@@ -81,21 +89,21 @@ const goSignUp = () => {
             <VueperSlide
               v-for="(sprint, index) in sprintList"
               :key="sprint"
-              @click="getSprintDetail(sprint.sprintId)"
+              @click="getSprintDetail(index)"
             >
               <template v-slot:content>
                 <div class="slide__item">
                   <div class="slide-box-list">
                     <div class="sprint-header-wrap">
-                      <h2>날짜날짜</h2>
-                      <div class="on-air-btn">진행 중</div>
+                      <h2>{{sprint.createdAt}}</h2>
+                      <div v-if="sprint.sprintStatus" class="on-air-btn">진행 중</div>
                     </div>
                     <h1>{{ index + 1 }}번째 스프린트</h1>
                     <div>{{ sprint.sprintTitle }}</div>
                     <div>{{ sprint.startDate }} ~ {{ sprint.endDate }}</div>
                     <div class="finished-story">
                       <div>완료된 스토리</div>
-                      <span>2/3</span>
+                      <span>{{sprint.completedCnt}}/{{sprint.totalLength}}</span>
                     </div>
                   </div>
                 </div>
