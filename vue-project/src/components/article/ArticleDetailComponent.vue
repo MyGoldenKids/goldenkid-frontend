@@ -243,7 +243,7 @@ onMounted(() => {
         </div>
         <div class="title-sub-right">
           <div class="right-item">
-            <button class="default-like-btn" type="button" @click="recommend" :disabled="!memberStore.isLoggedIn">추천하기 ❤</button>
+            <button class="default-like-btn" :class="{ 'like-btn' : !isRecommendedLocal }" type="button" @click="recommend" :disabled="!memberStore.isLoggedIn">추천하기 ❤️</button>
           </div>
         </div>
       </div>
@@ -324,7 +324,7 @@ onMounted(() => {
       </div>
 
       <!-- 댓글 작성 폼 -->
-      <div class="commet-add">
+      <div class="comment-add">
         <input type="text" class="add-input" placeholder="댓글작성" v-model="comment.content" />
         <button class="add-btn" @click="registerComment">등록</button>
       </div>
@@ -392,7 +392,8 @@ onMounted(() => {
   width: 100%;
   padding: 0.625rem;
   border: 0.063rem solid #665031;
-  background-color: #fff8f2;
+  background-color: #ad9478;
+  color: #fff8f2;
   font-size: 0.7rem;
 }
 
@@ -401,7 +402,14 @@ onMounted(() => {
   padding: 0.625rem;
   border: 0.063rem solid #665031;
   background-color: #fff8f2;
+  color: #665031;
   font-size: 0.7rem;
+}
+
+.like-btn:hover {
+  background-color: #ad9478;
+  color: #fff8f2;
+  cursor: pointer;
 }
 
 /* 게시글 내용 부분 */
@@ -474,7 +482,7 @@ onMounted(() => {
   border: none;
   background-color: #fff8f2;
 }
-.commet-add {
+.comment-add {
   padding: 1.25rem;
   display: grid;
   grid-template-columns: 85% 15%;
