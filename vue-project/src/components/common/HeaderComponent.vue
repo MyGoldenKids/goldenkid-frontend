@@ -51,7 +51,7 @@ const logout = () => {
                 class="menu-item"
                 :class="{ active: route.path.startsWith('/jira') }"
                 to="/jira/home"
-                >기억의 책</router-link
+                >금쪽플래너</router-link
             >
             <router-link
                 class="menu-item"
