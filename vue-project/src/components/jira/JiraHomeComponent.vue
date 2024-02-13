@@ -1,8 +1,8 @@
 <script setup>
-import { Carousel, Slide, Navigation } from "vue3-carousel";
 import { getSprintList, getStoryList } from "@/api/jira";
 import { useMemberStore } from "@/stores/member-store";
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import { VueperSlides, VueperSlide } from "vueperslides";
 import "vueperslides/dist/vueperslides.css";
 import "vue3-carousel/dist/carousel.css";
@@ -27,20 +27,48 @@ const getSprintDetail = (sprintId) => {
     storyList.value = data.data.data;
   });
 };
+
+const isSprintEndDatePassed = () => {
+  const today = new Date();
+  const latestSprint = sprintList.value[sprintList.value.length - 1];
+  const endDate = new Date(latestSprint.endDate);
+  if (sprintList.value.length > 0 && endDate.getTime() < today.getTime()) {
+    return true;
+  }
+  return false;
+};
+
+const router = useRouter();
+const goMakeSprint = () => {
+  // if (!isSprintEndDatePassed()) {
+  //   alert('아직 이번 주 스프린트가 끝나지 않았어요!');
+  //   return;
+  // }
+  router.push("/jira/plan0");
+};
+
+const goSignUp = () => {
+  router.push("/member/signup");
+};
 </script>
 
 <template>
   <div class="jira-wrap">
     <div class="jira-dash">
       <div class="jira-home-header">
-        <span>JIRA</span>
+        <span>기억의 책</span>
       </div>
       <div class="underline">
-        <h1>HISTORY</h1>
+        <div class="history">
+          <h1>HISTORY</h1>
+        </div>
+        <div class="go-make-sprint-btn" @click="goMakeSprint">
+          <button>에피소드 만들기</button>
+        </div>
       </div>
       <!-- slide 시작 -->
       <div class="mini-underline">
-        <div class="slide-box">
+        <div class="slide-box" v-if="sprintList.length > 0">
           <VueperSlides
             class="no-shadow"
             :visible-slides="3"
@@ -50,13 +78,18 @@ const getSprintDetail = (sprintId) => {
             :dragging-distance="200"
             :breakpoints="{ 800: { visibleSlides: 2, slideMultiple: 2 } }"
           >
-            <VueperSlide v-for="(sprint, index) in sprintList"
+            <VueperSlide
+              v-for="(sprint, index) in sprintList"
               :key="sprint"
               @click="getSprintDetail(sprint.sprintId)"
             >
               <template v-slot:content>
                 <div class="slide__item">
                   <div class="slide-box-list">
+                    <div class="sprint-header-wrap">
+                      <h2>날짜날짜</h2>
+                      <div class="on-air-btn">진행 중</div>
+                    </div>
                     <h1>{{ index + 1 }}번째 스프린트</h1>
                     <div>{{ sprint.sprintTitle }}</div>
                     <div>{{ sprint.startDate }} ~ {{ sprint.endDate }}</div>
@@ -70,11 +103,29 @@ const getSprintDetail = (sprintId) => {
             </VueperSlide>
           </VueperSlides>
         </div>
+        <div v-else class="no-history-wrap">
+          <div class="no-history">아직 만들어진 에피소드가 없어요 :(</div>
+          <div>
+            금쪽이 해방일지가 처음이라면?
+            <span class="make-story-btn" @click="goSignUp">회원가입 하기</span>
+          </div>
+          <div>
+            기억의 책이 처음이라면?
+            <span class="make-story-btn" @click="goMakeSprint"
+              >에피소드 만들기</span
+            >
+          </div>
+        </div>
       </div>
       <!-- slide 끝 -->
 
       <hr />
 
+      <template v-if="storyList.length === 0">
+        <div class="is-firsttime">
+          <p>에피소드를 등록하면 이 곳에서 나의 스토리를 볼 수 있어요.</p>
+        </div>
+      </template>
       <div class="todolist-wrap">
         <template v-for="(story, index) in storyList" :key="story">
           <div class="todolist">
@@ -128,22 +179,39 @@ const getSprintDetail = (sprintId) => {
   display: inline-block;
   margin: 0.45rem 0 0 0;
   color: #ad9478;
+  font-size: x-large;
 }
 
 .underline {
   border-bottom: 0.25rem solid #665031;
   width: 95%;
-  display: grid;
-  justify-items: left;
+  display: flex;
+  justify-content: space-between;
   margin: 0 2rem;
   margin-bottom: 3rem;
   overflow-y: scroll;
 }
-.underline h1 {
+.history {
   font-size: 2.5rem;
+  margin: 1rem 0;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
+.go-make-sprint-btn {
+  background-color: #665031;
+  color: #fff8f2;
+  border-radius: 1rem;
+  font-size: large;
+  padding: 2%;
   margin: 1rem 0;
 }
 
+.go-make-sprint-btn button {
+  background-color: transparent;
+  color: #fff8f2;
+}
 .mini-underline {
   width: 100%;
   box-sizing: border-box;
@@ -152,7 +220,7 @@ const getSprintDetail = (sprintId) => {
 hr {
   border: 0.125rem solid #665031;
   width: 45%;
-  margin: 1.25rem auto;
+  margin: 2rem auto 3rem auto;
 }
 
 /* Carousel 시작 */
@@ -250,5 +318,51 @@ hr {
   background-color: #665031;
   border-radius: 1.25rem;
   width: 100%;
+}
+
+.is-firsttime {
+  background-color: #fff8f2;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+  border-radius: 1.25rem;
+  font-size: smaller;
+}
+
+.is-firsttime button {
+  font-size: large;
+  margin-top: 0.5rem;
+}
+
+.no-history-wrap {
+  line-height: 3rem;
+}
+
+.no-history {
+  font-size: xx-large;
+}
+
+.make-story-btn {
+  color: #fff8f2;
+  background-color: #665031;
+  padding: 0.8%;
+  border-radius: 0.75rem;
+  cursor: pointer;
+}
+
+/* 진행중 버튼 */
+.sprint-header-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.on-air-btn {
+  background-color: crimson;
+  color: #fff8f2;
+  border-radius: 1.25rem;
+  font-size: small;
+  padding: 0.1rem 0.5rem;
 }
 </style>
