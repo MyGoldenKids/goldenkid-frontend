@@ -1,5 +1,5 @@
 <script setup>
-import { getDraft } from "@/api/diary";
+import { getDiaryDetail, getDraft } from "@/api/diary";
 import { ref, onMounted } from "vue";
 import { useMemberStore } from "@/stores/member-store";
 import { useDiaryStore } from "@/stores/diary-store";
@@ -22,7 +22,16 @@ onMounted(() => {
 
 const goToWrite = (index) => {
     diaryStore.selectedDraftId = draftList.value[index].diaryId;
-    router.push({ name: "diary-write" });
+    getDiaryDetail(
+        diaryStore.selectedDraftId,
+        (response) => {
+            diaryStore.draft = response.data.data;
+            router.push({ name: "diary-write" });
+        },
+        () => {
+            console.log("임시 저장된 일기를 불러올 수 없습니다.");
+        }
+    );
 };
     
 </script>
