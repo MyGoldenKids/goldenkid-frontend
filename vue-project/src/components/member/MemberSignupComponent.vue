@@ -103,7 +103,6 @@ function submitForm() {
                             type="email"
                             v-model="member.memberId"
                             required
-                            @keyup="checkId(member.memberId)"
                         />
                         <span class="message-text">{{ message }}</span>
                     </div>
@@ -117,6 +116,7 @@ function submitForm() {
                             v-model="member.password"
                             placeholder="8자리 이상 특수문자 1자 이상 포함"
                         />
+                        <span class="message-text">{{ passwordMessage }}</span>
                     </div>
                     <div class="sign-item">
                         <label for="passwordValidate" class="label"
@@ -142,8 +142,10 @@ function submitForm() {
                             type="tel"
                             required
                             v-model="member.phoneNumber"
+                            pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"
                             placeholder="010-xxxx-xxxx"
                         />
+                        <span class="message-text">{{ phoneNumberMessage }}</span>
                     </div>
                     <div class="sign-item">
                         <input type="checkbox" v-model="checked" />
