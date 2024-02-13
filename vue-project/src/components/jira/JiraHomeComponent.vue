@@ -1,7 +1,7 @@
 <script setup>
-import { getSprintList, getStoryList } from "@/api/jira";
+import { changeStoryStatus, getSprintList, getStoryList } from "@/api/jira";
 import { useMemberStore } from "@/stores/member-store";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { VueperSlides, VueperSlide } from "vueperslides";
 import "vueperslides/dist/vueperslides.css";
@@ -29,9 +29,7 @@ onMounted(() => {
       await getStoryList(sprint.sprintId, store.memberInfo.memberNo, (data) => {
         sprint.sprintDetail = data.data.data;
         sprint.totalLength = Object.keys(sprint.sprintDetail).length;
-        sprint.completedCnt = sprint.sprintDetail.filter(
-          (story) => story.storyStatus === 2
-        ).length;
+        sprint.completedCnt = sprint.sprintDetail.filter(story => story.storyStatus === 2).length;
       });
     });
   });
@@ -39,6 +37,18 @@ onMounted(() => {
 
 const getSprintDetail = (index) => {
   storyList.value = sprintList.value[index].sprintDetail;
+};
+
+const handleStatusChange = async (event, storyId) => {
+  const selectValue = event.target.value;
+  await changeStoryStatus(storyId, {'storyStatus': selectValue, 'memberId': store.memberInfo.memberNo}, (data) => {
+    const sprintIndex = sprintList.value.findIndex(sprint => 
+      sprint.sprintDetail.some(story => story.storyId === storyId));
+    if (sprintIndex !== -1) {
+      const sprint = sprintList.value[sprintIndex];
+      sprint.completedCnt = sprint.sprintDetail.filter(story => story.storyStatus === 2).length;
+    }
+  });
 };
 
 const isSprintEndDatePassed = () => {
@@ -63,6 +73,7 @@ const goMakeSprint = () => {
 const goSignUp = () => {
   router.push("/member/signup");
 };
+
 </script>
 
 <template>
@@ -198,10 +209,10 @@ const goSignUp = () => {
           </div>
           <div class="progress">
             <div class="select-box">
-              <select name="search" class="sel">
-                <option value="">해야할 일</option>
-                <option value="">진행 중</option>
-                <option value="">완료됨</option>
+              <select name="search" class="sel" v-model.number="story.storyStatus" @change="handleStatusChange($event, story.storyId)">
+                <option value="0">해야할 일</option>
+                <option value="1">진행 중</option>
+                <option value="2">완료됨</option>
               </select>
             </div>
             <!-- <span v-if="story.storyStatus === 0">해야할 일</span> -->
