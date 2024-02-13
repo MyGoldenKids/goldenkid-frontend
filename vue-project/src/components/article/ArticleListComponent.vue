@@ -20,12 +20,12 @@ const articleInfo = async () => {
 };
 
 const category = ref("title");
-const serachContent = ref("");
+const searchContent = ref("");
 
 const search = () => {
   searchArticle(
     category.value,
-    serachContent.value,
+    searchContent.value,
     (response) => {
       articleList.value = response.data.data;
       articleList.value.forEach((article) => {
@@ -68,8 +68,8 @@ onMounted(articleInfo);
           </select>
         </div>
         <div class="search-box">
-          <input type="text" @keyup.enter="search" v-model="serachContent"/>
-          <button type="button" @click="search">
+          <input type="text" @keyup.enter="search" v-model="searchContent" class="input-with-button"/>
+          <button type="button" @click="search" class="search-button">
             <img src="@/assets/img/SearchButton01.png">
           </button>
         </div>
@@ -172,7 +172,7 @@ button {
   border: 0.125rem solid #ad9478;
   box-sizing: border-box;
   border-radius: 1.25rem;
-  padding: 0.625rem;
+  padding: 0.625rem 0.625rem 0.625rem 1.25rem;
   line-height: 1rem;
 }
 .sel:focus {
@@ -195,8 +195,29 @@ button {
   border-radius: 1.25rem;
   outline: 0.063rem solid #ad9478;
 }
-.search-box button {
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-button {
+  width: 100%;
+  padding-right: 3.125rem;
+}
+.search-button {
   position: absolute;
+  right: 0.625rem;
+  top: 0.1rem;
+  height: 100%;
+  border: none; /* 기본 테두리 제거 */
+  background-color: transparent; /* 배경색 투명 */
+  cursor: pointer; /* 마우스 오버 시 커서 변경 */
+}
+
+.search-button img {
+  height: 60%; /* 버튼 내 이미지 크기 조정 */
 }
 
 table {
