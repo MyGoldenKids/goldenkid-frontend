@@ -53,11 +53,11 @@ const cancelEdit = (childId) => {
 const updateChild = async (childId) => {
     const childToSave = childList.value.find((c) => c.childId === childId);
     if (childToSave) {
-        if(!editingChildName.value) {
+        if (!editingChildName.value) {
             alert("이름을 입력해주세요.");
             return;
         }
-        if(!editingChildBirth.value) {
+        if (!editingChildBirth.value) {
             alert("생년월일을 입력해주세요.");
             return;
         }
@@ -90,11 +90,11 @@ const cancelAdd = () => {
 // 새 금쪽이 등록
 const addChild = async () => {
     try {
-        if(!addChildName.value) {
+        if (!addChildName.value) {
             alert("이름을 입력해주세요.");
             return;
         }
-        if(!addChildBirth.value) {
+        if (!addChildBirth.value) {
             alert("생년월일을 입력해주세요.");
             return;
         }
@@ -129,7 +129,8 @@ const deleteChild = (childId) => {
 <template>
     <!-- 애기 -->
     <div class="kid-grid">
-        <div class="kid-list-2">
+        <div
+            :class="{ 'kid-list-1': childList.length <= 1 && !isAdding, 'kid-list-2': (childList.length >= 1 && isAdding) || childList.length > 1 }">
             <div class="kid-box" v-for="(child, index) in childList" :key="index">
                 <!-- 수정화면 -->
                 <div v-if="child.isEditing">
@@ -155,7 +156,6 @@ const deleteChild = (childId) => {
                         </div>
                     </div>
                 </div>
-
 
                 <!-- 조회화면 -->
                 <div v-else>
@@ -213,6 +213,7 @@ const deleteChild = (childId) => {
 .kid-list-1 {
     display: grid;
     width: 50%;
+    margin: 2.25rem auto 0 auto;
     grid-template-columns: 1fr;
 }
 
@@ -230,10 +231,6 @@ const deleteChild = (childId) => {
     border-radius: 1.87rem;
     color: #fff;
     padding: 0.625rem 0 1.25rem 0;
-    opacity: 1;
-    /* 시작 투명도 */
-    transition: opacity 0.5s ease-in-out;
-    /* 트랜지션 효과 적용 */
 }
 
 .kid-box span {
@@ -257,7 +254,7 @@ const deleteChild = (childId) => {
     font-size: 1.1rem;
     background-color: #fff8f2;
     border: none;
-    border-radius: 10px;
+    border-radius: 0.625rem;
     padding: 0.625rem;
     color: #665031;
     font-size: 0.9rem;
@@ -307,7 +304,7 @@ const deleteChild = (childId) => {
 /* 라디오버튼 디자인 */
 .radio-button {
     display: inline-block;
-    margin-right: 20px;
+    margin-right: 1.25rem;
 }
 
 .radio-button input[type="radio"] {
@@ -317,10 +314,10 @@ const deleteChild = (childId) => {
 
 .radio-button label {
     position: relative;
-    padding-left: 25px;
+    padding-left: 1.5rem;
     cursor: pointer;
     display: inline-block;
-    line-height: 20px;
+    line-height: 1.25rem;
 }
 
 .radio-button label:before,
@@ -329,8 +326,8 @@ const deleteChild = (childId) => {
     position: absolute;
     left: 0;
     top: 0;
-    width: 20px;
-    height: 20px;
+    width: 1.25rem;
+    height: 1.25rem;
     border-radius: 50%;
     transition: all 0.3s ease;
 }
@@ -348,4 +345,5 @@ const deleteChild = (childId) => {
 
 .radio-button input[type="radio"]:checked+label:after {
     transform: scale(0.5);
-}</style>
+}
+</style>
