@@ -1,12 +1,18 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { useSurveyStore } from "@/stores/survey-store";
+import { useMemberStore } from "@/stores/member-store";
 
 const router = useRouter();
 const surveyStore = useSurveyStore();
+const memberStore = useMemberStore();
 
-const goSignup = () => {
-  router.push("/member/signup");
+const goJira = () => {
+  if(memberStore.isLoggedIn){
+    router.push("/jira/home");
+  } else {
+    router.push("/member/login");
+  }
 };
 
 const goSurvey = (value) => {
@@ -38,8 +44,8 @@ const goDiary = () => {
           더해보세요. <br />앞으로의 일주일이 지난 일주일보다 빛날거에요.
         </div>
         <div class="go-signup">
-          가입 후 <span>JIRA</span> 기록하기
-          <button @click="goSignup">GO</button>
+          로그인 후 <span>JIRA</span> 기록하기
+          <button @click="goJira">GO</button>
         </div>
       </div>
     </div>
