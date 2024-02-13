@@ -31,6 +31,16 @@ const createArticle = async() => {
     return;
   }
 
+  if(articleTitle.value.length > 100) {
+    window.alert("게시글의 제목은 100자 이하로 작성해주세요.");
+    return;
+  }
+
+  if(articleContent.value.length > 3000) {
+    window.alert("게시글의 내용은 3000자 이하로 작성해주세요.");
+    return;
+  }
+
   if (fileList.value.length > 0) {
     fileListId.value = await createFiles(memberNo, formData);
   }
