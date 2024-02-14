@@ -83,10 +83,12 @@ onMounted(articleInfo);
     <table>
       <thead>
         <tr>
-          <th>번호</th>
-          <th>제목</th>
-          <th>작성자</th>
-          <th>등록일</th>
+          <th class="id">번호</th>
+          <th class="title">제목</th>
+          <th class="nickname">작성자</th>
+          <th class="createdAt">등록일</th>
+          <th class="hit">조회</th>
+          <th class="recommendCount">추천</th>
         </tr>
       </thead>
       <!-- 게시글 리스트 조회 시작 -->
@@ -97,10 +99,12 @@ onMounted(articleInfo);
           @click="goDetail(article.articleId)"
           class="cursor-pointer"
         >
-          <td>{{ article.articleId }}</td>
-          <td>{{ article.articleTitle }}</td>
-          <td>{{ article.nickname }}</td>
-          <td>{{ article.formattedCreatedAt }}</td>
+          <td class="id">{{ article.articleId }}</td>
+          <td class="title">{{ article.articleTitle }}</td>
+          <td class="nickname">{{ article.nickname }}</td>
+          <td class="createAt">{{ article.formattedCreatedAt }}</td>
+          <td class="hit">{{ article.hit }}</td>
+          <td class="recommendCount">{{ article.recommendCount }}</td>
         </tr>
       </tbody>
       <!-- 게시글 리스트 조회 끝 -->
@@ -221,6 +225,7 @@ button {
 }
 
 table {
+  table-layout: fixed;
   width: 100%;
   border: 0.063rem #a39485 solid;
   font-size: 0.9em;
@@ -237,7 +242,7 @@ thead {
 }
 td,
 th {
-  padding: 1.5em 0.5em;
+  padding: 1.25em 0.5em;
   vertical-align: middle;
 }
 td {
@@ -254,5 +259,42 @@ a:hover {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.article-title, .article-nickname {
+  text-align: left;
+}
+
+th.id {
+  width: 10%;
+}
+th.title {
+  width: 55%;
+}
+
+td.title {
+  text-align: left;
+  padding-left: 3rem;
+}
+
+th.nickname {
+  width: 10%;
+  text-align: left;
+}
+
+td.nickname {
+  text-align: left;
+}
+
+th.createdAt {
+  width: 15%;
+}
+
+th.hit {
+  width: 10%;
+}
+
+th.recommendCount {
+  width: 10%;
 }
 </style>
