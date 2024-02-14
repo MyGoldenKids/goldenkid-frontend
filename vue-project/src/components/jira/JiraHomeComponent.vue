@@ -12,7 +12,7 @@ const sprintList = ref([]);
 const storyList = ref([]);
 
 const getSprint = () => {
-  if (store.memberStore) {
+  if (store.memberInfo) {
     getSprintList(store.memberInfo.memberNo, (data) => {
       sprintList.value = data.data.data;
       sprintList.value.sort((a, b) => {
@@ -200,7 +200,7 @@ const deleteStoryById = (storyId, index) => {
                           sprint.totalLength
                         }}
                       </div>
-                      <div class="end-ep" v-if="sprint.sprintStatus === 1">
+                      <div class="end-ep" v-if="sprint.sprintStatus == 1">
                         <button @click="handleSprintStatusChange(sprint, 0)">에피소드 완성</button>
                       </div>
                     </div>
