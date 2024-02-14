@@ -33,12 +33,14 @@ const goToWrite = (index) => {
         }
     );
 };
-    
 </script>
 
 <template>
     <div class="diary-ing">
-        <div class="item-title">작성 중인 일기</div>
+        <div class="item-title">
+            <img src="../../assets/img/sticker-star.png" class="sticker-star" />
+            <span>작성 중인 일기</span>
+        </div>
         <!-- 임시저장 있을 때 -->
         <div v-if="draftList.length !== 0">
             <div
@@ -48,17 +50,19 @@ const goToWrite = (index) => {
             >
                 <div class="ing-sub-left">
                     <div>
-                    <button @click="goToWrite(index)">
                         <span>#{{ draft.diaryId }} </span>
                         <span> {{ draft.diaryTitle }} </span>
-                    </button>
                     </div>
-                    <div class="ing-sub-date">{{ draft.createdAt }}</div>
+                    <div>
+                        <span></span>
+                        <span class="ing-sub-date">{{ draft.createdAt }}</span>
+                    </div>
                 </div>
                 <div class="ing-sub-right">
-                    <button class="ing-btn">작성 중</button>
+                    <button @click="goToWrite(index)" class="ing-btn">
+                        작성하러가기 >
+                    </button>
                 </div>
-                
             </div>
         </div>
         <!-- 임시저장 없을 때 -->
@@ -69,41 +73,71 @@ const goToWrite = (index) => {
 </template>
 
 <style scoped>
-/* 컨텐츠들 타이틀 */
+button {
+    background-color: inherit;
+}
 .item-title {
-    width: 50%;
-    border-bottom: 3px solid #89b9ad;
-    padding-bottom: 0.313rem;
-    margin: 0 auto 1.2rem auto;
-}
-
-/* 작성중인 일기 */
-.diary-ing-sub {
-    width: 70%;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 75% 25%;
+    width: 90%;
     text-align: left;
-    border-bottom: 3px solid #89b9ad;
+    margin: 0 auto 0.625rem auto;
+    display: grid;
+    grid-template-columns: 13% auto;
+    align-items: center;
+}
+.item-title span {
+    font-family: "NanumNeuRisNeuRisCe";
+    font-size: 2rem;
+    font-weight: 900;
+}
+.sticker-star {
+    width: 2.5rem;
+}
+.diary-ing-sub {
+    display: grid;
+    grid-template-columns: 65% auto;
+    text-align: left;
     padding: 1.25rem 0 0.313rem 0.313rem;
+    font-family: "NanumNeuRisNeuRisCe";
 }
-.ing-sub-date {
-    padding-left: 1rem;
-    padding-top: 0.5rem;
-    font-size: 0.8rem;
+.diary-ing-sub span {
+    font-family: "NanumNeuRisNeuRisCe";
+    font-size: 1.5rem;
 }
-.ing-btn {
-    border: none;
-    background-color: #89b9ad;
-    color: #ffffff;
-    padding: 0.313rem 0.625rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-}
-.diary-ing-sub-not {
+.ing-sub-left {
     width: 80%;
     margin: 0 auto;
-    text-align: center;
-    padding-top: 1.25rem;
+    text-align: left;
+}
+
+.ing-sub-left div {
+    display: grid;
+    grid-template-columns: 20% auto;
+    margin-bottom: 0.15rem;
+}
+.ing-sub-left span {
+    margin-right: 1.25rem;
+}
+.ing-sub-left span.ing-sub-date {
+    font-size: 1.2rem;
+}
+.ing-sub-right {
+    font-size: 1.4rem;
+}
+.ing-sub-right button {
+    font-family: "NanumNeuRisNeuRisCe";
+    transform: scale(1);
+    transition-duration: 0.3s;
+}
+
+.ing-sub-right button:hover {
+    transform: scale(1.1);
+    transition-duration: 0.3s;
+}
+.diary-ing-sub-not {
+    width: 90%;
+    margin: 0 auto;
+    padding: 1.25rem 0;
+    font-family: "NanumNeuRisNeuRisCe";
+    font-size: 1.5rem;
 }
 </style>

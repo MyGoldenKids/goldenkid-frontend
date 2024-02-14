@@ -21,71 +21,110 @@ onMounted(() => {
 
 const goToDiaryList = (diaryId) => {
     diaryStore.diaryId = diaryId;
-}
+};
 </script>
 
 <template>
     <div>
         <div class="diary-list">
-            <div class="item-title">최근 나의 일기</div>
-            <div class="diary-list-sub">
-                <ul>
-                    <li v-for="(diary, index) in diaryList.slice(0, 5)" :key="index">
-                        <router-link :to="{name: 'diary-list'}" @click="goToDiaryList(diary.diaryId)">
-                            <span>#{{ diary.diaryId }}</span>
-                            <span>{{ diary.diaryTitle }}</span>
-                            <span>{{ diary.createdAt }}</span>
-                        </router-link>
-                    </li>
-                </ul>
+            <div class="item-title">
+                <img
+                    src="../../assets/img/sticker-star.png"
+                    class="sticker-star"
+                />
+                <span>최근 나의 일기</span>
+            </div>
+            <div v-if="diaryList.length !== 0">
+                <div class="diary-list-sub">
+                    <ul>
+                        <li
+                            v-for="(diary, index) in diaryList.slice(0, 5)"
+                            :key="index"
+                        >
+                            <router-link
+                                :to="{ name: 'diary-list' }"
+                                @click="goToDiaryList(diary.diaryId)"
+                            >
+                                <span>#{{ diary.diaryId }}</span>
+                                <span>{{ diary.diaryTitle }}</span>
+                                <!-- <span>{{ diary.createdAt }}</span> -->
+                            </router-link>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div v-else>
+                <div class="diary-ing-sub-not">작성한 일기가 없습니다.</div>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-/* 컨텐츠들 타이틀 */
 .item-title {
-    width: 50%;
-    border-bottom: 3px solid #89b9ad;
-    padding-bottom: 0.313rem;
-    margin: 0 auto 1.2rem auto;
-}
-/* 최근 나의 일기 */
-.diary-list-sub {
-    /* padding-top: 0.625rem; */
     width: 90%;
+    text-align: left;
     margin: 0 auto;
+    display: grid;
+    grid-template-columns: 13% auto;
+    align-items: center;
+}
+
+.item-title span {
+    font-family: "NanumNeuRisNeuRisCe";
+    font-size: 2rem;
+    font-weight: 900;
+}
+.sticker-star {
+    width: 2.5rem;
+}
+.diary-list-sub {
+    width: 90%;
+    margin: 1.25rem auto;
+    font-family: "NanumNeuRisNeuRisCe";
 }
 .diary-list-sub li {
-    /* background-color: #dfdfdf; */
+    position: relative;
     width: 80%;
-    border-radius: 20px;
     padding: 0.4rem;
     margin: 0.2rem auto;
-    border: 2px solid #89b9ad;
+    overflow: hidden;
+    text-align: left;
 }
-
+.diary-list-sub li span {
+    margin-right: 1.25rem;
+}
 .diary-list-sub li a {
-    display: block;
-    width: 100%;
-}
-.diary-list-sub span {
-    font-size: 0.8rem;
-    padding-left: 0.3rem;
-    color: #89b9ad;
-}
-
-.diary-list-sub li:hover {
-    background-color: #89b9ad;
-    transition-duration: 0.5s;
-}
-.diary-list-sub li:hover span {
-    color: #fff;
-    transition-duration: 0.5s;
+    position: relative; /* 여기에 position 추가 */
+    z-index: 2; /* 텍스트를 배경보다 위로 */
+    color: #000;
+    text-decoration: none;
+    transition: color 0.5s ease;
+    background-color: transparent; /* 배경색 투명 */
+    font-size: 1.5rem;
 }
 
-a {
-    text-decoration-line: none;
+.diary-list-sub li a::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 0;
+    height: 100%;
+    background-color: rgba(137, 185, 173, 0.2); /* 형광펜 효과 색상 */
+    z-index: 1; /* 텍스트 뒤로 배경을 보내기 위해 z-index 조정 */
+    transition: all 0.5s ease-out; /* 부드러운 전환 효과 */
+}
+
+.diary-list-sub li a:hover::before {
+    width: 100%; /* 마우스를 올리면 배경이 전체 너비로 확장 */
+}
+.diary-ing-sub-not {
+    width: 90%;
+    margin: 0 auto;
+    padding: 1.25rem 0;
+    font-family: "NanumNeuRisNeuRisCe";
+    font-size: 1.5rem;
 }
 </style>
