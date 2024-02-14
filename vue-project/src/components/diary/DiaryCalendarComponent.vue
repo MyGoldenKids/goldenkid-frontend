@@ -61,6 +61,15 @@ const getDiaryPreview = async () => {
 .calendar {
     width: 70%;
     height: 14rem;
-    margin: 0 auto;
+    margin: 0.625rem auto 0 auto;
+}
+
+::v-deep button[type="button"] {
+    background-color: inherit !important;
+}
+
+::v-deep .vc-light.vc-attr,
+.vc-light .vc-attr {
+    --vc-highlight-solid-bg: #ad9478;
 }
 </style>
