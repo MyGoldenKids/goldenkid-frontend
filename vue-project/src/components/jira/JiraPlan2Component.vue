@@ -33,8 +33,9 @@ const validateInput = (event, story) => {
 
     if (value < min || value > max) {
         alert(`스토리 포인트는 ${min}에서 ${max} 사이여야 합니다.`);
-        input.value = value < min ? min : max;
-        story.storyPoint = input.value;
+        const correctedValue = value < min ? min : max;
+        input.value = correctedValue;
+        story.storyPoint = correctedValue;
     }
 }
 </script>
