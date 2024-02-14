@@ -13,12 +13,13 @@ const member = ref({
 const checked = ref(false); // 체크박스 체크여부
 const passwordValidate = ref(""); // 비밀번호 확인
 const passwordMessage = ref(""); // 비밀번호 유효성 메시지
+const validateMessage = ref(""); 
 
 let checkedId = false
 let checkedPwd = false
 
 watch(() => member.value.memberId, (newVal) => {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const emailRegex = /^(?=.{1,64}@)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     if (newVal) {
         if (emailRegex.test(newVal)) {
@@ -64,7 +65,27 @@ watch(() => member.value.password, (newVal) => {
     }
 });
 
+watch(() => passwordValidate.value, (newVal) => {
+    if (newVal) {
+        if (passwordValidate.value === member.value.password) {
+            validateMessage.value = "비밀번호가 일치합니다.";
+        } else {
+            validateMessage.value = "비밀번호가 일치하지 않습니다.";
+        }
+    } else {
+        validateMessage.value = "";
+    }
+});
+
 function submitForm() {
+    if (member.value.nickname.length < 2) {
+        alert("닉네임을 2자 이상 입력해주세요!");
+        return;
+    } else if (member.value.nickname.length > 10) {
+        alert("닉네임을 10자 이하로 입력해주세요!");
+        return;
+    }
+
     if (checked.value && checkedId && checkedPwd && passwordValidate.value == member.value.password) {
         signup(
             member,
@@ -123,6 +144,7 @@ function submitForm() {
                             ><span>*</span> 비밀번호 확인</label
                         >
                         <input type="password" v-model="passwordValidate" />
+                        <span class="message-text">{{ validateMessage }}</span>
                     </div>
                     <div class="sign-item">
                         <label for="nickname" class="label"
