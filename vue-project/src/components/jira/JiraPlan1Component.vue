@@ -1,18 +1,28 @@
 <script setup>
 import { Carousel, Pagination, Slide, Navigation } from "vue3-carousel";
 import { useJiraCreateStore } from "@/stores/jira-create-store";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { Story } from "@/models/story";
+import { activityList } from "@/api/jira";
 import "vue3-carousel/dist/carousel.css";
 
 const store = useJiraCreateStore();
 const storyList = store.storyList;
 const idx = ref(0);
+const activities = [];
 
-const activityList = [new Story("아이와 함께 할 활동들 적을 공간 / 아이와 함께 할 활동들 적을 공간"),
-new Story("아이와 함께 할 활동들 적을 공간 / 아이와 함께 할 활동들 적을 공간"),
-new Story("아이와 함께 할 활동들 적을 공간 / 아이와 함께 할 활동들 적을 공간"),
-new Story("아이와 함께 할 활동들 적을 공간 / 아이와 함께 할 활동들 적을 공간")];
+onMounted(() => {
+    activityList(
+        (response) => {
+            response.data.data.forEach((activity) => {
+                activities.push(new Story(activity.activityDescription));
+            });
+        },
+        () => {
+            console.log("스토리를 가져올 수 없습니다.");
+        }
+    );
+});
 
 function injectStory(story) {
     if (idx.value > 3) {
@@ -54,7 +64,7 @@ function removeStory(index) {
                             :transition="500"
                             :autoplay="3000"
                         >
-                            <Slide v-for="(slide, index) in activityList" :key="index">
+                            <Slide v-for="(slide, index) in activities" :key="index">
                                 <div class="carousel__item">
                                     <div class="slide-box-list">
                                         <h1>활동 {{index + 1}}번</h1>

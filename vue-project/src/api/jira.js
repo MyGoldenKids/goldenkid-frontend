@@ -82,6 +82,10 @@ const deleteStory = async (storyId, memberId, success, fail) => {
         .catch(fail);
 };
 
+// 활동 추천
+const activityList = async (success, fail) => {
+    await instance.get("activity/recommend").then(success).catch(fail);
+}
 export {
     createSprint,
     getSprintList,
@@ -94,4 +98,5 @@ export {
     modifyStory,
     changeStoryStatus,
     deleteStory,
+    activityList,
 };
