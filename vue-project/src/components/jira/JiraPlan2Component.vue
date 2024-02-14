@@ -9,7 +9,7 @@ const sprintInfo = store.sprintInfo;
 const router = useRouter();
 const totalStoryPoints = computed(() => {
     return store.storyList.reduce((total, story) => {
-        if (story instanceof Story && story.storyPoint !== undefined) {
+        if (story instanceof Story && typeof story.storyPoint === 'number') {
             return total + parseInt(story.storyPoint);
         }
         return total;
@@ -18,7 +18,7 @@ const totalStoryPoints = computed(() => {
 store.totalStoryPoints = totalStoryPoints;
 
 const checkStoryPoints = () => {
-    if (store.storyList.some(story => story.storyPoint === 0)) {
+    if (store.storyList.filter(story => story !== undefined).some(story => story.storyPoint === 0)) {
         alert('스토리 포인트는 최소 1 이상이어야 합니다.');
     } else {
         router.push({ name: 'jira-plan3' });
@@ -42,13 +42,13 @@ const checkStoryPoints = () => {
                 <div class="todo-box" v-for="(story, index) in store.storyList" :key="index">
                     <div class="todo-time" v-if="story !== undefined">
                         <p>{{story.storyContent}}</p>
-                        <input type="number" required v-model="story.storyPoint" min="0"/>
+                        <input type="number" required v-model="story.storyPoint" min="0" max="4"/>
                     </div>
                 </div>
                 <div class="sum-point"><span>{{totalStoryPoints}}</span> HOURS</div>
                 <div class="jira-btn">
                     <router-link :to="{ name: 'jira-plan1' }">PREV</router-link>
-                    <a @click="checkStoryPoints">NEXT</a>
+                    <button @click="checkStoryPoints">NEXT</button>
                 </div>
             </div>
         </div>
@@ -143,7 +143,7 @@ const checkStoryPoints = () => {
 .jira-btn {
     margin: 2.5rem;
 }
-.jira-btn a {
+.jira-btn a, button {
     background-color: #665031;
     color: #fff;
     border: none;
