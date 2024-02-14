@@ -82,7 +82,7 @@ const isSprintEndDatePassed = () => {
 const router = useRouter();
 const goMakeSprint = () => {
   if (!isSprintEndDatePassed()) {
-    alert('아직 끝나지 않은 스프린트가 있어요!');
+    alert('아직 끝나지 않은 에피소드가 있어요!');
     return;
   }
   router.push("/jira/plan0");
