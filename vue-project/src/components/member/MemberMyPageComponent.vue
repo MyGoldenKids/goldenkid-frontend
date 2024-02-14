@@ -40,7 +40,7 @@ const editInfo = () => {
     isEditing.value = true;
 };
 // 수정하다가 취소버튼 눌렀을 때
-const cancleEdit = () => {
+const cancelEdit = () => {
     isEditing.value = false;
 };
 
@@ -53,6 +53,25 @@ const registEdit = () => {
 
 function submitForm() {
     // TO DO: 회원정보 수정 form의 로직 추가
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,16}$/;
+    if (!passwordRegex.test(memberDetail.value.newPassword)){
+        alert("비밀번호는 영문, 숫자, 특수문자를 포함한 8~16자리여야 합니다.");
+        return;
+    }
+
+    if (memberDetail.value.nickname.length < 2) {
+        alert("닉네임을 2자 이상 입력해주세요!");
+        return;
+    } else if (memberDetail.value.nickname.length > 10) {
+        alert("닉네임을 10자 이하로 입력해주세요!");
+        return;
+    }
+
+    if (memberDetail.value.password === "") {
+        alert("비밀번호를 입력해주세요.");
+        return;
+    }
+
     modifyMemberDetail(
         memberDetail,
         () => {
@@ -60,6 +79,8 @@ function submitForm() {
             store.memberInfo.nickname = memberDetail.value.nickname;
             alert("회원정보가 변경되었습니다.");
             isEditing.value = false;
+            memberDetail.value.password = "";
+            memberDetail.value.newPassword = "";
         },
         () => {
             alert("비밀번호가 일치하지 않습니다.");
@@ -95,7 +116,7 @@ function signOut() {
         </div>
         <div class="btn-box" v-if="isEditing">
             <button @click="registEdit">저장</button>
-            <button @click="cancleEdit">취소</button>
+            <button @click="cancelEdit">취소</button>
         </div>
         <div class="btn-box" v-else>
             <button @click="editInfo">정보수정</button>
