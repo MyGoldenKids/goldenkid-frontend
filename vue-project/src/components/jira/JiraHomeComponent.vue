@@ -81,8 +81,6 @@ const isSprintEndDatePassed = () => {
 
 const router = useRouter();
 const goMakeSprint = () => {
-  // enddate가 오늘날짜보다 크면 만들기 못가게 막기
-  // 아니면 push
   if (!isSprintEndDatePassed()) {
     alert('아직 끝나지 않은 스프린트가 있어요!');
     return;
@@ -110,9 +108,7 @@ const deleteStoryById = (storyId, index) => {
         storyId,
         store.memberInfo.memberNo,
         (response) => {
-          console.log(response.data.data)
           deleteIndex(index);
-          //????? 아마 여기에 부르는거 하면 쌉가능 
         },
         (error) => {
           console.log(error);
