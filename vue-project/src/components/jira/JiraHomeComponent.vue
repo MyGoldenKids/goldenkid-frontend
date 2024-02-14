@@ -48,13 +48,18 @@ onMounted(() => {
   getSprint();
 });
 
-const deleteIndex = (idx) => {
+const deleteIndex = (idx, storyId) => {
   // 자바스크립트 전용 0번 인덱스 삭제 로직
+  const sprint = sprintList.value.find((sprint) =>
+    sprint.sprintDetail.some((story) => story.storyId === storyId)
+  );
   if (idx >= 0 && idx < storyList.value.length) {
     storyList.value.splice(idx, 1);
   } else {
     storyList.value.splice(idx, idx);
   }
+  sprint.totalLength = Object.keys(sprint.sprintDetail).length;
+  sprint.completedCnt = sprint.sprintDetail.filter(story => story.storyStatus === 2).length;
 }
 
 const getSprintDetail = (index) => {
@@ -62,8 +67,7 @@ const getSprintDetail = (index) => {
 };
 
 const handleStoryStatusChange = async (event, storyId) => {
-  const selectValue = event.target.value;
-  await changeStoryStatus(storyId, { 'storyStatus': selectValue, 'memberId': store.memberInfo.memberNo }, (data) => {
+  await changeStoryStatus(storyId, { 'storyStatus': event.target.value, 'memberId': store.memberInfo.memberNo }, (data) => {
     const sprintIndex = sprintList.value.findIndex(sprint =>
       sprint.sprintDetail.some(story => story.storyId === storyId));
     if (sprintIndex !== -1) {
@@ -112,7 +116,7 @@ const goSignUp = () => {
 };
 
 // 스토리 삭제
-const deleteStoryById = (storyId, index) => {
+const deleteStoryById = async (storyId, index) => {
   const answer = window.confirm("스토리를 삭제 하시겠습니까?");
 
   if (storyList.value.length === 1) {
@@ -123,11 +127,11 @@ const deleteStoryById = (storyId, index) => {
   if (answer) {
     const story = storyList.value.find((story) => story.storyId === storyId);
     if (story) {
-      deleteStory(
+      await deleteStory(
         storyId,
         store.memberInfo.memberNo,
         (response) => {
-          deleteIndex(index);
+          deleteIndex(index, storyId);
         },
         (error) => {
           console.log(error);
