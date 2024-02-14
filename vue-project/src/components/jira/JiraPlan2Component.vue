@@ -2,10 +2,11 @@
 import {useJiraCreateStore} from "@/stores/jira-create-store";
 import {computed} from "vue";
 import {Story} from "@/models/story";
+import {useRouter} from "vue-router";
 const store = useJiraCreateStore();
 
 const sprintInfo = store.sprintInfo;
-
+const router = useRouter();
 const totalStoryPoints = computed(() => {
     return store.storyList.reduce((total, story) => {
         if (story instanceof Story && story.storyPoint !== undefined) {
@@ -15,6 +16,14 @@ const totalStoryPoints = computed(() => {
     }, 0);
 });
 store.totalStoryPoints = totalStoryPoints;
+
+const checkStoryPoints = () => {
+    if (store.storyList.some(story => story.storyPoint === 0)) {
+        alert('스토리 포인트는 최소 1 이상이어야 합니다.');
+    } else {
+        router.push({ name: 'jira-plan3' });
+    }
+}
 </script>
 
 <template>
@@ -39,7 +48,7 @@ store.totalStoryPoints = totalStoryPoints;
                 <div class="sum-point"><span>{{totalStoryPoints}}</span> HOURS</div>
                 <div class="jira-btn">
                     <router-link :to="{ name: 'jira-plan1' }">PREV</router-link>
-                    <router-link :to="{ name: 'jira-plan3' }">NEXT</router-link>
+                    <a @click="checkStoryPoints">NEXT</a>
                 </div>
             </div>
         </div>

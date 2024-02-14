@@ -19,7 +19,7 @@ function injectStory(story) {
         window.alert("최대 4개의 스토리까지만 추가 가능합니다.")
         return;
     }
-    storyList[idx.value++] = story;
+    storyList[idx.value++] = story.clone();
 }
 
 function removeStory(index) {

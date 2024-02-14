@@ -3,4 +3,7 @@ export class Story {
         this.storyContent = storyContent;
         this.storyPoint = storyPoint;
     }
+    clone() {
+        return new Story(this.storyContent, this.storyPoint);
+    }
 }

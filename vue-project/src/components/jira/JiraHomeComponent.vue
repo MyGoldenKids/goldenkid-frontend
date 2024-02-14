@@ -1,7 +1,7 @@
 <script setup>
-import { getSprintList, getStoryList } from "@/api/jira";
+import { changeStoryStatus, getSprintList, getStoryList, deleteStory, changeSprintStatus } from "@/api/jira";
 import { useMemberStore } from "@/stores/member-store";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { VueperSlides, VueperSlide } from "vueperslides";
 import "vueperslides/dist/vueperslides.css";
@@ -10,45 +10,131 @@ import "vue3-carousel/dist/carousel.css";
 const store = useMemberStore();
 const sprintList = ref([]);
 const storyList = ref([]);
-onMounted(() => {
-  getSprintList(store.memberInfo.memberNo, (data) => {
-    sprintList.value = data.data.data;
-    sprintList.value.forEach((sprint) => {
-      let startDate = new Date(sprint.startDate);
-      let endDate = new Date(sprint.endDate);
-      sprint.startDate = startDate.toLocaleDateString().replace(/\.$/, "");
-      sprint.endDate = endDate.toLocaleDateString().replace(/\.$/, "");
+
+const getSprint = () => {
+  if (store.memberInfo) {
+    getSprintList(store.memberInfo.memberNo, (data) => {
+      sprintList.value = data.data.data;
+      sprintList.value.sort((a, b) => {
+        if (a.sprintStatus === 1 && b.sprintStatus !== 1) {
+          return -1;
+        }
+        if (a.sprintStatus !== 1 && b.sprintStatus === 1) {
+          return 1;
+        }
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+      sprintList.value.forEach(async (sprint) => {
+        let startDate = new Date(sprint.startDate);
+        let endDate = new Date(sprint.endDate);
+        let createdAt = new Date(sprint.createdAt);
+        sprint.startDate = startDate.toLocaleDateString().replace(/\.$/, "");
+        sprint.endDate = endDate.toLocaleDateString().replace(/\.$/, "");
+        sprint.createdAt = createdAt
+          .toLocaleDateString()
+          .replace(/\.$/, "")
+          .replace(/\. /g, "-");
+        await getStoryList(sprint.sprintId, store.memberInfo.memberNo, (data) => {
+          sprint.sprintDetail = data.data.data;
+          sprint.totalLength = Object.keys(sprint.sprintDetail).length;
+          sprint.completedCnt = sprint.sprintDetail.filter(story => story.storyStatus === 2).length;
+        });
+      });
     });
-  });
+  }
+}
+
+onMounted(() => {
+  getSprint();
 });
 
-const getSprintDetail = (sprintId) => {
-  getStoryList(sprintId, store.memberInfo.memberNo, (data) => {
-    storyList.value = data.data.data;
+const deleteIndex = (idx) => {
+  // 자바스크립트 전용 0번 인덱스 삭제 로직
+  if (idx >= 0 && idx < storyList.value.length) {
+    storyList.value.splice(idx, 1);
+  } else {
+    storyList.value.splice(idx, idx);
+  }
+}
+
+const getSprintDetail = (index) => {
+  storyList.value = sprintList.value[index].sprintDetail;
+};
+
+const handleStoryStatusChange = async (event, storyId) => {
+  const selectValue = event.target.value;
+  await changeStoryStatus(storyId, { 'storyStatus': selectValue, 'memberId': store.memberInfo.memberNo }, (data) => {
+    const sprintIndex = sprintList.value.findIndex(sprint =>
+      sprint.sprintDetail.some(story => story.storyId === storyId));
+    if (sprintIndex !== -1) {
+      const sprint = sprintList.value[sprintIndex];
+      sprint.completedCnt = sprint.sprintDetail.filter(story => story.storyStatus === 2).length;
+    }
+  });
+};
+
+const handleSprintStatusChange = async (sprint, sprintStatus) => {
+  await changeSprintStatus(sprint.sprintId, { 'sprintStatus': sprintStatus, 'memberId': store.memberInfo.memberNo }, (data) => {
+    sprint.sprintStatus = sprintStatus;
   });
 };
 
 const isSprintEndDatePassed = () => {
   const today = new Date();
-  const latestSprint = sprintList.value[sprintList.value.length - 1];
-  const endDate = new Date(latestSprint.endDate);
-  if (sprintList.value.length > 0 && endDate.getTime() < today.getTime()) {
-    return true;
-  }
-  return false;
+  let hasActiveSprint = false;
+
+  sprintList.value.forEach(sprint => {
+    const endDate = new Date(sprint.endDate);
+
+    if (sprint.sprintStatus === 1) {
+      if (endDate.getTime() < today.getTime()) {
+        // sprint 완료 API 호출
+        changeSprintStatus(sprint.sprintId, { 'sprintStatus': 0, 'memberId': store.memberInfo.memberNo }, (data) => {
+          sprint.sprintStatus = 0;
+        });
+      } else hasActiveSprint = true;
+    }
+  });
+  return !hasActiveSprint;
 };
 
 const router = useRouter();
 const goMakeSprint = () => {
-  // if (!isSprintEndDatePassed()) {
-  //   alert('아직 이번 주 스프린트가 끝나지 않았어요!');
-  //   return;
-  // }
+  if (!isSprintEndDatePassed()) {
+    alert('아직 끝나지 않은 에피소드가 있어요!');
+    return;
+  }
   router.push("/jira/plan0");
 };
 
 const goSignUp = () => {
   router.push("/member/signup");
+};
+
+// 스토리 삭제
+const deleteStoryById = (storyId, index) => {
+  const answer = window.confirm("스토리를 삭제 하시겠습니까?");
+
+  if (storyList.value.length === 1) {
+    window.alert("스토리는 최소 1개가 있어야 합니다.")
+    return
+  }
+
+  if (answer) {
+    const story = storyList.value.find((story) => story.storyId === storyId);
+    if (story) {
+      deleteStory(
+        storyId,
+        store.memberInfo.memberNo,
+        (response) => {
+          deleteIndex(index);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    }
+  }
 };
 </script>
 
@@ -69,39 +155,60 @@ const goSignUp = () => {
       <!-- slide 시작 -->
       <div class="mini-underline">
         <div class="slide-box" v-if="sprintList.length > 0">
-          <VueperSlides
-            class="no-shadow"
-            :visible-slides="3"
-            slide-multiple
-            :gap="3"
-            :slide-ratio="1 / 4"
-            :dragging-distance="200"
-            :breakpoints="{ 800: { visibleSlides: 2, slideMultiple: 2 } }"
-          >
-            <VueperSlide
-              v-for="(sprint, index) in sprintList"
-              :key="sprint"
-              @click="getSprintDetail(sprint.sprintId)"
-            >
-              <template v-slot:content>
-                <div class="slide__item">
-                  <div class="slide-box-list">
-                    <div class="sprint-header-wrap">
-                      <h2>날짜날짜</h2>
-                      <div class="on-air-btn">진행 중</div>
-                    </div>
-                    <h1>{{ index + 1 }}번째 스프린트</h1>
-                    <div>{{ sprint.sprintTitle }}</div>
-                    <div>{{ sprint.startDate }} ~ {{ sprint.endDate }}</div>
-                    <div class="finished-story">
-                      <div>완료된 스토리</div>
-                      <span>2/3</span>
+          <div v-if="sprintList.length < 3" :class="{
+            'list-1': sprintList.length == 1,
+            'list-2': sprintList.length == 2,
+          }">
+            <div class="kid-box" v-for="(sprint, index) in sprintList" :key="sprint" @click="getSprintDetail(index)">
+              <div class="slide__item">
+                <div class="slide_box_list">
+                  <div class="sprint-header-wrap">
+                    <h1>#{{ index + 1 }} {{ sprint.sprintTitle }}</h1>
+                    <div v-if="sprint.sprintStatus" class="on-air-btn">
+                      진행 중
                     </div>
                   </div>
+                  <div>{{ sprint.startDate }} - {{ sprint.endDate }}</div>
+                  <div>
+                    완료된 스토리 : {{ sprint.completedCnt }}/{{
+                      sprint.totalLength
+                    }}
+                  </div>
+                  <div class="end-ep" v-if="sprint.sprintStatus === 1">
+                    <button @click="handleSprintStatusChange(sprint, 0)">에피소드 완성</button>
+                  </div>
                 </div>
-              </template>
-            </VueperSlide>
-          </VueperSlides>
+              </div>
+            </div>
+          </div>
+          <div v-else>
+            <VueperSlides class="no-shadow" :visible-slides="3" slide-multiple :gap="3" :slide-ratio="1 / 4"
+              :dragging-distance="200" :breakpoints="{ 800: { visibleSlides: 2, slideMultiple: 2 } }">
+              <VueperSlide v-for="(sprint, index) in sprintList" :key="sprint" @click="getSprintDetail(index)">
+                <template v-slot:content>
+                  <div class="slide__item">
+                    <div class="slide-box-list">
+                      <div class="sprint-header-wrap">
+                        <h1>#{{ index + 1 }} {{ sprint.sprintTitle }}</h1>
+                        <div v-if="sprint.sprintStatus" class="on-air-btn">
+                          진행 중
+                        </div>
+                      </div>
+                      <div>{{ sprint.startDate }} - {{ sprint.endDate }}</div>
+                      <div>
+                        완료된 스토리 : {{ sprint.completedCnt }}/{{
+                          sprint.totalLength
+                        }}
+                      </div>
+                      <div class="end-ep" v-if="sprint.sprintStatus == 1">
+                        <button @click="handleSprintStatusChange(sprint, 0)">에피소드 완성</button>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+              </VueperSlide>
+            </VueperSlides>
+          </div>
         </div>
         <div v-else class="no-history-wrap">
           <div class="no-history">아직 만들어진 에피소드가 없어요 :(</div>
@@ -111,9 +218,7 @@ const goSignUp = () => {
           </div>
           <div>
             금쪽플래너가 처음이라면?
-            <span class="make-story-btn" @click="goMakeSprint"
-              >에피소드 만들기</span
-            >
+            <span class="make-story-btn" @click="goMakeSprint">에피소드 만들기</span>
           </div>
         </div>
       </div>
@@ -123,21 +228,35 @@ const goSignUp = () => {
 
       <template v-if="storyList.length === 0">
         <div class="is-firsttime">
-          <p>에피소드를 등록하면 이 곳에서 나의 스토리를 볼 수 있어요.</p>
+          <p>에피소드를 클릭하면 이 곳에서 나의 스토리를 볼 수 있어요.</p>
         </div>
       </template>
       <div class="todolist-wrap">
         <template v-for="(story, index) in storyList" :key="story">
           <div class="todolist">
-            <span>{{ story.storyContent }}</span>
+            <span>
+              <span>{{ story.storyContent }}</span>
+              <span class="img-margin">
+                <img src="../../assets/img/delete_red.png" alt="delete_btn_err"
+                  @click="deleteStoryById(story.storyId, index)" />
+              </span>
+            </span>
             <span>
               <span>{{ story.storyPoint }}시간</span>
             </span>
           </div>
           <div class="progress">
-            <span v-if="story.storyStatus === 0">해야할 일</span>
-            <span v-else-if="story.storyStatus === 1">진행 중</span>
-            <span v-else>완료됨</span>
+            <div class="select-box">
+              <select name="search" class="sel" v-model.number="story.storyStatus"
+                @change="handleStoryStatusChange($event, story.storyId)">
+                <option value="0">해야할 일</option>
+                <option value="1">진행 중</option>
+                <option value="2">완료됨</option>
+              </select>
+            </div>
+            <!-- <span v-if="story.storyStatus === 0">해야할 일</span> -->
+            <!-- <span v-else-if="story.storyStatus === 1">진행 중</span> -->
+            <!-- <span v-else>완료됨</span> -->
           </div>
         </template>
       </div>
@@ -146,9 +265,6 @@ const goSignUp = () => {
 </template>
 
 <style scoped>
-.vueperslides {
-  box-sizing: border-box;
-}
 .jira-wrap {
   background-color: #ad9478;
   text-align: center;
@@ -161,7 +277,7 @@ const goSignUp = () => {
   border: 0.313rem dashed #665031;
   border-radius: 1.25rem;
   box-sizing: border-box;
-  padding: 2rem;
+  padding: 2rem 2rem 4em;
 }
 
 .jira-home-header {
@@ -191,6 +307,7 @@ const goSignUp = () => {
   margin-bottom: 3rem;
   overflow-y: scroll;
 }
+
 .history {
   font-size: 2.5rem;
   margin: 1rem 0;
@@ -212,6 +329,7 @@ const goSignUp = () => {
   background-color: transparent;
   color: #fff8f2;
 }
+
 .mini-underline {
   width: 100%;
   box-sizing: border-box;
@@ -220,10 +338,15 @@ const goSignUp = () => {
 hr {
   border: 0.125rem solid #665031;
   width: 45%;
-  margin: 2rem auto 3rem auto;
+  margin: 2rem auto;
 }
 
-/* Carousel 시작 */
+/* Slide 시작 */
+.slider-container {
+  display: flex;
+  justify-content: center;
+}
+
 .slide-box-list span {
   background-color: #665031;
   color: #fff8f2;
@@ -238,7 +361,13 @@ hr {
   align-items: center;
 }
 
-.progress > span {
+.finished-story :last-child {
+  border: solid 0.23rem #665031;
+  padding: 0.5vw 0.7vw 0.3vw 0.7vw;
+  border-radius: 1rem;
+}
+
+.progress>span {
   text-align: center;
   color: #fff8f2;
 }
@@ -246,20 +375,43 @@ hr {
 .slide-box {
   width: 82%;
   margin: 0 auto;
-  padding: 1.25rem 0;
 }
+
 .slide-box h1 {
-  font-size: 1.3rem;
+  font-size: 1.3vw;
   margin: 0.5rem 0;
 }
+
+/* 슬라이드 3개 이상일 때 적용되는 css  */
 .slide-box-list {
   background-color: #fff8f2;
-  padding: 2.5rem 1.25rem;
+  padding: 2rem 1.25rem;
   border-radius: 1.25rem;
-  line-height: 1.8rem;
+  line-height: 1.5vw;
   box-sizing: border-box;
   box-shadow: 0rem 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
   margin: 0.5rem;
+  font-size: 1vw;
+  width: 17vw;
+}
+
+/* 슬라이드 2개 이상일 때 적용되는 css */
+.slide_box_list {
+  background-color: #fff8f2;
+  padding: 2rem 1.25rem;
+  border-radius: 1.25rem;
+  line-height: 1.5vw;
+  box-sizing: border-box;
+  box-shadow: 0rem 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+  margin: 0.5rem auto;
+  font-size: 1.3vw;
+  width: 24vw;
+  text-align: start;
+}
+
+.slide_box_list h1 {
+  font-size: 1.5vw;
+  margin: 0.5rem 0;
 }
 
 .slide-box-list.active {
@@ -269,43 +421,77 @@ hr {
 .slide-box-list:hover {
   transform: scale(1.05);
 }
+
 .slide__item {
   padding: 0.625rem 0;
   box-sizing: border-box;
+  flex: 0 0 auto;
 }
 
-/* Carousel 아래 */
+.list-1 {
+  display: grid;
+  width: 50%;
+  margin: 2.25rem auto 0 auto;
+  grid-template-columns: 1fr;
+}
+
+.list-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 2.25rem;
+}
+
+/* Slide 아래 */
 .todolist {
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
-  padding: 0.7rem 1.5rem;
+  padding: 0.4rem 1.5rem;
   background-color: #fff8f2;
   border-radius: 1.25rem;
   width: 100%;
   margin: 0.25rem 0;
+  font-size: 1.1vw;
 }
 
-.todolist > span {
+.todolist>span {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 0.5rem;
 }
 
-.todolist :last-child {
+.todolist :last-child span {
   background-color: #665031;
   color: #fff8f2;
   border-radius: 0.7rem;
-  padding: 0.3rem 0.5rem;
+  padding: 0.5rem 0.7rem;
 }
 
 .todolist-wrap {
   display: grid;
   grid-template-columns: 77% 18%;
   gap: 5%;
-  width: 80%;
+  width: 90%;
   padding: 1.25rem;
   margin: 0 auto;
+}
+
+.img-margin {
+  margin: 0 0.7vw;
+}
+
+span>img {
+  width: 1.6vw;
+  height: auto;
+  cursor: pointer;
+  background-color: transparent;
+  transition: transform 0.2s ease-in-out;
+}
+
+span>img:hover {
+  transform: scale(1.2);
 }
 
 .progress {
@@ -314,7 +500,7 @@ hr {
   justify-content: center;
   align-items: center;
   margin: 0.25rem 0;
-  padding: 0.7rem 1rem;
+  padding: 0.4rem 1rem;
   background-color: #665031;
   border-radius: 1.25rem;
   width: 100%;
@@ -359,10 +545,64 @@ hr {
 }
 
 .on-air-btn {
-  background-color: crimson;
+  background-color: #e1baad;
+  color: #665031;
+  border-radius: 1.25rem;
+  font-size: 0.9vw;
+  padding: 0.313rem 0.625rem;
+}
+
+.sel {
+  font-family: "jalnan";
+  font-size: 1.1vw;
+  width: 100%;
+  background-color: transparent;
+  box-sizing: border-box;
+  padding: 0.625rem;
+  color: #fff8f2;
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  margin: 0 auto;
+}
+
+.select-box {
+  display: flex;
+  justify-content: center;
+}
+
+.sel option {
+  display: block;
+  background: #fff8f2;
+  color: #665031;
+}
+
+.sel:focus {
+  border: 0.063rem solid transparent;
+  box-sizing: border-box;
+  border-radius: 1.25rem;
+  outline: 0.125rem solid transparent;
+  cursor: pointer;
+}
+
+select {
+  text-align-last: center;
+  text-align: left;
+  -ms-text-align-last: left;
+  -moz-text-align-last: left;
+}
+
+.end-ep {
+  display: flex;
+  justify-content: right;
+}
+
+.end-ep button {
+  background-color: #665031;
   color: #fff8f2;
   border-radius: 1.25rem;
-  font-size: small;
-  padding: 0.1rem 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 1vw;
 }
 </style>
