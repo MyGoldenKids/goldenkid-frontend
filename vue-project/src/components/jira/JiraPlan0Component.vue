@@ -18,8 +18,7 @@
         <div class="jira-content">
             <div class="content-title">
                 <form class="sprint-form">
-
-                <input type="text" placeholder="제목을 입력하세요" v-model="sprintInfo.value.sprintTitle">
+                <input type="text" placeholder="제목을 입력하세요" maxlength="10" v-model="sprintInfo.value.sprintTitle">
                 <div class="date-form">
                 <div class="start-date">
                     <div>시작일</div>
