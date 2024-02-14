@@ -1,18 +1,45 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useCalendarStore } from "@/stores/calendar-store";
-import { getDiaryByDate } from "@/api/diary";
+import { getDiaryByDate, getCalendarDiary } from "@/api/diary";
 import { useMemberStore } from "@/stores/member-store";
 import { useDiaryStore } from "@/stores/diary-store";
 
 const calendarStore = useCalendarStore();
 const diaryStore = useDiaryStore();
 const memberStore = useMemberStore();
+const dateList = ref([]);
+
+onMounted(() => {
+    getCalendarDiary(
+        memberStore.memberInfo.memberNo,
+        (response) => {
+            dateList.value = response.data.data;
+            // 2014-02-07 형식에서 년, 월, 일을 추출하여 배열에 저장
+            dateList.value.forEach((date) => {
+                const [year, month, day] = date.split("-");
+                attrs.value.push({
+                    key: "highlight",
+                    dot: "red",
+                    dates: new Date(year, month - 1, day),
+                });
+            });
+        },
+        (error) => {
+            console.log(error);
+        }
+    );
+});
 
 const attrs = ref([
     {
         key: "today",
         dates: new Date(),
+    },
+    {
+        key: "highlight",
+        dot: 'red',
+        dates: []
     },
 ]);
 
