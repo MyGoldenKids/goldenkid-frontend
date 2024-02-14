@@ -12,34 +12,36 @@ const sprintList = ref([]);
 const storyList = ref([]);
 
 const getSprint = () => {
-  getSprintList(store.memberInfo.memberNo, (data) => {
-    sprintList.value = data.data.data;
-    sprintList.value.sort((a, b) => {
-      if (a.sprintStatus === 1 && b.sprintStatus !== 1) {
-        return -1;
-      }
-      if (a.sprintStatus !== 1 && b.sprintStatus === 1) {
-        return 1;
-      }
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    });
-    sprintList.value.forEach(async (sprint) => {
-      let startDate = new Date(sprint.startDate);
-      let endDate = new Date(sprint.endDate);
-      let createdAt = new Date(sprint.createdAt);
-      sprint.startDate = startDate.toLocaleDateString().replace(/\.$/, "");
-      sprint.endDate = endDate.toLocaleDateString().replace(/\.$/, "");
-      sprint.createdAt = createdAt
-        .toLocaleDateString()
-        .replace(/\.$/, "")
-        .replace(/\. /g, "-");
-      await getStoryList(sprint.sprintId, store.memberInfo.memberNo, (data) => {
-        sprint.sprintDetail = data.data.data;
-        sprint.totalLength = Object.keys(sprint.sprintDetail).length;
-        sprint.completedCnt = sprint.sprintDetail.filter(story => story.storyStatus === 2).length;
+  if (store.memberStore) {
+    getSprintList(store.memberInfo.memberNo, (data) => {
+      sprintList.value = data.data.data;
+      sprintList.value.sort((a, b) => {
+        if (a.sprintStatus === 1 && b.sprintStatus !== 1) {
+          return -1;
+        }
+        if (a.sprintStatus !== 1 && b.sprintStatus === 1) {
+          return 1;
+        }
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+      sprintList.value.forEach(async (sprint) => {
+        let startDate = new Date(sprint.startDate);
+        let endDate = new Date(sprint.endDate);
+        let createdAt = new Date(sprint.createdAt);
+        sprint.startDate = startDate.toLocaleDateString().replace(/\.$/, "");
+        sprint.endDate = endDate.toLocaleDateString().replace(/\.$/, "");
+        sprint.createdAt = createdAt
+          .toLocaleDateString()
+          .replace(/\.$/, "")
+          .replace(/\. /g, "-");
+        await getStoryList(sprint.sprintId, store.memberInfo.memberNo, (data) => {
+          sprint.sprintDetail = data.data.data;
+          sprint.totalLength = Object.keys(sprint.sprintDetail).length;
+          sprint.completedCnt = sprint.sprintDetail.filter(story => story.storyStatus === 2).length;
+        });
       });
     });
-  });
+  }
 }
 
 onMounted(() => {
