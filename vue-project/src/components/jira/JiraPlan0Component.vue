@@ -10,9 +10,9 @@
         <div class="jira-dash">
             <div class="jira-title">
                 <h1>STEP0</h1>
-                <p class="font-color">스프린트 생성</p>
+                <p class="font-color">에피소드 생성</p>
                 <p>
-                    스프린트를 생성하세요!<br />
+                    에피소드를 생성하세요!<br />
                 </p>
             </div>
         <div class="jira-content">
