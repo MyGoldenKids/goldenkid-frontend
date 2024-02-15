@@ -251,7 +251,7 @@ onMounted(() => {
 
     <!-- 게시글 내용 -->
     <div class="board-content">
-      <p>{{ article.articleContent }}</p>
+      <p style= "white-space: pre-line">{{ article.articleContent }}</p>
       <!-- 첨부파일 -->
       <div class="upload">
         <!-- 클립사진 + '파일첨부' 글자 삽입 -->
