@@ -1,14 +1,30 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import logo from '@/assets/img/mainbear.png';
+import logo1 from '@/assets/img/logo-mypage1.png';
+import logo2 from '@/assets/img/logo-mypage2.png';
 
 const router = useRouter();
-const bgImage = ref(logo);
+const bgImage = ref(logo1);
 
 const goMain = () => {
     router.push("/");
 };
+
+// 배경 이미지를 전환하는 함수입니다.
+const switchBackgroundImage = () => {
+    bgImage.value = bgImage.value === logo1 ? logo2 : logo1;
+};
+
+// 컴포넌트가 마운트될 때 인터벌을 설정합니다.
+onMounted(() => {
+    const intervalId = setInterval(switchBackgroundImage, 1000); // 1초마다 배경 이미지를 전환합니다.
+
+    // 컴포넌트가 언마운트될 때 인터벌을 제거합니다.
+    onUnmounted(() => {
+        clearInterval(intervalId);
+    });
+});
 </script>
 
 <template>
@@ -25,14 +41,13 @@ const goMain = () => {
 
 .background-img {
     position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 60%;
-    background-size: cover;
-    background-position: center;
+    left: -5%;
+    bottom: -1%;
+    width: 90%;
+    height: 90%;
+    background-size: contain;
+    background-position: bottom;
     background-repeat: no-repeat;
-
 }
 
 .center-button {
