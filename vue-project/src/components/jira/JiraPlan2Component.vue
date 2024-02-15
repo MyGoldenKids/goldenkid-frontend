@@ -57,7 +57,7 @@ const validateInput = (event, story) => {
                 <div class="todo-box" v-for="(story, index) in store.storyList" :key="index">
                     <div class="todo-time" v-if="story !== undefined">
                         <p>{{ story.storyContent }}</p>
-                        <input type="number" required v-model="story.storyPoint" min="0" max="4" @input="validateInput($event, story)"/>
+                        <input type="number" required v-model="story.storyPoint" min="1" max="4" @input="validateInput($event, story)"/>
                     </div>
                 </div>
                 <div class="sum-point"><span>{{ totalStoryPoints }}</span> HOURS</div>
