@@ -8,7 +8,6 @@ import "vue3-carousel/dist/carousel.css";
 
 const store = useJiraCreateStore();
 const storyList = ref(store.storyList);
-const idx = ref(0);
 const activities = [];
 
 onMounted(() => {
@@ -29,8 +28,9 @@ function injectStory(story) {
         window.alert("최대 4개의 스토리까지만 추가 가능합니다.");
         return;
     }
-    storyList.value.push(story.clone());
-    // storyList.value[idx.value++] = story.clone();
+    let cloneStory = story.clone();
+    cloneStory.storyPoint = 1;
+    storyList.value.push(cloneStory);
 }
 
 // 삭제 버튼 누르면
@@ -43,19 +43,6 @@ const deleteButton = (idx) => {
     }
 };
 
-function removeStory(index) {
-    if (storyList.value[index] instanceof Story) {
-        storyList.value[index] = undefined;
-        let notUndefined = storyList.value.filter(
-            (story) => story !== undefined
-        );
-        let undefinedItems = storyList.value.filter(
-            (story) => story === undefined
-        );
-        storyList.value = notUndefined.concat(undefinedItems);
-        idx.value--;
-    }
-}
 </script>
 
 <template>

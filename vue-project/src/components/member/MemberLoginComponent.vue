@@ -104,20 +104,12 @@ label {
     width: 100%;
     padding: 0.8rem 0;
     box-sizing: border-box;
-    /* border: 3px solid #89B9AD; */
     background-color: #89b9ad;
     color: #fff;
     border: none;
     border-radius: 10px;
     margin-top: 0.625rem;
-}
-
-/* 로그인 박스 checkbox */
-.check-box {
-    display: grid;
-    padding-bottom: 1.875rem;
-    padding-top: 0.625rem;
-    align-items: center;
+    margin-bottom: 0.625rem;
 }
 
 .check-box input {
