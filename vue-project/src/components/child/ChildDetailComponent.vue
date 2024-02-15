@@ -1,5 +1,10 @@
 <script setup>
-import { getChildList, updateChildInfo, registerChild, deleteChildInfo } from "@/api/child";
+import {
+    getChildList,
+    updateChildInfo,
+    registerChild,
+    deleteChildInfo,
+} from "@/api/child";
 import { ref, onMounted } from "vue";
 import { useMemberStore } from "@/stores/member-store";
 const store = useMemberStore();
@@ -33,9 +38,9 @@ const editChild = (childId) => {
     childList.value.forEach((c) => {
         if (c.childId === childId) {
             c.isEditing = true;
-            editingChildName.value = c.childName
-            editingChildGender.value = c.childGender
-            editingChildBirth.value = c.childBirth
+            editingChildName.value = c.childName;
+            editingChildGender.value = c.childGender;
+            editingChildBirth.value = c.childBirth;
         }
     });
 };
@@ -57,7 +62,7 @@ const updateChild = async (childId) => {
             alert("이름을 입력해주세요.");
             return;
         }
-        if(editingChildName.value.length > 20) {
+        if (editingChildName.value.length > 20) {
             alert("이름은 20자 이내로 입력해주세요.");
             return;
         }
@@ -70,7 +75,7 @@ const updateChild = async (childId) => {
                 childId: childId,
                 childName: editingChildName.value,
                 childGender: editingChildGender.value,
-                childBirth: editingChildBirth.value
+                childBirth: editingChildBirth.value,
             });
             childToSave.isEditing = false; // 수정 모드 해제
             getChild(memberNo); // 아이 목록 새로고침
@@ -88,7 +93,6 @@ const newChild = () => {
 // 금쪽이 추가 취소
 const cancelAdd = () => {
     isAdding.value = false;
-
 };
 
 // 새 금쪽이 등록
@@ -98,7 +102,7 @@ const addChild = async () => {
             alert("이름을 입력해주세요.");
             return;
         }
-        if(addChildName.value.length > 20) {
+        if (addChildName.value.length > 20) {
             alert("이름은 20자 이내로 입력해주세요.");
             return;
         }
@@ -110,7 +114,7 @@ const addChild = async () => {
             memberId: memberNo,
             childName: addChildName.value,
             childGender: addChildGender.value,
-            childBirth: addChildBirth.value
+            childBirth: addChildBirth.value,
         });
         isAdding.value = false;
         getChild(memberNo); // 아이 목록 새로고침
@@ -138,29 +142,55 @@ const deleteChild = (childId) => {
     <!-- 애기 -->
     <div class="kid-grid">
         <div
-            :class="{ 'kid-list-1': childList.length <= 1 && !isAdding, 'kid-list-2': (childList.length >= 1 && isAdding) || childList.length > 1 }">
-            <div class="kid-box" v-for="(child, index) in childList" :key="index">
+            :class="{
+                'kid-list-1':
+                    childList.length == 0 ||
+                    (childList.length == 1 && !isAdding),
+                'kid-list-2':
+                    childList.length >= 2 ||
+                    (childList.length == 1 && isAdding),
+            }"
+        >
+            <div
+                class="kid-box"
+                v-for="(child, index) in childList"
+                :key="index"
+            >
                 <!-- 수정화면 -->
                 <div v-if="child.isEditing">
                     <span>금쪽이 수정</span>
-                    <input type="text" v-model="editingChildName">
+                    <input type="text" v-model="editingChildName" />
                     <div class="radio-box">
                         <div class="radio-box">
                             <div class="radio-button">
-                                <input type="radio" id="male" value="true" v-model="editingChildGender">
+                                <input
+                                    type="radio"
+                                    id="male"
+                                    value="true"
+                                    v-model="editingChildGender"
+                                />
                                 <label for="male">남아</label>
                             </div>
                             <div class="radio-button">
-                                <input type="radio" id="female" value="false" v-model="editingChildGender">
+                                <input
+                                    type="radio"
+                                    id="female"
+                                    value="false"
+                                    v-model="editingChildGender"
+                                />
                                 <label for="female">여아</label>
                             </div>
                         </div>
                     </div>
-                    <input type="date" v-model="editingChildBirth">
+                    <input type="date" v-model="editingChildBirth" />
                     <div class="mypage-grid">
                         <div class="btn-box">
-                            <button @click="updateChild(child.childId)">저장</button>
-                            <button @click="cancelEdit(child.childId)">취소</button>
+                            <button @click="updateChild(child.childId)">
+                                저장
+                            </button>
+                            <button @click="cancelEdit(child.childId)">
+                                취소
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -174,8 +204,12 @@ const deleteChild = (childId) => {
                     <p>{{ child.childBirth }}</p>
                     <div class="mypage-grid">
                         <div class="btn-box">
-                            <button @click="editChild(child.childId)">수정</button>
-                            <button @click="deleteChild(child.childId)">삭제</button>
+                            <button @click="editChild(child.childId)">
+                                수정
+                            </button>
+                            <button @click="deleteChild(child.childId)">
+                                삭제
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -184,20 +218,30 @@ const deleteChild = (childId) => {
             <!-- 금쪽이 추가화면 -->
             <div v-if="isAdding" class="kid-box">
                 <span>금쪽이 추가</span>
-                <input type="text" v-model="addChildName">
+                <input type="text" v-model="addChildName" />
                 <div class="radio-box">
                     <div class="radio-box">
                         <div class="radio-button">
-                            <input type="radio" id="male" value="true" v-model="addChildGender">
+                            <input
+                                type="radio"
+                                id="male"
+                                value="true"
+                                v-model="addChildGender"
+                            />
                             <label for="male">남아</label>
                         </div>
                         <div class="radio-button">
-                            <input type="radio" id="female" value="false" v-model="addChildGender">
+                            <input
+                                type="radio"
+                                id="female"
+                                value="false"
+                                v-model="addChildGender"
+                            />
                             <label for="female">여아</label>
                         </div>
                     </div>
                 </div>
-                <input type="date" v-model="addChildBirth">
+                <input type="date" v-model="addChildBirth" />
                 <div class="mypage-grid">
                     <div class="btn-box">
                         <button @click="addChild">저장</button>
@@ -330,7 +374,7 @@ const deleteChild = (childId) => {
 
 .radio-button label:before,
 .radio-button label:after {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     top: 0;
@@ -351,7 +395,7 @@ const deleteChild = (childId) => {
     transform: scale(0);
 }
 
-.radio-button input[type="radio"]:checked+label:after {
+.radio-button input[type="radio"]:checked + label:after {
     transform: scale(0.5);
 }
 </style>
