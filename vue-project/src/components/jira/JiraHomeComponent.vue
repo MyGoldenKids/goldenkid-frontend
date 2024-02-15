@@ -178,7 +178,7 @@ const deleteStoryById = async (storyId, index) => {
                       sprint.totalLength
                     }}
                   </div>
-                  <div class="end-ep" v-if="sprint.sprintStatus === 1">
+                  <div class="end-ep" v-if="sprint.sprintStatus">
                     <button @click="handleSprintStatusChange(sprint, 0)">에피소드 완성</button>
                   </div>
                 </div>
