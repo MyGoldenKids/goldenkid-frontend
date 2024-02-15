@@ -17,15 +17,19 @@ const { VITE_SERVER_URL } = import.meta.env;
 onMounted(async () => {
     const response = await getDiaryList(memberStore.memberInfo.memberNo);
     diaryList.value = response.data.data;
+
+    for (let i = 0; i < diaryList.value.length; i++) {
+        diaryList.value[i]["index"] = i + 1;
+    }
     
     // 최근 다이어리 모음에서 선택한 값이 있는 경우
     if (diaryStore.diaryId) {
-        await fetchDiaryDetail(diaryStore.diaryId); // 다어이리 모음에서 선택한 다이어리 정보 가져오기
+        await fetchDiaryDetail(diaryStore.diaryId, 1); // 다어이리 모음에서 선택한 다이어리 정보 가져오기
         diaryStore.diaryId = ""; // 가져온 후에는 초기화
     }
     // 가장 최근 다이어리 가져오기
     else if (!diaryDetail.value && diaryList.value.length > 0) {
-        await fetchDiaryDetail(diaryList.value[0].diaryId);
+        await fetchDiaryDetail(diaryList.value[0].diaryId, 1);
     }
 });
 
@@ -50,12 +54,13 @@ const download = async (fileId, fileName) => {
     });
 };
 
-const fetchDiaryDetail = async (diaryId) => {
+const fetchDiaryDetail = async (diaryId, index) => {
     const response = await getDiaryDetail(diaryId);
     diaryDetail.value = {
         ...response.data.data,
-        diaryId: diaryId,
+        diaryId: index,
     };
+    console.log(diaryDetail.value);
     fileListId.value = diaryDetail.value.fileListId;
     if(fileListId.value){
         fileData.value = await getFileInfo(fileListId.value);
@@ -152,8 +157,8 @@ const goToModify = (diaryId) => {
                 <div class="list-title">
                     <ul>
                         <li v-for="(diary, index) in diaryList" :key="index">
-                            <a @click="fetchDiaryDetail(diary.diaryId)">
-                                <span>#{{ diary.diaryId }}</span>
+                            <a @click="fetchDiaryDetail(diary.diaryId, index+1)">
+                                <span>#{{ index+1 }}</span>
                                 <span>{{ diary.diaryTitle }}</span>
                                 <span>{{ diary.createdAt }}</span>
                             </a>

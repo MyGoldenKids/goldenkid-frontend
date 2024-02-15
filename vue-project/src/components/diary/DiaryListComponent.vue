@@ -45,7 +45,7 @@ const goToDiaryList = (diaryId) => {
                                 :to="{ name: 'diary-list' }"
                                 @click="goToDiaryList(diary.diaryId)"
                             >
-                                <span>#{{ diary.diaryId }}</span>
+                                <span>#{{ index+1 }}</span>
                                 <span>{{ diary.diaryTitle }}</span>
                                 <!-- <span>{{ diary.createdAt }}</span> -->
                             </router-link>
