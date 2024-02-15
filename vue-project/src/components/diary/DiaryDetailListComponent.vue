@@ -122,7 +122,7 @@ const goToModify = (diaryId) => {
                                 </div>
                             </div>
                         
-                        <div class="diary-text">
+                        <div class="diary-text" style= "white-space: pre-line">
                             {{ diaryDetail.diaryContent }}
                         </div>
                         <div class="upload">
