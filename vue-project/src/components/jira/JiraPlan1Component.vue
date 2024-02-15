@@ -112,11 +112,7 @@ function removeStory(index) {
                             :key="index"
                             @click="deleteButton(index)"
                         >
-                            {{
-                                item !== undefined
-                                    ? item.storyContent
-                                    : "내용 안넣었을 때"
-                            }}
+                            {{ item.storyContent }}
                         </div>
 
                         <div
