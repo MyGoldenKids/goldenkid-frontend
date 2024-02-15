@@ -91,12 +91,12 @@ const getDiaryPreview = async () => {
     margin: 0.625rem auto 0 auto;
 }
 
-::v-deep button[type="button"] {
+:deep(button[type="button"]) {
     background-color: inherit !important;
 }
 
-::v-deep .vc-light.vc-attr,
-.vc-light .vc-attr {
+:deep(.vc-light.vc-attr,
+.vc-light .vc-attr ) {
     --vc-highlight-solid-bg: #ad9478;
 }
 </style>
