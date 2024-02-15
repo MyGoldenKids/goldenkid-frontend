@@ -19,17 +19,18 @@ onMounted(async () => {
     diaryList.value = response.data.data;
 
     for (let i = 0; i < diaryList.value.length; i++) {
-        diaryList.value[i]["index"] = i + 1;
+        diaryList.value[i]["index"] = diaryList.value.length - i;
     }
     
     // 최근 다이어리 모음에서 선택한 값이 있는 경우
     if (diaryStore.diaryId) {
-        await fetchDiaryDetail(diaryStore.diaryId, 1); // 다어이리 모음에서 선택한 다이어리 정보 가져오기
+        await fetchDiaryDetail(diaryStore.diaryId, diaryStore.diaryIndex); // 다어이리 모음에서 선택한 다이어리 정보 가져오기
         diaryStore.diaryId = ""; // 가져온 후에는 초기화
+        diaryStore.diaryIndex = ""; // 가져온 후에는 초기화
     }
     // 가장 최근 다이어리 가져오기
     else if (!diaryDetail.value && diaryList.value.length > 0) {
-        await fetchDiaryDetail(diaryList.value[0].diaryId, 1);
+        await fetchDiaryDetail(diaryList.value[0].diaryId, diaryList.value.length);
     }
 });
 
@@ -58,9 +59,9 @@ const fetchDiaryDetail = async (diaryId, index) => {
     const response = await getDiaryDetail(diaryId);
     diaryDetail.value = {
         ...response.data.data,
-        diaryId: index,
+        diaryId: diaryId,
+        diaryIndex: index,
     };
-    console.log(diaryDetail.value);
     fileListId.value = diaryDetail.value.fileListId;
     if(fileListId.value){
         fileData.value = await getFileInfo(fileListId.value);
@@ -107,7 +108,7 @@ const goToModify = (diaryId) => {
                     <div class="title">{{ diaryDetail.diaryTitle }}</div>
                     <div class="title-under">
                         <div class="title-sub">
-                            <span>#{{ diaryDetail.diaryId }}번째 일기</span>
+                            <span>#{{ diaryDetail.diaryIndex }}번째 일기</span>
                             <span>{{ diaryDetail.cratedAt }}</span>
                         </div>
                         <div class="title-btn">
@@ -157,8 +158,8 @@ const goToModify = (diaryId) => {
                 <div class="list-title">
                     <ul>
                         <li v-for="(diary, index) in diaryList" :key="index">
-                            <a @click="fetchDiaryDetail(diary.diaryId, index+1)">
-                                <span>#{{ index+1 }}</span>
+                            <a @click="fetchDiaryDetail(diary.diaryId, diaryList.length - index)">
+                                <span>#{{ diaryList.length - index }}</span>
                                 <span>{{ diary.diaryTitle }}</span>
                                 <span>{{ diary.createdAt }}</span>
                             </a>
