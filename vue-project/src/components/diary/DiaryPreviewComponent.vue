@@ -27,7 +27,7 @@ const formatDate = (date) => {
             <!-- 해당 날짜에 작성한 일기가 있는 경우 -->
             <div v-else>
                 <div v-for="(diary, index) in diaryStore.preview" :key="index">
-                    #{{ diary.diaryId }} {{ diary.diaryTitle }}
+                    #{{ diaryStore.preview.length - index }} {{ diary.diaryTitle }}
                 </div>
             </div>
         </p>

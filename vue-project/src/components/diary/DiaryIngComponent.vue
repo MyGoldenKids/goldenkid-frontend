@@ -50,7 +50,6 @@ const goToWrite = (index) => {
             >
                 <div class="ing-sub-left">
                     <div>
-                        <span>#{{ draft.diaryId }} </span>
                         <span> {{ draft.diaryTitle }} </span>
                     </div>
                     <div>

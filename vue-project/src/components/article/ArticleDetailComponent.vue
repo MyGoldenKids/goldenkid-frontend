@@ -150,6 +150,12 @@ const getCommentList = async () => {
 };
 
 const registerComment = async () => {
+  // 로그인 안 했으면 로그인 창 이동
+  if (!memberStore.isLoggedIn) {
+    router.push("/member/login");
+    return;
+  }
+
   // 댓글 내용이 없을 경우 경고창 띄우기
   if (!comment.value.content) {
     alert("댓글을 입력해주세요.");

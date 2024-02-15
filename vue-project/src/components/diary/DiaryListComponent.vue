@@ -19,8 +19,9 @@ onMounted(() => {
     );
 });
 
-const goToDiaryList = (diaryId) => {
+const goToDiaryList = (diaryId, index) => {
     diaryStore.diaryId = diaryId;
+    diaryStore.diaryIndex = index;
 };
 </script>
 
@@ -43,9 +44,9 @@ const goToDiaryList = (diaryId) => {
                         >
                             <router-link
                                 :to="{ name: 'diary-list' }"
-                                @click="goToDiaryList(diary.diaryId)"
+                                @click="goToDiaryList(diary.diaryId, diaryList.length - index)"
                             >
-                                <span>#{{ diary.diaryId }}</span>
+                                <span>#{{ diaryList.length - index }}</span>
                                 <span>{{ diary.diaryTitle }}</span>
                                 <!-- <span>{{ diary.createdAt }}</span> -->
                             </router-link>
