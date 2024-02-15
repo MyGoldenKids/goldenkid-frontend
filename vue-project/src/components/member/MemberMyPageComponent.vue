@@ -110,7 +110,7 @@ function signOut() {
             <input type="password" placeholder="새 비밀번호" v-model="memberDetail.newPassword" />
         </div>
         <div class="mom-box" v-else>
-            <img src="@/assets/img/bear-profile.png" alt="프로필" />
+            <img src="@/assets/img/profile-bear-mom.png" alt="부모프로필" />
             <p>{{ memberDetail.nickname }}</p>
             <p>{{ memberDetail.phoneNumber }}</p>
         </div>

@@ -197,7 +197,7 @@ const deleteChild = (childId) => {
 
                 <!-- 조회화면 -->
                 <div v-else>
-                    <img src="@/assets/img/bear-profile.png" alt="금쪽프로필" />
+                    <img src="@/assets/img/profile-bear-kid.png" alt="금쪽프로필" />
                     <p>{{ child.childName }}</p>
                     <p v-if="child.childGender">남아</p>
                     <p v-else>여아</p>
