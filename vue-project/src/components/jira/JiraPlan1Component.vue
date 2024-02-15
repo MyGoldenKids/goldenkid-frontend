@@ -66,7 +66,8 @@ function removeStory(index) {
                 <p class="font-color">스토리등록</p>
                 <p>
                     아이와 함께 할 활동을 선택 해보세요😊<br />
-                    최대 4개까지 선택 가능해요 !
+                    최대 4개까지 선택 가능해요 ! <br />
+                    추가된 스토리를 한번 더 클릭하면 삭제할 수 있습니다.
                 </p>
             </div>
             <div class="jira-content">
@@ -119,7 +120,7 @@ function removeStory(index) {
                             class="todo-item"
                             v-for="index in 4 - storyList.length"
                         >
-                            {{ "내용 안넣었을 때" }}
+                            {{ "추천 스토리를 눌러 스토리를 추가해보세요!"}}
                         </div>
                     </div>
                 </div>
