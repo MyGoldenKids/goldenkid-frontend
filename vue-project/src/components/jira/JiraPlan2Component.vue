@@ -21,6 +21,7 @@ const checkStoryPoints = () => {
     if (store.storyList.filter(story => story !== undefined).some(story => story.storyPoint === 0)) {
         alert('스토리 포인트는 최소 1 이상이어야 합니다.');
     } else {
+        store.totalStoryPoints = totalStoryPoints.value;
         router.push({ name: 'jira-plan3' });
     }
 }

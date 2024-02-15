@@ -7,7 +7,7 @@ import { activityList } from "@/api/jira";
 import "vue3-carousel/dist/carousel.css";
 
 const store = useJiraCreateStore();
-const storyList = store.storyList;
+const storyList = ref(store.storyList);
 const idx = ref(0);
 const activities = [];
 
@@ -25,23 +25,37 @@ onMounted(() => {
 });
 
 function injectStory(story) {
-    if (idx.value > 3) {
-        window.alert("최대 4개의 스토리까지만 추가 가능합니다.")
+    if (storyList.value.length > 3) {
+        window.alert("최대 4개의 스토리까지만 추가 가능합니다.");
         return;
     }
-    storyList[idx.value++] = story.clone();
+    storyList.value.push(story.clone());
+    // storyList.value[idx.value++] = story.clone();
 }
 
+// 삭제 버튼 누르면
+const deleteButton = (idx) => {
+    // 자바스크립트 전용 0번 인덱스 삭제 로직
+    if (idx >= 0 && idx < storyList.value.length) {
+        storyList.value.splice(idx, 1);
+    } else {
+        storyList.value.splice(idx, idx);
+    }
+};
+
 function removeStory(index) {
-    if (storyList[index] instanceof Story) {
-        storyList[index] = undefined;
-        let notUndefined = storyList.filter(story => story !== undefined);
-        let undefinedItems = storyList.filter(story => story === undefined);
+    if (storyList.value[index] instanceof Story) {
+        storyList.value[index] = undefined;
+        let notUndefined = storyList.value.filter(
+            (story) => story !== undefined
+        );
+        let undefinedItems = storyList.value.filter(
+            (story) => story === undefined
+        );
         storyList.value = notUndefined.concat(undefinedItems);
         idx.value--;
     }
 }
-
 </script>
 
 <template>
@@ -64,10 +78,13 @@ function removeStory(index) {
                             :transition="500"
                             :autoplay="3000"
                         >
-                            <Slide v-for="(slide, index) in activities" :key="index">
+                            <Slide
+                                v-for="(slide, index) in activities"
+                                :key="index"
+                            >
                                 <div class="carousel__item">
                                     <div class="slide-box-list">
-                                        <h1>활동 {{index + 1}}번</h1>
+                                        <h1>활동 {{ index + 1 }}번</h1>
                                         <p @click="injectStory(slide)">
                                             {{ slide.storyContent }}
                                         </p>
@@ -88,12 +105,23 @@ function removeStory(index) {
                         </Carousel>
                     </div>
                     <div class="todo-box">
-                    <div class="todo-item" :class="{'select-todo': item instanceof Story}"
-                            v-for="(item, index) in storyList" :key="index" 
-                            @click="removeStory(index)">
-                        {{ item !== undefined ? item.storyContent : "내용 안넣었을 때" }}
+                        <div
+                            class="todo-item"
+                            :class="{ 'select-todo': item instanceof Story }"
+                            v-for="(item, index) in storyList"
+                            :key="index"
+                            @click="deleteButton(index)"
+                        >
+                            {{ item.storyContent }}
+                        </div>
+
+                        <div
+                            class="todo-item"
+                            v-for="index in 4 - storyList.length"
+                        >
+                            {{ "내용 안넣었을 때" }}
+                        </div>
                     </div>
-                </div>
                 </div>
                 <div class="jira-btn">
                     <router-link :to="{ name: 'jira-plan2' }">NEXT</router-link>

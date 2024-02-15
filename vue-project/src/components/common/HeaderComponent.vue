@@ -42,9 +42,10 @@ const logout = () => {
             </div>
         </div>
         <div class="logo">
-            <router-link to="/"
-                ><img src="@/assets/img/logo.png"
-            /></router-link>
+            <router-link to="/">
+                <p><img src="@/assets/img/logo.png"/></p>
+                <p>금쪽이 해방일지</p>
+            </router-link>
         </div>
         <div class="nav">
             <router-link
@@ -82,11 +83,10 @@ a {
 }
 
 .header {
-    /* background-color: pink; */
-    padding: 50px 0 20px;
+    padding: 3.125rem 0 0.625rem 0;
 }
 .nav {
-    padding: 20px 0;
+    padding: 1.25rem 0;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     /* 4개의 열을 생성합니다. 각 열의 너비는 동일하게 설정됩니다. */
@@ -98,17 +98,24 @@ a {
 
 .logo {
     text-align: center;
+    margin: 0.313rem 0 0.625rem 0;
 }
 .logo img {
-    width: 50px;
+    width: 5rem;
+}
+.logo p {
+    font-size: 2rem;
+    font-weight: 900;
+    font-family: 'NanumNeuRisNeuRisCe';
+
 }
 .menu-item {
     /* background-color: bisque; */
     height: auto;
     background-image: url(../../assets/img/sticker2.png);
     background-size: cover;
-    padding: 10px 0;
-    margin: 0 50px;
+    padding: 0.625rem 0;
+    margin: 0 3.13rem;
     transition: background-image 0.3s ease;
 }
 
@@ -133,7 +140,7 @@ a {
     padding: 0.4rem 0.625rem;
     border: 4px dotted #ad9478;
     text-align: center;
-    border-radius: 10px;
+    border-radius: 0.625rem;
 }
 .member-sub div a:hover {
     background-color: #ad9478;
