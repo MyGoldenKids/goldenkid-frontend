@@ -12,7 +12,7 @@ const sprintList = ref([]);
 const storyList = ref([]);
 
 const getSprint = () => {
-  if (store.memberInfo.memberId !== '') {
+  if (store.isLoggedIn) {
     getSprintList(store.memberInfo.memberNo, (data) => {
       sprintList.value = data.data.data;
       sprintList.value.sort((a, b) => {
