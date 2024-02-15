@@ -31,20 +31,21 @@ const category = ref("title");
 const searchContent = ref("");
 
 const search = () => {
-    searchArticle(
-        category.value,
-        searchContent.value,
-        (response) => {
-            articleList.value = response.data.data;
-            articleList.value.forEach((article) => {
-                article.formattedCreatedAt = formatCreatedAt(article.createdAt);
-            });
-        },
-        (error) => {
-            console.error(error);
-        }
-    );
-};
+  searchArticle(
+    category.value,
+    searchContent.value,
+    (response) => {
+      articleList.value = response.data.data;
+      articleList.value.forEach((article) => {
+        article.formattedCreatedAt = formatCreatedAt(article.createdAt);
+      });
+      articleListSize.value = articleList.value.length;
+    },
+    (error) => {
+      console.error(error);
+    }
+  );
+}
 
 // 작성일 연-월-일 포매팅 할 함수
 const formatCreatedAt = (createdAt) => {
@@ -62,7 +63,12 @@ const goDetail = (articleId) => {
 };
 
 const articlePageHandler = () => {
-    articleInfo(10, currentPage.value);
+  articleInfo(10, currentPage.value);
+  getArticleListSize((response)=> {
+    articleListSize.value = response.data.data;
+  }, (error) => {
+    console.error(error);
+  })
 };
 
 onMounted(async () => {
@@ -151,30 +157,6 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.pagination-container {
-    display: flex;
-    column-gap: 10px;
-}
-.paginate-buttons {
-    height: 40px;
-    width: 40px;
-    border-radius: 20px;
-    cursor: pointer;
-    background-color: rgb(242, 242, 242);
-    border: 1px solid rgb(217, 217, 217);
-    color: black;
-}
-.paginate-buttons:hover {
-    background-color: #d8d8d8;
-}
-.active-page {
-    background-color: #3498db;
-    border: 1px solid #3498db;
-    color: white;
-}
-.active-page:hover {
-    background-color: #2988c8;
-}
 a {
     text-decoration-line: none;
 }
