@@ -35,6 +35,7 @@ const search = () => {
       articleList.value.forEach((article) => {
         article.formattedCreatedAt = formatCreatedAt(article.createdAt);
       });
+      articleListSize.value = articleList.value.length;
     },
     (error) => {
       console.error(error);
@@ -59,6 +60,11 @@ const goDetail = (articleId) => {
 
 const articlePageHandler = () => {
   articleInfo(10, currentPage.value);
+  getArticleListSize((response)=> {
+    articleListSize.value = response.data.data;
+  }, (error) => {
+    console.error(error);
+  })
 };
 
 onMounted(async () => {
@@ -147,6 +153,7 @@ onMounted(async () => {
   background-color: rgb(242, 242, 242);
   border: 1px solid rgb(217, 217, 217);
   color: black;
+  font-weight: 100px;
 }
 .paginate-buttons:hover {
   background-color: #d8d8d8;
