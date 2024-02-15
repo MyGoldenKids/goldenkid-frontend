@@ -56,7 +56,7 @@ const goToDiaryWrite = (child) => {
             <div v-for="(child, index) in childList" :key="index" @click="goToDiaryWrite(child.childId)">
                 <div class="profile-box">
                     <div class="profile-img">
-                        <img src="@/assets/img/bear-profile.png" alt="프로필" class="profile" />
+                        <img src="@/assets/img/profile-bear-kid.png" alt="금쪽프로필" class="profile" />
                     </div>
                     <div class="profile-text">
                         <h1>{{ child.childName }}</h1>
