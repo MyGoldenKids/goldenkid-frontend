@@ -52,14 +52,6 @@ function submitForm() {
                         v-model="loginInfo.password"
                     />
                     <button type="submit">로그인</button>
-                    <div class="check-box">
-                        <label for="remember-check">
-                            <input
-                                type="checkbox"
-                                id="remember-check"
-                            />아이디 저장
-                        </label>
-                    </div>
                     <router-link to="/member/signup" class="a-btn"
                         >회원가입</router-link
                     >
