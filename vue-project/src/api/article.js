@@ -1,8 +1,13 @@
 import { instance } from "@/api/axios";
 
 // 전체 게시글 조회
-const getArticleList = (success, fail) => {
-  instance.get("article/list").then(success).catch(fail);
+const getArticleList = (size, page, success, fail) => {
+  instance.get(`article/list?size=${size}&page=${page}`).then(success).catch(fail);
+};
+
+// 전체 게시글 사이즈 조회
+const getArticleListSize = (success, fail) => {
+  instance.get("article/size").then(success).catch(fail);
 };
 
 // 단일 게시글 조회
@@ -40,4 +45,4 @@ const checkRecommendArticle = (articleId, memberId, success, fail) => {
   instance.get(`article/recommend/${articleId}/member/${memberId}`).then(success).catch(fail);
 }
 
-export { getArticleList, getArticle, writeArticle, modifyArticle, deleteArticle, searchArticle, recommendArticle, checkRecommendArticle };
+export { getArticleList, getArticle, writeArticle, modifyArticle, deleteArticle, searchArticle, recommendArticle, checkRecommendArticle, getArticleListSize };

@@ -1,12 +1,16 @@
 <script setup>
-import { getArticleList, searchArticle } from "@/api/article.js";
+import { getArticleList, searchArticle, getArticleListSize } from "@/api/article.js";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 // 게시글 전체 리스트 조회
+const currentPage = ref(1);
 const articleList = ref("");
-const articleInfo = async () => {
+const articleListSize = ref(0);
+const articleInfo = async (size, page) => {
   getArticleList(
+    size,
+    page,
     (response) => {
       articleList.value = response.data.data;
       articleList.value.forEach((article) => {
@@ -53,7 +57,18 @@ const goDetail = (articleId) => {
   router.push(`/article/detail/${articleId}`);
 };
 
-onMounted(articleInfo);
+const articlePageHandler = () => {
+  articleInfo(10, currentPage.value);
+};
+
+onMounted(async () => {
+  articleInfo(10, currentPage.value);
+  getArticleListSize((response)=> {
+    articleListSize.value = response.data.data;
+  }, (error) => {
+    console.error(error);
+  })
+});
 </script>
 
 <template>
@@ -109,10 +124,41 @@ onMounted(articleInfo);
       </tbody>
       <!-- 게시글 리스트 조회 끝 -->
     </table>
+    <vue-awesome-paginate
+      :total-items="articleListSize"
+      v-model="currentPage"
+      :items-per-page="10"
+      :max-pages-shown="10"
+      @click="articlePageHandler"
+    />
   </div>
 </template>
 
 <style scoped>
+.pagination-container {
+  display: flex;
+  column-gap: 10px;
+}
+.paginate-buttons {
+  height: 40px;
+  width: 40px;
+  border-radius: 20px;
+  cursor: pointer;
+  background-color: rgb(242, 242, 242);
+  border: 1px solid rgb(217, 217, 217);
+  color: black;
+}
+.paginate-buttons:hover {
+  background-color: #d8d8d8;
+}
+.active-page {
+  background-color: #3498db;
+  border: 1px solid #3498db;
+  color: white;
+}
+.active-page:hover {
+  background-color: #2988c8;
+}
 a {
   text-decoration-line: none;
 }
