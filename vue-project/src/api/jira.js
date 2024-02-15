@@ -1,11 +1,11 @@
 import { instance } from "./axios";
 
-// 스프린트 생성
+// 에피소드 생성
 const createSprint = async (data, success, fail) => {
     await instance.post("jira/sprint/create", data).then(success).catch(fail);
 };
 
-// 스프린트 조회
+// 에피소드 조회
 const getSprintList = async (memberId, success, fail) => {
     await instance
         .get(`jira/sprint/list/${memberId}`)
@@ -13,7 +13,7 @@ const getSprintList = async (memberId, success, fail) => {
         .catch(fail);
 };
 
-// 스프린트 상태 변경
+// 에피소드 상태 변경
 const changeSprintStatus = async (sprintId, data, success, fail) => {
     await instance
         .patch(`jira/sprint/status/${sprintId}`, data)
@@ -21,7 +21,7 @@ const changeSprintStatus = async (sprintId, data, success, fail) => {
         .catch(fail);
 };
 
-// 스프린트 수정
+// 에피소드 수정
 const modifySprint = async (sprintId, data, success, fail) => {
     await instance
         .put(`jira/sprint/modify/${sprintId}`, data)
@@ -29,7 +29,7 @@ const modifySprint = async (sprintId, data, success, fail) => {
         .catch(fail);
 };
 
-// 스프린트 삭제
+// 에피소드 삭제
 const deleteSprint = async (sprintId, memberId, success, fail) => {
     await instance
         .delete(`jira/sprint/delete/${sprintId}`, memberId)
@@ -42,7 +42,7 @@ const createStory = async (data, success, fail) => {
     await instance.post("jira/story/create", data).then(success).catch(fail);
 };
 
-// 스프린트별 스토리 조회
+// 에피소드별 스토리 조회
 const getStoryList = async (sprintId, memberId, success, fail) => {
     await instance
         .get(`jira/story/list/${sprintId}/member/${memberId}`)
