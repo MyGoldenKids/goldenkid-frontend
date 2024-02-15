@@ -22,6 +22,7 @@ const memberStore = useMemberStore();
 const memberNo = memberStore.memberInfo.memberNo;
 const fileStore = useFileStore();
 const fileListId = ref(articleStore.articleInfo.fileListId);
+const formData = new FormData();
 let isCanceling = false; //onBeforeRouteLeave, 게시글 등록, 게시글 등록 취소 동시 사용시에 필요합니다.
 
 const createFiles = async(memberNo, formData) => {
@@ -52,10 +53,10 @@ const updateArticle = async() => {
   }
 
   // 파일 리스트 아이디가 없는데 파일 첨부할것이 있다면?
-  if (fileListId.value == 0 && isFormDataEmpty(formData)) {
+  if (fileListId.value == 0 && !isFileListEmpty(formData)) {
     // fileListId를 새로 생성한다.
     fileListId.value = await createFiles(memberNo, formData);
-  } else {
+  } else if (fileListId.value != 0){
     // 이미 있다면 하던대로 하자.
     await updateFiles(fileListId.value, memberNo, formData);
   }
@@ -116,8 +117,6 @@ const deleteButton = (idx) => {
   }
 }
 
-const formData = new FormData();
-
 const updateFiles = async (fileListId, memberId, formData) => {
   // 삭제할 부분 삭제
   for (let fileId of deleteFileList) {
@@ -133,15 +132,16 @@ const updateFiles = async (fileListId, memberId, formData) => {
 
     
   isCanceling = true;
-  if(!isFormDataEmpty(formData)) {
+  if(!isFileListEmpty()) {
     await modifyFile(fileListId, memberId, formData);
   }
   
   
 };
 // 폼에 아무것도 없는지 확인
-const isFormDataEmpty = (formData) => {
-  return Array.from(formData.entries()).length === 0;
+const isFileListEmpty = () => {
+  console.log(formData);
+  return fileList.value.length === 0;
 }
 
 // 뒤로가기 이벤트 발생 시 alert 기능

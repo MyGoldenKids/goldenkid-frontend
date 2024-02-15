@@ -155,8 +155,8 @@ const registerComment = async () => {
     alert("댓글을 입력해주세요.");
     return;
   }
-  if(comment.value.content.length > 45) {
-    alert("댓글은 45자 이내로 작성해주세요.");
+  if(comment.value.content.length > 100) {
+    alert("댓글은 100자 이내로 작성해주세요.");
     return;
   }
   writeComment(
