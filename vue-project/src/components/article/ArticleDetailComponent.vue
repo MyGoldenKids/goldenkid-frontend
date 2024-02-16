@@ -257,7 +257,7 @@ onMounted(() => {
 
     <!-- 게시글 내용 -->
     <div class="board-content">
-      <p style= "white-space: pre-line">{{ article.articleContent }}</p>
+      <p style= "white-space: pre-line" class="content-wrap">{{ article.articleContent }}</p>
       <!-- 첨부파일 -->
       <div class="upload">
         <!-- 클립사진 + '파일첨부' 글자 삽입 -->
@@ -428,6 +428,10 @@ onMounted(() => {
 
 .fileList button {
   background-color: #fff8f2;
+}
+
+.content-wrap {
+  overflow-wrap: break-word;
 }
 
 /* 게시글 댓글 부분 */

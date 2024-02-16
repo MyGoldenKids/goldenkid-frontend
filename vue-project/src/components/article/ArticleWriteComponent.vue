@@ -230,6 +230,7 @@ textarea {
   border: none;
   padding: 0.625rem;
   line-height: 2.5rem;
+  overflow-wrap: break-word;
 }
 
 .article textarea:focus {
