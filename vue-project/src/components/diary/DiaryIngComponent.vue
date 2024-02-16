@@ -53,7 +53,6 @@ const goToWrite = (index) => {
                         <span> {{ draft.diaryTitle }} </span>
                     </div>
                     <div>
-                        <span></span>
                         <span class="ing-sub-date">{{ draft.createdAt }}</span>
                     </div>
                 </div>
@@ -108,11 +107,6 @@ button {
     text-align: left;
 }
 
-.ing-sub-left div {
-    display: grid;
-    grid-template-columns: 20% auto;
-    margin-bottom: 0.15rem;
-}
 .ing-sub-left span {
     margin-right: 1.25rem;
 }
