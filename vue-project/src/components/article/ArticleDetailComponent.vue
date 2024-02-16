@@ -542,6 +542,7 @@ onMounted(() => {
   padding-left: 1.25rem;
   background-color: #fff8f2;
   box-sizing: border-box;
+  width: 100%;
 }
 .comment-edit input:focus {
   border: 0.125rem solid #89b9ad;

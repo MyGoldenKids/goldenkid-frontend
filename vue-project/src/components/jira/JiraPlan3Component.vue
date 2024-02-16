@@ -40,7 +40,7 @@ const makeSprint = async () => {
   <div class="jira-wrap">
     <div class="jira-dash">
       <div class="jira-title">
-        <p class="font-color">JIRA 완성 !</p>
+        <p class="font-color">에피소드 완성 !</p>
         <p>
           이번 주 내 아이와의 이야기가 완성됐어요. <br />
           이제 관리하러 가볼까요 ? <br />
@@ -73,12 +73,13 @@ const makeSprint = async () => {
 .jira-wrap {
   background-color: #ad9478;
   text-align: center;
-  border-radius: 0.625rem;
-  padding: 1.25rem;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
   box-sizing: border-box;
 }
 .jira-dash {
-  border: 4px dashed #665031;
+  border: 0.313rem dashed #665031;
+  border-radius: 1.25rem;
   display: grid;
   grid-template-columns: 30% 70%;
 }

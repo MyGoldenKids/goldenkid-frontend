@@ -157,7 +157,7 @@ const goArticleList = () => {
         </form>
         <div v-for="(file, index) in fileList" :key="index" class="fileList">
           {{ file.name }}
-          <button type="button" @click="deleteButton(index)">삭제</button>
+          <button type="button" @click="deleteButton(index)" class="file-delete-btn">삭제</button>
         </div>
       </div>
 
@@ -193,8 +193,8 @@ textarea {
 }
 
 .article input {
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 90%;
   box-sizing: border-box;
   padding: 0.625rem;
   font-size: 2.813rem;
@@ -225,10 +225,11 @@ textarea {
 
 .article textarea {
   margin: 1rem 0;
-  font-size: 1.813rem;
+  font-size: 1.5rem;
   background-color: #fff8f2;
   border: none;
   padding: 0.625rem;
+  line-height: 2.5rem;
 }
 
 .article textarea:focus {
@@ -302,6 +303,7 @@ textarea {
 
 .fileList {
   padding-left: 2.5rem;
+  margin: 0.2rem 0;
 }
 
 /* 취소&등록 bar */
@@ -324,5 +326,13 @@ textarea {
   border-radius: 0.75rem;
   border: none;
   background-color: #fff8f2;
+}
+
+.file-delete-btn {
+  background-color: #ad9478;
+  color: #fff8f2;
+  border-radius: 1.25rem;
+  margin: 0 0.5rem;
+  padding: 0.25rem 0.5rem;
 }
 </style>
