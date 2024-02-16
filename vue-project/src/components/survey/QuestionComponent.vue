@@ -163,9 +163,17 @@ const resultView = async () => {
                 </label>
             </div>
         </div>
-
         <button type="submit" class="submit-btn">제출하기</button>
     </form>
+    <div class="reference">
+        <div v-if="category === 0">
+            <h2>출처: 통합뇌휴먼심리연구소</h2>
+        </div>
+        <div v-else>
+            <h2>출처: Pfizer Inc</h2>
+        </div>
+    </div>
+    
 </template>
 
 <style scoped>
@@ -177,6 +185,7 @@ const resultView = async () => {
     text-align: center;
     font-size: 1.5rem;
     margin-bottom: 2rem;
+    font-weight: 100;
 }
 .content-title-sub {
     width: 30%;
@@ -228,9 +237,13 @@ const resultView = async () => {
     width: 80%;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 10% 70% 25%;
+    grid-template-columns: 5% 75% auto;
+    gap: 0.625rem;
     align-items: center;
     padding: 0.625rem 0;
+}
+.select-box div:last-child {
+    align-content: end;
 }
 .select-num {
     font-size: 1.5rem;
@@ -249,5 +262,14 @@ const resultView = async () => {
     background-color: #89b9ad;
     color: #fff;
     transition-duration: 0.5s;
+}
+.reference {
+    text-align: right; 
+    font-size: 0.8rem;
+    margin-right: 2.5rem;
+}
+.reference h2 {
+    color: #b1b1b1;
+    font-weight: 100;
 }
 </style>
